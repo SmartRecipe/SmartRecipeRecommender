@@ -15,8 +15,8 @@ public class Ingredient {
     //to represent it as its own object, as it will have a number of different values within (calories, sugars, vitamins,
     //etc.).
     
-    String name;
-    String nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
+    private String name;
+    private String nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
     public Ingredient() { }
     

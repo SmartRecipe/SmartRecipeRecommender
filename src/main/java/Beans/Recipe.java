@@ -19,13 +19,13 @@ public class Recipe {
     //but may want to consider creating class to represent it as its own object, as it will have a number of different
     //values within (calories, sugars, vitamins, etc.).
     
-    String name;
-    String desc;
-    String nutVal; //Nutritional value per serving
-    SimpleEntry<Ingredient, String> ingredients;
-    ArrayList<String> instructions;
-    String servingSize;
-    float totalServings;
+    private String name;
+    private String desc;
+    private String nutVal; //Nutritional value per serving
+    private SimpleEntry<Ingredient, String> ingredients;
+    private ArrayList<String> instructions;
+    private String servingSize;
+    private float totalServings;
     
     public Recipe() { }
     

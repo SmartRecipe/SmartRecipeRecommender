@@ -11,4 +11,6 @@ package Beans;
  */
 public class VirtualRefrigerator {
     //Should pull list of ingredients from database and place them into an ArrayList through which the front-end can access them.
+    
+    
 }
