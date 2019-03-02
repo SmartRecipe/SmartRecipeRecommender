@@ -5,7 +5,6 @@
  */
 package Beans;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 
 /**
@@ -13,24 +12,24 @@ import java.util.ArrayList;
  * @author soup
  */
 public class Recipe {
-    //Should contain a list of key-value pairs detailing the ingredients required and how many of each necessary
-    //(both saved as Strings to maintain flexibility) Should also have a list of the instructions for the recipe;
-    //each step is a separate object in the list Nutritional value ("nutVal") is represented as a String for now,
-    //but may want to consider creating class to represent it as its own object, as it will have a number of different
-    //values within (calories, sugars, vitamins, etc.).
+    //Necessary Ingredients stored as ArrayList (amounts necessary represented through Ingredient's "quantity" field.
+    // Should also have a list of the instructions for the recipe; each step is a separate object in the list.
+    //Nutritional value ("nutVal") is represented as a String for now, but may want to consider creating class
+    //to represent it as its own object, as it will have a number of different values within (calories, sugars,
+    //vitamins, etc.).
     
     private String name;
     private String desc;
     private String nutVal; //Nutritional value per serving
-    private SimpleEntry<Ingredient, String> ingredients;
+    private ArrayList<Ingredient> ingredients;
     private ArrayList<String> instructions;
     private String servingSize;
     private float totalServings;
     
     public Recipe() { }
     
-    public Recipe(String name, String desc, String nutVal, SimpleEntry<Ingredient, String> ingredients,
-            ArrayList<String> instructions, String servingSize, float totalServings) {
+    public Recipe(String name, String desc, String nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
+            String servingSize, float totalServings) {
         this.name = name;
         this.desc = desc;
         this.nutVal = nutVal;
@@ -64,11 +63,11 @@ public class Recipe {
         this.nutVal = nutVal;
     }
 
-    public SimpleEntry<Ingredient, String> getIngredients() {
+    public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(SimpleEntry<Ingredient, String> ingredients) {
+    public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
