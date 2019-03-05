@@ -15,9 +15,17 @@ public class VirtualRefrigerator {
     //Should pull list of ingredients from database and place them into an ArrayList through which the front-end can access them.
     
     private ArrayList<Ingredient> ingredients; //Master list of all ingredients in the system; ingredient is not considered in user's refrigerator if quantity is 0.
+    private static VirtualRefrigerator instance;
     
-    public VirtualRefrigerator(/* User object goes here */) {
+    private VirtualRefrigerator(/* User object goes here */) {
         //Query database for user's refrigerator data and populate fields accordingly
+    }
+    
+    public static VirtualRefrigerator getInstance() {
+        if (instance == null)
+            instance = new VirtualRefrigerator();
+        
+        return instance;
     }
     
     /**

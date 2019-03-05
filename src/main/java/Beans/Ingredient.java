@@ -18,11 +18,11 @@ public class Ingredient {
     private String name;
     private float quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
                             //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.
-    private String nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
+    private NutritionInfo nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
     public Ingredient() { }
     
-    public Ingredient(String name, int numOwned, String nutVal) {
+    public Ingredient(String name, int numOwned, NutritionInfo nutVal) {
         this.name = name;
         this.quantity = numOwned;
         this.nutVal = nutVal;
@@ -70,11 +70,11 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
-    public String getNutVal() {
+    public NutritionInfo getNutVal() {
         return nutVal;
     }
 
-    public void setNutVal(String nutVal) {
+    public void setNutVal(NutritionInfo nutVal) {
         this.nutVal = nutVal;
     }   
 }
