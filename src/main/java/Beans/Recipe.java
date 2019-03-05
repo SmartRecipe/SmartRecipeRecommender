@@ -20,7 +20,7 @@ public class Recipe {
     
     private String name;
     private String desc;
-    private String nutVal; //Nutritional value per serving
+    private NutritionInfo nutVal; //Nutritional value per serving
     private ArrayList<Ingredient> ingredients;
     private ArrayList<String> instructions;
     private String servingSize;
@@ -28,7 +28,7 @@ public class Recipe {
     
     public Recipe() { }
     
-    public Recipe(String name, String desc, String nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
+    public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
             String servingSize, float totalServings) {
         this.name = name;
         this.desc = desc;
@@ -55,11 +55,11 @@ public class Recipe {
         this.desc = desc;
     }
     
-    public String getNutVal() {
+    public NutritionInfo getNutVal() {
         return nutVal;
     }
     
-    public void setNutVal(String nutVal) {
+    public void setNutVal(NutritionInfo nutVal) {
         this.nutVal = nutVal;
     }
 
