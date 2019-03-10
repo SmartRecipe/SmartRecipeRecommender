@@ -7,19 +7,18 @@ import Card from 'react-bootstrap/Card';
 class RecipeCardComponent extends Component {
   render() {
     const {
+      text,
       title,
     } = this.props;
 
     return (
-      <Card>
+      <Card bg="light" border="secondary">
         <Card.Body>
           <Card.Title>{title}</Card.Title>
           <Card.Text>
-            Some quick example text to build on the card title and make up the bulk of
-            the card's content.
+            {text}
           </Card.Text>
-          <Card.Link href="#">Card Link</Card.Link>
-          <Card.Link href="#">Another Link</Card.Link>
+          <Card.Link>Another Link</Card.Link>
         </Card.Body>
       </Card>
     );
@@ -27,3 +26,9 @@ class RecipeCardComponent extends Component {
 }
 
 export default RecipeCardComponent;
+
+            // <div className="col-sm-2 col-md-2 col-lg-2">
+            //   <div className="container">
+            //     <img src={recipeimg}/>
+            //   </div>
+            // </div>
