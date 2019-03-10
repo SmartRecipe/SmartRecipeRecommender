@@ -9,11 +9,12 @@
 
 ## Installation & Usage
 
-Clone the repository in current directory, use 
+### Build Requirements
 
-```bash
-git clone https://github.com/SmartRecipe/SmartRecipeRecommender.git
-```
+Make sure that you have these packages installed in order to build the project
+
+* npm
+* yarn
 
 ### Development Build
 
