@@ -6,11 +6,13 @@ export const history = createHistory();
 export const menuItemProps = {
     recipesMenu : {
         id: 1,
+        key: "recipes",
         title: "Recipes",
         route: "/recipes",
     },
     ingredientsMenu: {
-        id: 2, 
+        id: 2,
+        key: "ingredients", 
         title: "Ingredients",
         route: "/ingredients",
     },
