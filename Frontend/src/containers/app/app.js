@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Router } from 'react-router-dom';
-import { slide as Menu } from 'react-burger-menu';
-import { Container, Navbar, Nav, NavItem, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, Form, FormControl, Button  } from 'react-bootstrap';
 
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
@@ -19,7 +18,7 @@ class App extends Component {
   render() {
     return (
         <div>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="primary" variant="dark" expand="lg" collapseOnSelect sticky="top">
                 <Navbar.Brand href="/">Smart Recipe Recommender</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -27,6 +26,10 @@ class App extends Component {
                         <Nav.Link href={menuItemProps.recipesMenu.route}>{menuItemProps.recipesMenu.title}</Nav.Link>
                         <Nav.Link href={menuItemProps.ingredientsMenu.route}>{menuItemProps.ingredientsMenu.title}</Nav.Link>
                     </Nav>
+                    <Form inline>
+                        <FormControl type="text" placeholder="Search" className=" mr-sm-2" />
+                        <Button type="submit">Submit</Button>
+                    </Form>
                 </Navbar.Collapse>
             </Navbar>
             <div className="sample"/>
