@@ -4,11 +4,18 @@ html {
 
 body {
   height: 100%;
-  background: #444;
+  background: #ddd;
   color: #fffce1;
   font-family: 'Raleway', Arial, sans-serif;
 }
 
-sample {
+.card-deck-container {
   margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.toolbar-container {
+  margin: 10px;
 }
