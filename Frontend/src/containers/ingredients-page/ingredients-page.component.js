@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * Main container for ingredients page
+ */
 class IngredientsPageContainer extends Component {
   render() {
     return (
