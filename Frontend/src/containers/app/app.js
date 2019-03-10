@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import { Route, Router } from 'react-router-dom';
+import { slide as Menu } from 'react-burger-menu';
+import { Container, Navbar, Nav, NavItem, MenuItem } from 'react-bootstrap';
 
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
@@ -9,49 +10,31 @@ import { history, menuItemProps } from '../../utils/app.constants';
 import RecipesPageContainer from '../recipes-page/recipes-page.component';
 import IngredientsPageContainer from '../ingredients-page/ingredients-page.component';
 
+/**
+ * Entry point for frontend app
+ * Uses react router to change between links 
+ * Uses Navigation Bar component to allow moving to different pages
+ */
 class App extends Component {
   render() {
     return (
-        <div className="App">
+        <div>
+            <Navbar bg="light" expand="lg">
+                <Navbar.Brand href="/">Smart Recipe Recommender</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link href={menuItemProps.recipesMenu.route}>{menuItemProps.recipesMenu.title}</Nav.Link>
+                        <Nav.Link href={menuItemProps.ingredientsMenu.route}>{menuItemProps.ingredientsMenu.title}</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+            <div className="sample"/>
             <Router history={history}>
-                <Route render={({ location, history }) => (
-                    <React.Fragment>
-                        <SideNav
-                            onSelect={(selected) => {
-                                const to = selected;
-                                if (location.pathname !== to) {
-                                    history.push(to);
-                                }
-                                console.log('Triggered change');
-                                console.log(location);
-                            }}>
-                            <SideNav.Toggle />
-                            <SideNav.Nav defaultSelected={menuItemProps.recipesMenu.key}>
-                                <NavItem eventKey={menuItemProps.recipesMenu.key}>
-                                    <NavIcon>
-                                        <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
-                                    </NavIcon>
-                                    <NavText>
-                                        {menuItemProps.recipesMenu.title}
-                                    </NavText>
-                                </NavItem>
-                                <NavItem eventKey={menuItemProps.ingredientsMenu.key}>
-                                    <NavIcon>
-                                        <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
-                                    </NavIcon>
-                                    <NavText>
-                                        {menuItemProps.ingredientsMenu.title}
-                                    </NavText>
-                                </NavItem>
-                            </SideNav.Nav>
-                        </SideNav>
-                        <main>
-                            <Route path="/" exact/>
-                            <Route path={menuItemProps.recipesMenu.route} component={props => <RecipesPageContainer/>}/>
-                            <Route path={menuItemProps.ingredientsMenu.route} component={props => <IngredientsPageContainer/>}/>
-                        </main>
-                    </React.Fragment>)}
-                />
+                <div>
+                    <Route path={menuItemProps.recipesMenu.route} component={props => <RecipesPageContainer/>}/> 
+                    <Route path={menuItemProps.ingredientsMenu.route} component={props => <IngredientsPageContainer/>}/> 
+                </div>
             </Router>
         </div>
     );
@@ -59,4 +42,3 @@ class App extends Component {
 }
 
 export default App;
-
