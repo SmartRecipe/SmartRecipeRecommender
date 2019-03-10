@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import SideNav from '@trendmicro/react-sidenav';
 import { Route, Router } from 'react-router-dom';
-import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
-import { history } from '../../utils/app.constants';
+import MenuItem from '../../components/menu/menu-item.component';
+import { history, menuItemProps } from '../../utils/app.constants';
 
 class App extends Component {
   render() {
@@ -15,35 +16,21 @@ class App extends Component {
                     <React.Fragment>
                         <SideNav
                             onSelect={(selected) => {
-                                const to = '/' + selected;
+                                const to = selected;
                                 if (location.pathname !== to) {
                                     history.push(to);
                                 }
                             }}>
                             <SideNav.Toggle />
                             <SideNav.Nav defaultSelected="home">
-                                <NavItem eventKey="home">
-                                    <NavIcon>
-                                        <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
-                                    </NavIcon>
-                                    <NavText>
-                                        Home
-                                    </NavText>
-                                </NavItem>
-                                <NavItem eventKey="devices">
-                                    <NavIcon>
-                                        <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
-                                    </NavIcon>
-                                    <NavText>
-                                        Devices
-                                    </NavText>
-                                </NavItem>
+                                <MenuItem title={menuItemProps.recipesMenu.title}/>
+                                <MenuItem title={menuItemProps.ingredientsMenu.title}/>
                             </SideNav.Nav>
                         </SideNav>
                         <main>
                             <Route path="/" exact/>
-                            <Route path="/home"/>
-                            <Route path="/devices"/>
+                            <Route path={menuItemProps.recipesMenu.route}/>
+                            <Route path={menuItemProps.ingredientsMenu.route}/>
                         </main>
                     </React.Fragment>)}
                 />
