@@ -18,7 +18,7 @@ Make sure you have these packages installed in order to build the project
 * npm
 * yarn
 
-### Development Build
+#### Development Build
 
 To run the frontend application in development mode, use following commands 
 
@@ -27,6 +27,6 @@ cd SmartRecipeRecommender/Frontend
 yarn start
 ```
 
-### Production Build
+#### Production Build
 
 In progress...
