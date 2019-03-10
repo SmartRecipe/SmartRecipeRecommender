@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 
+import RecipeCardComponent from '../../components/cards/recipe-card.component'
+
 class RecipesPageContainer extends Component {
   render() {
     return (
         <div>
-            <h1>Recipes</h1>
+            <RecipeCardComponent />
         </div>
     );
   }
