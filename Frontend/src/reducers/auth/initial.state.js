@@ -1,8 +1,6 @@
 export default {
-  auth: {
-    user: {},
-    isAuthenticated: true,
-    isError: false,
-    isPending: false,
-  },
+    userId: {},
+    isSignInPending: false,
+    isSignInFailed: false,
+    isSignInSuccess: false,
 };
