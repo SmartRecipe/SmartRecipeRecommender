@@ -9,6 +9,17 @@ A simple single page responsive application developed using React for Smart Reci
 * React Router v4
 * React Bootstrap
 
+## API Requirements
+
+### User Sign In API
+
+Requires user to sign in to the frontend application first. Requires server to accepet following arguments.
+
+* email
+* password 
+
+The server should return the status of the request along with a unique user id on success.
+
 ## Installation & Usage
 
 ### Build Requirements
