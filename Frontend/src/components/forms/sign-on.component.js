@@ -27,7 +27,6 @@ class UserSignOnComponent extends Component {
 
     return (
       <div>
-        <CssBaseline />
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h5">
             {appConstants.appTitle}
