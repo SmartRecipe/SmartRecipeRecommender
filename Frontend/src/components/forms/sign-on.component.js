@@ -50,11 +50,11 @@ class UserSignOnComponent extends Component {
             }
             {
               isSignUp &&
-              <Button color="primary" onClick={onToggleClicked} className={classes.button}>Sign in instead ?</Button>
+              <Button fullWidth color="primary" onClick={onToggleClicked} className={classes.button}>Sign in instead ?</Button>
             }
             {
               !isSignUp &&
-              <Button color="primary" onClick={onToggleClicked} className={classes.button}>Don't have an account ?</Button>
+              <Button fullWidth color="primary" onClick={onToggleClicked} className={classes.button}>Don't have an account ?</Button>
             }
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               {signInButtonText}
