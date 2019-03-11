@@ -10,12 +10,36 @@ body {
 }
 
 .card-deck-container {
-  margin-top: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+    margin-top: 50px;
+    margin-left: 250px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .toolbar-container {
   margin: 10px;
+}
+
+.card-title {
+  color: rgba(0, 0, 0, 0.80);
+}
+
+.home-page-container {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  height: 50%;
+  padding: 10px;
+  /*margin-top: 50%;*/
+  border-radius: 5px;
+  border: 2px solid #888;
+}
+
+.login-field {
+  vertical-align: center;
+  align-content: center;
 }
