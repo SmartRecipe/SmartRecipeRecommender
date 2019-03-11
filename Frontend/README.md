@@ -11,6 +11,13 @@ A simple single page responsive application developed using React for Smart Reci
 
 ## API Requirements
 
+### User Sign Up API
+
+New users need to be able to sign up to the application. The backend API should accept following arguments and return with a new unique user id.
+
+* email
+* password
+
 ### User Sign In API
 
 Requires user to sign in to the frontend application first. Requires server to accepet following arguments.
