@@ -6,6 +6,7 @@ import { Route, Router } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import { signOut } from '../../actions/auth/auth.actions';
 import MenuComponent from '../../components/menu/menu.component';
 import HomePageComponent from '../home-page/home-page.component';
 import { history, menuItemProps } from '../../utils/app.constants';
@@ -31,6 +32,7 @@ class App extends React.Component {
 
     this.onDrawerOpen = this.onDrawerOpen.bind(this);
     this.onDrawerClosed = this.onDrawerClosed.bind(this);
+    this.onSignOutClicked = this.onSignOutClicked.bind(this);
     this.onMenuItemClicked = this.onMenuItemClicked.bind(this);
   }
 
@@ -59,7 +61,14 @@ class App extends React.Component {
    */
   onMenuItemClicked(link) {
     this.setState({ open: false });
-    history.push(link)
+
+    history.push(link);
+  }
+
+  onSignOutClicked() {
+    this.setState({ open: false });
+
+    this.props.signOut();
   }
 
   render() {
@@ -84,6 +93,7 @@ class App extends React.Component {
             open={this.state.open}
             onDrawerOpen={this.onDrawerOpen}
             onDrawerClosed={this.onDrawerClosed}
+            onSignOutClicked={this.onSignOutClicked}
             onMenuItemClicked={this.onMenuItemClicked}
           />
         }
@@ -141,7 +151,9 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  signOut: () => dispatch(signOut()),
+});
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(App));
