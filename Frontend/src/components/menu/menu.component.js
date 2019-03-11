@@ -27,8 +27,9 @@ class MenuComponent extends React.Component {
   render() {
     const { 
       open,
+      title,
       theme,
-      classes, 
+      classes,
       onDrawerOpen,
       onDrawerClosed,
       onSignOutClicked,
@@ -45,7 +46,7 @@ class MenuComponent extends React.Component {
               <MenuIcon/>
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              {appConstants.appTitle}
+              {title}
             </Typography>
           </Toolbar>
         </AppBar>
