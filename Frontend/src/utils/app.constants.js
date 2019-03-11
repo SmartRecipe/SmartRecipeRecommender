@@ -36,3 +36,9 @@ export const actionsSignIn = {
     success: "ACTION_SIGN_IN_SUCCESS",
     signout: "ACTION_SIGN_OUT",
 };
+
+// constants related to navigation reducer
+// the information on the page changes based on which route user chose
+export const actionsNavigation = {
+    navigateTo: "ACTION_NAVIGATE_TO",
+};
