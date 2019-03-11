@@ -7,6 +7,8 @@ import { Route, Router } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import { signOut } from '../../actions/auth/auth.actions';
+import { navigateTo } from '../../actions/navigation/navigation.actions';
+
 import MenuComponent from '../../components/menu/menu.component';
 import HomePageComponent from '../home-page/home-page.component';
 import { history, menuItemProps } from '../../utils/app.constants';
@@ -62,6 +64,8 @@ class App extends React.Component {
   onMenuItemClicked(link) {
     this.setState({ open: false });
 
+    this.props.navigateTo(link);
+
     history.push(link);
   }
 
@@ -73,7 +77,8 @@ class App extends React.Component {
 
   render() {
     const { 
-      classes, 
+      classes,
+      currentRoute,
       isSignInFailed,
       isSignInSuccess,
       isSignInPending,
@@ -90,7 +95,8 @@ class App extends React.Component {
         { 
           isSignInSuccess &&
           <MenuComponent
-            open={this.state.open}
+            open={open}
+            title={currentRoute}
             onDrawerOpen={this.onDrawerOpen}
             onDrawerClosed={this.onDrawerClosed}
             onSignOutClicked={this.onSignOutClicked}
@@ -148,11 +154,13 @@ const mapStateToProps = state => ({
   isSignInPending: state.authReducer.isSignInPending,
   isSignInSuccess: state.authReducer.isSignInSuccess,
   isSignInFailed: state.authReducer.isSignInFailed,
+  currentRoute: state.navigationReducer.currentRoute,
 });
 
 
 const mapDispatchToProps = dispatch => ({
   signOut: () => dispatch(signOut()),
+  navigateTo: (route) => dispatch(navigateTo(route)),
 });
 
 
