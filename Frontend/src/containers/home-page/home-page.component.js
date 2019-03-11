@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import { signIn } from '../../actions/auth/auth.actions';
+import UserSignOnComponent from '../../components/forms/sign-on.component';
 import { history, menuItemProps, appConstants } from '../../utils/app.constants';
 
 /**
@@ -22,7 +23,13 @@ class HomePageComponent extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      isSignUp: false,
+    };
+
     this.onSignInClicked = this.onSignInClicked.bind(this);
+    this.onSignInOptionSelected = this.onSignInOptionSelected.bind(this);
+    this.onSignUpOptionSelected = this.onSignUpOptionSelected.bind(this);
   }
 
   /**
@@ -35,33 +42,48 @@ class HomePageComponent extends Component {
 
     this.props.signIn(null, null);
 
+    console.log('calling sign in');
+
     history.push(menuItemProps.recipesMenu.route);
   }
 
+  onSignInOptionSelected() {
+    this.setState({
+      isSignUp: false,
+    });
+  }
+
+  onSignUpOptionSelected() {
+    this.setState({
+      isSignUp: true,
+    });
+  }
+
   render() {
+    const { isSignUp } = this.state;
     const { classes } = this.props;
 
     return (
       <main className={classes.main}>
-        <CssBaseline />
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            {appConstants.appTitle}
-          </Typography>
-          <form className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" autoComplete="current-password" />
-            </FormControl>
-            <Button type="submit" onClick={this.onSignInClicked} fullWidth variant="contained" color="primary" className={classes.submit}>
-              Sign in
-            </Button>
-          </form>
-        </Paper>
+        {
+          !isSignUp &&
+          <UserSignOnComponent
+            isSignUp={false}
+            onSubmit={this.onSignInClicked}
+            onToggleClicked={this.onSignUpOptionSelected}
+            signInButtonText="Sign In"
+          />
+        }
+
+        {
+          isSignUp &&
+          <UserSignOnComponent
+            isSignUp={true}
+            onSubmit={this.onSignInClicked}
+            onToggleClicked={this.onSignInOptionSelected}
+            signInButtonText="Create new account"
+          />
+        }
       </main>
     );
   }
@@ -78,24 +100,6 @@ const styles = theme => ({
       marginLeft: 'auto',
       marginRight: 'auto',
     },
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-  },
-  avatar: {
-    margin: theme.spacing.unit,
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing.unit,
-  },
-  submit: {
-    marginTop: theme.spacing.unit * 3,
   },
 });
 
