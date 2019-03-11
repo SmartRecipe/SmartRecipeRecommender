@@ -26,9 +26,3 @@ class RecipeCardComponent extends Component {
 }
 
 export default RecipeCardComponent;
-
-            // <div className="col-sm-2 col-md-2 col-lg-2">
-            //   <div className="container">
-            //     <img src={recipeimg}/>
-            //   </div>
-            // </div>
