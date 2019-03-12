@@ -5,12 +5,10 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import { signIn } from '../../actions/auth/auth.actions';
-import { history, menuItemProps, appConstants } from '../../utils/app.constants';
+import { appConstants } from '../../utils/app.constants';
 
 /**
  * Generic form component used as sign in / sign up form
