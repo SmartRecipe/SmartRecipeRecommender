@@ -22,12 +22,6 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-const options = [
-  'Delete',
-];
-
-const ITEM_HEIGHT = 48;
-
 class RecipeCardComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -184,6 +178,12 @@ export default withStyles(styles)(RecipeCardComponent);
         anchorEl: null, 
     });
   }
+
+  const options = [
+  'Delete',
+];
+
+const ITEM_HEIGHT = 48;
 
         <Menu
           open={open}
