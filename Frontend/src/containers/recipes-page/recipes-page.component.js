@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
+import Fab from '@material-ui/core/Fab';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+
+import AddIcon from '@material-ui/icons/Add';
 
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 
@@ -9,9 +12,24 @@ import RecipeCardComponent from '../../components/cards/recipe-card.component';
  * Container for recipes page
  */
 class RecipesPageContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onAddButtonClicked = this.onAddButtonClicked.bind(this);
+  }
+
+  onAddButtonClicked() {
+    
+  }
+
   render() {
+    const { classes } = this.props;
+
     return (
         <div className="card-deck-container">
+          <Fab color="primary" aria-label="Add" className={classes.fab}>
+            <AddIcon />
+          </Fab>
           <Grid container spacing={18}>
             <Grid item sm>
               <RecipeCardComponent/>
@@ -47,6 +65,13 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  fab: {
+    margin: theme.spacing.unit,
+    position: 'fixed',
+    bottom: 0,
+    right: 0,
+    margin: 24,
   },
 });
 
