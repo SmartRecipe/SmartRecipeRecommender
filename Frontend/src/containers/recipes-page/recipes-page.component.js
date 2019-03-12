@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
-import RecipeCardComponent2 from '../../components/cards/card.component';
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 
 /**
