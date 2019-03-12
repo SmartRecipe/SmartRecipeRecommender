@@ -61,16 +61,18 @@ class App extends React.Component {
    * @param  {string} link Link of the page to navigate to 
    * @return {null}      
    */
-  onMenuItemClicked(link) {
+  onMenuItemClicked(link, title) {
     this.setState({ open: false });
 
-    this.props.navigateTo(link);
+    this.props.navigateTo(title);
 
     history.push(link);
   }
 
   onSignOutClicked() {
     this.setState({ open: false });
+
+    this.props.navigateTo(menuItemProps.recipesMenu.title);
 
     this.props.signOut();
   }
@@ -125,6 +127,7 @@ class App extends React.Component {
 const styles = theme => ({
   root: {
     display: 'flex',
+    width: '100%',
   },
   content: {
     flexGrow: 1,
