@@ -33,25 +33,10 @@ class RecipeCardComponent extends React.Component {
     super(props);
 
     this.state = {
-      anchorEl: null,
       expanded: false,
     }
 
-    this.onMenuClosed = this.onMenuClosed.bind(this);
-    this.onMenuOpened = this.onMenuOpened.bind(this);
     this.onCardExpanded = this.onCardExpanded.bind(this);
-  }
-
-  onMenuOpened(e) {
-    this.setState({ 
-        anchorEl: e.currentTarget,
-    });
-  }
-
-  onMenuClosed() {
-    this.setState({ 
-        anchorEl: null, 
-    });
   }
 
   onCardExpanded() {
@@ -69,11 +54,9 @@ class RecipeCardComponent extends React.Component {
     } = this.props;
 
     const { 
-      anchorEl, 
       expanded,
     } = this.state;
     
-    const open = Boolean(anchorEl);
 
     return (
       <Card className={classes.card}>
@@ -84,36 +67,11 @@ class RecipeCardComponent extends React.Component {
               R
             </Avatar>
           }
-          action={
-            <IconButton aria-owns={open ? 'long-menu' : undefined} onClick={this.onMenuOpened}>
-              <MoreVertIcon />
-            </IconButton>
-          }
           title="Shrimp and Chorizo Paella"
           subheader="September 14, 2016"
         />
 
-        {/* Card Menu  */}
-        <Menu
-          open={open}
-          id="long-menu"
-          anchorEl={anchorEl}
-          onClose={this.onMenuClosed}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: 200,
-            },
-          }}
-        >
-          {options.map(option => (
-            <MenuItem key={option} selected={option === 'Pyxis'} onClick={this.onMenuClosed}>
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-
-        {/* Main Content */}
+        {/* Short Description */}
         <CardContent>
           <Typography component="p">
             This impressive paella is a perfect party dish and a fun meal to cook together with your
@@ -212,3 +170,43 @@ RecipeCardComponent.propTypes = {
 };
 
 export default withStyles(styles)(RecipeCardComponent);
+
+
+/***
+          onMenuOpened(e) {
+    this.setState({ 
+        anchorEl: e.currentTarget,
+    });
+  }
+
+  onMenuClosed() {
+    this.setState({ 
+        anchorEl: null, 
+    });
+  }
+
+        <Menu
+          open={open}
+          id="long-menu"
+          anchorEl={anchorEl}
+          onClose={this.onMenuClosed}
+          PaperProps={{
+            style: {
+              maxHeight: ITEM_HEIGHT * 4.5,
+              width: 200,
+            },
+          }}
+        >
+          {options.map(option => (
+            <MenuItem key={option} selected={option === 'Pyxis'} onClick={this.onMenuClosed}>
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+
+          action={
+            <IconButton aria-owns={open ? 'long-menu' : undefined} onClick={this.onMenuOpened}>
+              <MoreVertIcon />
+            </IconButton>
+          }
+***/
