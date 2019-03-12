@@ -1,18 +1,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
-import Paper from '@material-ui/core/Paper';
-import InputLabel from '@material-ui/core/InputLabel';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import backgroundImage from './bg.jpg';
 import { signIn } from '../../actions/auth/auth.actions';
+import { history, menuItemProps } from '../../utils/app.constants';
 import UserSignOnComponent from '../../components/forms/sign-on.component';
-import { history, menuItemProps, appConstants } from '../../utils/app.constants';
 
 /**
  * Landing page component for unsigned users
