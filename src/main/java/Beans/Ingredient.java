@@ -10,11 +10,6 @@ package Beans;
  * @author soup
  */
 public class Ingredient {
-    //Should have fields pertaining to nutrition values, dietary implications, etc. Can all be pulled from Edamam API
-    //Nutritional value ("nutVal") is represented as a String for now, but may want to consider creating class
-    //to represent it as its own object, as it will have a number of different values within (calories, sugars, vitamins,
-    //etc.).
-    
     private String name;
     private float quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
                             //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.

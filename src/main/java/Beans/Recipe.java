@@ -12,12 +12,6 @@ import java.util.ArrayList;
  * @author soup
  */
 public class Recipe {
-    //Necessary Ingredients stored as ArrayList (amounts necessary represented through Ingredient's "quantity" field.
-    // Should also have a list of the instructions for the recipe; each step is a separate object in the list.
-    //Nutritional value ("nutVal") is represented as a String for now, but may want to consider creating class
-    //to represent it as its own object, as it will have a number of different values within (calories, sugars,
-    //vitamins, etc.).
-    
     private String name;
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
