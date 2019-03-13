@@ -12,6 +12,7 @@ import App from './containers/app/app';
 import configureStore from './store/configureStore';
 import initialState from './reducers/auth/initial.state';
 
+
 const store = configureStore(initialState);
 
 const persistor = persistStore(store);
