@@ -29,14 +29,14 @@ class IngredientCardComponent extends Component {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h6" component="h2">
-            Ingredient        
+            {title}        
           </Typography>
           <Typography component="p">
             Small Description
           </Typography>
         </CardContent>
 
-        <CardActions classes={classes.actions} disableActionSpacing>
+        <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Edit">
             <EditIcon />
           </IconButton>
@@ -51,7 +51,7 @@ class IngredientCardComponent extends Component {
 
 const styles = {
   card: {
-    minWidth: 180,
+    minWidth: 120,
     margin: 10,
   },
   bullet: {
