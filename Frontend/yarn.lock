@@ -4883,13 +4883,6 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immutable-ops@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/immutable-ops/-/immutable-ops-0.5.2.tgz#3803d9bc65821bf4aaedf2f3542ec8714b73646a"
-  integrity sha1-OAPZvGWCG/Sq7fLzVC7IcUtzZGo=
-  dependencies:
-    ramda "^0.22.1"
-
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -8221,11 +8214,6 @@ raf@3.4.1:
   dependencies:
     performance-now "^2.1.0"
 
-ramda@^0.22.1:
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.22.1.tgz#031da0c3df417c5b33c96234757eb37033f36a0e"
-  integrity sha1-Ax2gw99BfFszyWI0dX6zcDPzag4=
-
 randomatic@^3.0.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-3.1.1.tgz#b776efc59375984e36c537b2f51a1f0aff0da1ed"
@@ -8623,16 +8611,6 @@ recursive-readdir@2.2.2:
   dependencies:
     minimatch "3.0.4"
 
-redux-orm@^0.12.2:
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/redux-orm/-/redux-orm-0.12.2.tgz#cc6c16f387c0f65f66aee8b8d53f1ecc933a9164"
-  integrity sha512-Hm4OPqseqB4WFw7DNCIOHhHNvcpOSwCBxBLOmchwqqq3XqCFldyAG3YMv9XJsvTTugw1z4PGlNgG1hXRiBgmBg==
-  dependencies:
-    babel-runtime "^6.26.0"
-    immutable-ops "^0.5.2"
-    lodash "^4.17.10"
-    reselect "^3.0.1"
-
 redux-persist@^5.10.0:
   version "5.10.0"
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-5.10.0.tgz#5d8d802c5571e55924efc1c3a9b23575283be62b"
@@ -8863,11 +8841,6 @@ requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
-
-reselect@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/reselect/-/reselect-3.0.1.tgz#efdaa98ea7451324d092b2b2163a6a1d7a9a2147"
-  integrity sha1-79qpjqdFEyTQkrKyFjpqHXqaIUc=
 
 resolve-cwd@^2.0.0:
   version "2.0.0"
