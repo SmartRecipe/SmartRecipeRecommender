@@ -6,6 +6,11 @@ export const appConstants = {
     appTitle: "Smart Recipe Recommender",
 };
 
+// constants related to in-memory ORM models 
+export const ormConstants = {
+    nameIngredientModel: 'Ingredient',
+}
+
 // properties of items in the navigation menu
 export const menuItemProps = {
     recipesMenu : {
@@ -35,6 +40,20 @@ export const actionsSignIn = {
     pending: "ACTION_SIGN_IN_PENDING",
     success: "ACTION_SIGN_IN_SUCCESS",
     signout: "ACTION_SIGN_OUT",
+};
+
+// constants related to ingredient actions
+export const actionsIngredients = {
+    add: "ACTION_ADD_INGREDIENT",
+    delete: "ACTION_DELETE_INGREDIENT",
+    update: "ACTION_UPDATE_INGREDIENT",
+};
+
+// constants related to recipe actions
+export const actionsRecipes = {
+    add: "ACTION_ADD_RECIPE",
+    delete: "ACTION_DELETE_RECIPE",
+    update: "ACTION_UPDATE_RECIPE",
 };
 
 // constants related to navigation reducer
