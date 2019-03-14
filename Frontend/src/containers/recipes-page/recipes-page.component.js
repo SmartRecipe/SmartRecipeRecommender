@@ -23,11 +23,22 @@ class RecipesPageContainer extends Component {
 
     this.state = {
       showDialog: false,
+      recipe: {
+        name: '',
+        short_description: '',
+        description: '',
+        ingredients: [],
+      },
     };
 
     this.onDialogClosed = this.onDialogClosed.bind(this);
     this.onDialogSubmit = this.onDialogSubmit.bind(this);
+    this.onDialogFormChange = this.onDialogFormChange.bind(this);
     this.onAddButtonClicked = this.onAddButtonClicked.bind(this);
+    this.onFormIngredientAdded = this.onFormIngredientAdded.bind(this);
+    this.onFormIngredientDeleted = this.onFormIngredientDeleted.bind(this);
+    this.onRecipeEditButtonClicked = this.onRecipeEditButtonClicked.bind(this);
+    this.onRecipeDeleteButtonClicked = this.onRecipeDeleteButtonClicked.bind(this);
   }
 
   onAddButtonClicked() {
@@ -48,6 +59,107 @@ class RecipesPageContainer extends Component {
     this.props.addRecipe(recipe);
   }
 
+  onDialogFormChange(e) {
+    e.preventDefault();
+
+    const { target } = e;
+
+    switch (target.id) {
+      case 'title':
+        this.setState({
+          recipe: {
+            ...this.state.recipe,
+            name: target.value,
+          }
+        });
+        break;
+      case 'short_description':
+        this.setState({
+          recipe: {
+            ...this.state.recipe,
+            short_description: target.value,
+          }
+        });
+        break;
+      case 'description':
+        this.setState({
+          recipe: {
+            ...this.state.recipe,
+            description: target.value,
+          }
+        });
+        break;
+    }
+  }
+
+  onFormIngredientAdded(e) {
+    const { 
+      ingredients: currentIngredients,
+    } = this.state.recipe;
+
+    const {
+      allIngredients
+    } = this.props;
+
+    const id = e.target.value;
+
+    for (var i = 0; i < currentIngredients.length; i++) {
+      if (currentIngredients[i].id == id) {
+        return
+      }
+    }
+
+    this.setState(state => {
+      const ingredients = [...state.recipe.ingredients];
+
+      let chipToAdd = {
+        id: id,
+      };
+
+      for (var i = 0; i < allIngredients.length; i++) {
+        if (allIngredients[i].id == id) {
+          chipToAdd = allIngredients[i];
+        }
+      }
+
+      ingredients.push(chipToAdd);
+      return {
+        recipe: {
+          ...state.recipe,
+          ingredients,
+        } 
+      };
+    });
+  }
+
+  onFormIngredientDeleted(data) {
+    this.setState(state => {
+      const ingredients = [...state.recipe.ingredients];
+      const chipToDelete = ingredients.indexOf(data);
+      ingredients.splice(chipToDelete, 1);
+      return { 
+        ...state,
+        recipe: {
+          ...state.recipe,
+          ingredients, 
+        }
+      };
+    });
+  }
+
+  onRecipeEditButtonClicked(id) {
+    const recipe = this.props.recipes.filter((recipe) => recipe.id == id);
+
+    this.setState({
+      showDialog: true,
+      recipe: recipe[0],
+    });
+  }
+
+  onRecipeDeleteButtonClicked(id) {
+
+  }
+
   getRecipesGrid(recipes) {
     const totalRecipes = recipes.length;
 
@@ -63,14 +175,18 @@ class RecipesPageContainer extends Component {
       for (var j = i*GRID_ROW_SIZE; j < end; j++) {
         const currentRecipe = recipes[j];
         if ((currentRecipe !== undefined) && (currentRecipe !== null)) {
-          const { id, name, short_description, description } = currentRecipe;
+          const { id, name, short_description, description, ingredients } = currentRecipe;
           cols.push(
             <Grid key={"recipe_item_" + j} item sm>
               <RecipeCardComponent
+                id={id}
                 key={id}
                 title={name}
-                shortDescription={short_description}
                 description={description}
+                ingredients={ingredients}
+                shortDescription={short_description}
+                onEditButtonClicked={this.onRecipeEditButtonClicked}
+                onDeleteButtonClicked={this.onRecipeDeleteButtonClicked}
               />
             </Grid>);
         }
@@ -82,7 +198,7 @@ class RecipesPageContainer extends Component {
   }
 
   render() {
-    const { showDialog } = this.state;
+    const { showDialog, recipe } = this.state;
 
     const { classes, recipes } = this.props;
 
@@ -96,7 +212,14 @@ class RecipesPageContainer extends Component {
             <AddIcon />
           </Fab>
           {
-            <AddRecipeDialog open={showDialog} onClose={this.onDialogClosed} onSubmit={this.onDialogSubmit} onFormChange={this.onFormChange}/>
+            <AddRecipeDialog 
+              open={showDialog} 
+              onClose={this.onDialogClosed} 
+              onSubmit={this.onDialogSubmit} 
+              onFormChange={this.onDialogFormChange}
+              onIngredientAdded={this.onFormIngredientAdded}
+              onIngredientDeleted={this.onFormIngredientDeleted}
+              recipe={recipe}/>
           }
           {
             recipesGrid
@@ -131,6 +254,7 @@ RecipesPageContainer.propTypes = {
 const mapStateToProps = state => ({
   recipes: state.recipesReducer.recipes,
   currentRoute: state.navigationReducer.currentRoute,
+  allIngredients: state.ingredientsReducer.ingredients,
 });
 
 
