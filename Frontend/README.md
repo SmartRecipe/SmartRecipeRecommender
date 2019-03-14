@@ -7,7 +7,7 @@ A simple single page responsive application developed using React for Smart Reci
 * React 16+
 * React Redux 
 * React Router v4
-* React Bootstrap
+* React Material
 
 ## API Requirements
 
