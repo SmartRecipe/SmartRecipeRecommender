@@ -62,6 +62,15 @@ export const actionsNavigation = {
     navigateTo: "ACTION_NAVIGATE_TO",
 };
 
+export const ingredientUnits = [
+    { id: 1, val: 'lbs.' }, 
+    { id: 2, val: 'oz.' }, 
+    { id: 3, val: 'kg.' }, 
+    { id: 4, val: 'gms.' },
+    { id: 5, val: 'ct.' },
+    { id: 6, val: 'pc.' },
+];
+
 export const sampleRecipe = {
     name: "Shrimp and Chorizo Paella", 
     description: "Method: \
