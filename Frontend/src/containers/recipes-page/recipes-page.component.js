@@ -12,10 +12,11 @@ import { addRecipe } from '../../actions/recipes-page/recipes-page.actions';
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
 
+// Row size of recipe grid
 const GRID_ROW_SIZE = 4;
 
 /**
- * Container for recipes page
+ * Main Container for recipes page. 
  */
 class RecipesPageContainer extends Component {
   constructor(props) {
@@ -41,24 +42,43 @@ class RecipesPageContainer extends Component {
     this.onRecipeDeleteButtonClicked = this.onRecipeDeleteButtonClicked.bind(this);
   }
 
+  /**
+   * When 'add new recipe' button is clicked
+   * @return
+   */
   onAddButtonClicked() {
     this.setState({
       showDialog: true,
     });
-  }
+  } 
 
+  /**
+   * When new recipe dialog is closed
+   * @return
+   */
   onDialogClosed() {
     this.setState({
       showDialog: false,
     });
   }
 
+  /**
+   * Handles subimitting recipe form
+   * @param  {Object} e      Event
+   * @param  {Object} recipe New recipe to add
+   * @return
+   */
   onDialogSubmit(e, recipe) {
     this.onDialogClosed();
 
     this.props.addRecipe(recipe);
   }
 
+  /**
+   * Handles changes on new 'recipe' form
+   * @param  {Object} e Event
+   * @return
+   */
   onDialogFormChange(e) {
     e.preventDefault();
 
@@ -92,6 +112,10 @@ class RecipesPageContainer extends Component {
     }
   }
 
+  /**
+   * Handles new ingredient added in a recipe form
+   * @param  {Object} e event
+   */
   onFormIngredientAdded(e) {
     const { 
       ingredients: currentIngredients,
@@ -132,6 +156,10 @@ class RecipesPageContainer extends Component {
     });
   }
 
+  /**
+   * Handles event when ingredient is deleted from a recipe
+   * @param  {Object} data Ingredient data
+   */
   onFormIngredientDeleted(data) {
     this.setState(state => {
       const ingredients = [...state.recipe.ingredients];
@@ -147,6 +175,10 @@ class RecipesPageContainer extends Component {
     });
   }
 
+  /**
+   * Handles click on 'Edit' button on 'recipe' card
+   * @param  {Object} id Id of the recipe clicked
+   */
   onRecipeEditButtonClicked(id) {
     const recipe = this.props.recipes.filter((recipe) => recipe.id == id);
 
@@ -160,6 +192,11 @@ class RecipesPageContainer extends Component {
 
   }
 
+  /**
+   * Generates a grid of specified size out of 
+   * all recipe components available in the store.
+   * @param  {Array} recipes List of recipes
+   */
   getRecipesGrid(recipes) {
     const totalRecipes = recipes.length;
 
