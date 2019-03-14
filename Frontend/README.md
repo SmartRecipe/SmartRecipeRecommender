@@ -15,8 +15,8 @@ A simple single page responsive application developed using React for Smart Reci
 
 New users create their accounts using this API. Requires backend server to accepet following arguments.
 
-* email
-* password
+* email : String
+* password : String
 
 Sign Up results in creating a new account and signing in the new user at the same time.
 
@@ -24,10 +24,28 @@ Sign Up results in creating a new account and signing in the new user at the sam
 
 Existing users sign in to the application using this API. Requires backend server to accepet following arguments.
 
-* email
-* password 
+* email : String
+* password  : String
 
 The server should return the status of the request along with a unique user id and a session id when Sign In succeeds.
+
+### Ingredient API
+
+Ingredient is the most basic data in the application. Most logic revolves around a list of ingredients of a user. Each ingredient comprises of following fields.
+
+* id : String
+* name : String
+* qty : String
+* unit : String
+
+### Recipe API
+
+A recipe is made of following fields.
+
+* name : String
+* short_description : String
+* description : String
+* ingredients : List(Ingredient)
 
 ## Installation & Usage
 
