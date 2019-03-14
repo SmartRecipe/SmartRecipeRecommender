@@ -132,8 +132,8 @@ const styles = theme => ({
     paddingTop: '56.25%', // 16:9
   },
   divider: {
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 15,
+    marginBottom: 15,
   },
   actions: {
     display: 'flex',
