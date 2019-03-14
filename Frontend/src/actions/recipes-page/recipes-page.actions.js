@@ -9,9 +9,16 @@ import { actionsRecipes } from '../../utils/app.constants';
  */
 export function addRecipe(recipe) {
   function add(recipe) {
+    let id = uuidv1();
+
+
+    if (recipe.id) {
+      id = recipe.id;
+    }
+
     recipe = {
       ...recipe,
-      id: uuidv1(),
+      id: id,
     }
 
     return { type: actionsRecipes.add, recipe: recipe };
