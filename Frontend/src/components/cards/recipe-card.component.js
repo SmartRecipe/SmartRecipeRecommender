@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
+import Divider from '@material-ui/core/Divider';
 import MenuItem from '@material-ui/core/MenuItem';
 import Collapse from '@material-ui/core/Collapse';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -21,6 +22,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import IngredientChipsComponent from '../chips/ingredient-chips.component.js'
+
 
 class RecipeCardComponent extends React.Component {
   constructor(props) {
@@ -44,9 +48,13 @@ class RecipeCardComponent extends React.Component {
       classes, 
       avatar,
       date,
+      id,
       title,
       shortDescription,
       description,
+      ingredients,
+      onEditButtonClicked,
+      onDeleteButtonClicked,
     } = this.props;
 
     const { 
@@ -79,10 +87,10 @@ class RecipeCardComponent extends React.Component {
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
-          <IconButton aria-label="Edit">
+          <IconButton aria-label="Edit" onClick={() => onEditButtonClicked(id)}>
             <EditIcon />
           </IconButton>
-          <IconButton aria-label="Delete">
+          <IconButton aria-label="Delete" onClick={() => onDeleteButtonClicked(id)}>
             <DeleteIcon />
           </IconButton>
           <IconButton aria-label="Share">
@@ -103,6 +111,8 @@ class RecipeCardComponent extends React.Component {
         {/* Collapse Details */}
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
+            <IngredientChipsComponent onDelete={undefined} ingredients={ingredients} />
+            <Divider className={classes.divider}/>
             { description }
           </CardContent>
         </Collapse>
@@ -114,11 +124,16 @@ class RecipeCardComponent extends React.Component {
 const styles = theme => ({
   card: {
     maxWidth: 400,
+    minHeight: 196,
     margin: 10,
   },
   media: {
     height: 0,
     paddingTop: '56.25%', // 16:9
+  },
+  divider: {
+    marginTop: 5,
+    marginBottom: 5,
   },
   actions: {
     display: 'flex',
@@ -143,49 +158,3 @@ RecipeCardComponent.propTypes = {
 };
 
 export default withStyles(styles)(RecipeCardComponent);
-
-
-/***
-          onMenuOpened(e) {
-    this.setState({ 
-        anchorEl: e.currentTarget,
-    });
-  }
-
-  onMenuClosed() {
-    this.setState({ 
-        anchorEl: null, 
-    });
-  }
-
-  const options = [
-  'Delete',
-];
-
-const ITEM_HEIGHT = 48;
-
-        <Menu
-          open={open}
-          id="long-menu"
-          anchorEl={anchorEl}
-          onClose={this.onMenuClosed}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: 200,
-            },
-          }}
-        >
-          {options.map(option => (
-            <MenuItem key={option} selected={option === 'Pyxis'} onClick={this.onMenuClosed}>
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-
-          action={
-            <IconButton aria-owns={open ? 'long-menu' : undefined} onClick={this.onMenuOpened}>
-              <MoreVertIcon />
-            </IconButton>
-          }
-***/
