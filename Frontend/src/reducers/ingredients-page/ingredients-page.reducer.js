@@ -10,12 +10,17 @@ import { actionsIngredients } from '../../utils/app.constants';
 export default function ingredientsReducer(state = initialState, action = {}) {
   switch (action.type) {
     case actionsIngredients.add:
+      const { ingredients } = state;
+
+      const payloadIngredientId = action.ingredient.id;
+
+      const remainingIngredients = ingredients.filter((ingredient) => ingredient.id != payloadIngredientId)
+
+      remainingIngredients.push(action.ingredient);
+
       return {
         ...state,
-        ingredients: [
-            ...state.ingredients,
-            action.ingredient,
-        ],
+        ingredients: remainingIngredients,
       };
 
     default:
