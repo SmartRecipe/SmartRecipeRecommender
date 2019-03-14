@@ -15,7 +15,7 @@ export default function recipesReducer(state = initialState, action = {}) {
 
       const payloadRecipeId = action.recipe.id;
 
-      const remainingRecipes = recipes.filter((recipe) => recipe.id != payloadRecipeId)
+      const remainingRecipes = recipes.filter((recipe) => recipe.id !== payloadRecipeId)
 
       remainingRecipes.push(action.recipe);
 
