@@ -11,12 +11,17 @@ export default function recipesReducer(state = initialState, action = {}) {
 
  switch (action.type) {
     case actionsRecipes.add:
+      const { recipes } = state;
+
+      const payloadRecipeId = action.recipe.id;
+
+      const remainingRecipes = recipes.filter((recipe) => recipe.id != payloadRecipeId)
+
+      remainingRecipes.push(action.recipe);
+
       return {
         ...state,
-        recipes: [
-            ...state.recipes,
-            action.recipe,
-        ],
+        recipes: remainingRecipes,
       };
 
     default:
