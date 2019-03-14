@@ -8,19 +8,22 @@ import { actionsIngredients } from '../../utils/app.constants';
  * @return 
  */
 export function addIngredient(ingredient={}) {
-  function add() {
+  function add(ingredient) {
+    let id = uuidv1();
 
-    const ingredient = {
-        id: uuidv1(),
-        name: 'ingredient 1',
-        qty: 10,
-        unit: 'gms',
-    };
+    if (ingredient.id) {
+      id = ingredient.id;
+    }
+
+    ingredient = {
+      ...ingredient,
+      id: id,
+    }
 
     return { type: actionsIngredients.add, ingredient };
   }
 
   return (dispatch) => {
-    dispatch(add());
+    dispatch(add(ingredient));
   };
 }
