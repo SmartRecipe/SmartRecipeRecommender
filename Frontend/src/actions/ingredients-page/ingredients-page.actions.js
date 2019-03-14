@@ -3,12 +3,13 @@ import uuidv1 from 'uuid/v1';
 import { actionsIngredients } from '../../utils/app.constants';
 
 /**
- * Populates state information when user navigates to another page
- * @param  {string} route    Route to navigate to
+ * Add new ingredient to Redux store
+ * @param  {Object} ingredient  Ingredient to add
  * @return 
  */
-export function addIngredient() {
+export function addIngredient(ingredient={}) {
   function add() {
+
     const ingredient = {
         id: uuidv1(),
         name: 'ingredient 1',
