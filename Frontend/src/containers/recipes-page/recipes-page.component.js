@@ -109,6 +109,8 @@ class RecipesPageContainer extends Component {
           }
         });
         break;
+      default:
+        break;
     }
   }
 
@@ -128,7 +130,7 @@ class RecipesPageContainer extends Component {
     const id = e.target.value;
 
     for (var i = 0; i < currentIngredients.length; i++) {
-      if (currentIngredients[i].id == id) {
+      if (currentIngredients[i].id === id) {
         return
       }
     }
@@ -141,7 +143,7 @@ class RecipesPageContainer extends Component {
       };
 
       for (var i = 0; i < allIngredients.length; i++) {
-        if (allIngredients[i].id == id) {
+        if (allIngredients[i].id === id) {
           chipToAdd = allIngredients[i];
         }
       }
@@ -180,7 +182,7 @@ class RecipesPageContainer extends Component {
    * @param  {Object} id Id of the recipe clicked
    */
   onRecipeEditButtonClicked(id) {
-    const recipe = this.props.recipes.filter((recipe) => recipe.id == id);
+    const recipe = this.props.recipes.filter((recipe) => recipe.id === id);
 
     this.setState({
       showDialog: true,
@@ -209,7 +211,7 @@ class RecipesPageContainer extends Component {
       let end = (i+1)*GRID_ROW_SIZE;
       end = (totalRecipes < end) ? totalRecipes : end; 
       let cols = []
-      for (var j = i*GRID_ROW_SIZE; j < end; j++) {
+      for (var j = start; j < end; j++) {
         const currentRecipe = recipes[j];
         if ((currentRecipe !== undefined) && (currentRecipe !== null)) {
           const { id, name, short_description, description, ingredients } = currentRecipe;
@@ -276,11 +278,10 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: 24,
     position: 'fixed',
     bottom: 0,
     right: 0,
-    margin: 24,
   },
 });
 

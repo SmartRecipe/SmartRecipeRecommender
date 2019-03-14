@@ -82,6 +82,8 @@ class IngredientsPageContainer extends Component {
           }
         });
         break;
+      default:
+        break;
     }
   }
 
@@ -99,7 +101,7 @@ class IngredientsPageContainer extends Component {
   }
 
   onEditIngredientButtonClicked(id) {
-    const ingredient = this.props.allIngredients.filter((ingredient) => ingredient.id == id);
+    const ingredient = this.props.allIngredients.filter((ingredient) => ingredient.id === id);
 
     console.log();
 
@@ -123,7 +125,7 @@ class IngredientsPageContainer extends Component {
       let end = (i+1)*GRID_ROW_SIZE;
       end = (totalIngredients < end) ? totalIngredients : end; 
       let cols = []
-      for (var j = i*GRID_ROW_SIZE; j < end; j++) {
+      for (var j = start; j < end; j++) {
         const currentIngredient = ingredients[j];
         if ((currentIngredient !== undefined) && (currentIngredient !== null)) {
           cols.push(
@@ -186,11 +188,10 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: 24,
     position: 'fixed',
     bottom: 0,
     right: 0,
-    margin: 24,
   },
 });
 

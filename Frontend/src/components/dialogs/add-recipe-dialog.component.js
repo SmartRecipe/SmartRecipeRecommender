@@ -2,31 +2,39 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 
-import { sampleRecipe } from '../../utils/app.constants';
 import EditRecipeFormComponent from '../forms/edit-recipe-form.component';
 
+/**
+ * Dialog which contains 'Edit Recipe' form
+ */
 class AddRecipeDialog extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       recipe: {
-        name: sampleRecipe.name,
-        short_description: sampleRecipe.shortDescription,
-        description: sampleRecipe.description,
-        ingredients: sampleRecipe.ingredients,
+        name: '',
+        short_description: '',
+        description: '',
+        ingredients: '',
       },
     }
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
-  
+
+  /**
+   * Handles onSubmit event of the recipe form
+   * Uses a callback function from the parent component 
+   * @param  {Object} e               Event
+   * @param  {Object} recipe      Recipe to edit / add
+   * @param  {Function} nextFunction  Callback from parent component
+   * @return 
+   */
   onFormSubmit(e, recipe, nextFunction) {
     // callback from parent component
     nextFunction(e, recipe);

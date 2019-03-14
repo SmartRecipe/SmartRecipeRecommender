@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
-import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 import Divider from '@material-ui/core/Divider';
-import MenuItem from '@material-ui/core/MenuItem';
 import Collapse from '@material-ui/core/Collapse';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -20,12 +17,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import IngredientChipsComponent from '../chips/ingredient-chips.component.js'
 
-
+/**
+ * Generic Card component to show recipe information
+ */
 class RecipeCardComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -46,8 +44,6 @@ class RecipeCardComponent extends React.Component {
   render() {
     const { 
       classes, 
-      avatar,
-      date,
       id,
       title,
       shortDescription,

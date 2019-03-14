@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
+import { withStyles } from '@material-ui/core/styles';
 
+/**
+ * Chip component to show ingredients associated with a recipe as a list of items
+ */
 class IngredientChipsComponent extends React.Component {
 
   render() {

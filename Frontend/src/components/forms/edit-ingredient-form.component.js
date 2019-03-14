@@ -1,20 +1,15 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Input from '@material-ui/core/Input';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
-import NativeSelect from '@material-ui/core/NativeSelect';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import { ingredientUnits } from '../../utils/app.constants';
 
 /**
- * Generic form component used as sign in / sign up form
+ * Generic form component used as 'Edit ingredient' / 'Add new ingredient'
  */
 class EditIngredientFormComponent extends Component {
   render() {

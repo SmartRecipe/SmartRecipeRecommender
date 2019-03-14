@@ -32,7 +32,6 @@ class MenuComponent extends React.Component {
   render() {
     const { 
       open,
-      title,
       theme,
       classes,
       onDrawerOpen,
