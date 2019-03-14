@@ -20,6 +20,7 @@ class IngredientChipsComponent extends React.Component {
                 label={data.name}
                 onDelete={(handleDelete !== undefined) ? () => handleDelete(data) : undefined}
                 className={classes.chip}
+                color={(handleDelete !== undefined) ? "primary" : undefined}
               />
             );
           })
