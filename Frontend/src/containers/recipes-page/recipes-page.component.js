@@ -130,7 +130,7 @@ class RecipesPageContainer extends Component {
     const id = e.target.value;
 
     for (var i = 0; i < currentIngredients.length; i++) {
-      if (currentIngredients[i].id === id) {
+      if (currentIngredients[i].id == id) {
         return
       }
     }
@@ -143,7 +143,7 @@ class RecipesPageContainer extends Component {
       };
 
       for (var i = 0; i < allIngredients.length; i++) {
-        if (allIngredients[i].id === id) {
+        if (allIngredients[i].id == id) {
           chipToAdd = allIngredients[i];
         }
       }

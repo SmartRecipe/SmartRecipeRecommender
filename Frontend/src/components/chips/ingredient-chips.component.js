@@ -11,6 +11,8 @@ class IngredientChipsComponent extends React.Component {
   render() {
     const { classes, ingredients, handleDelete } = this.props;
 
+    console.log('Received new ingredients', ingredients);
+
     return ( 
       <div>
         {
