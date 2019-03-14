@@ -19,11 +19,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 class IngredientCardComponent extends Component {
   render(){
 
-    const { 
+    const {
+      id,
       title, 
       classes,
-      description, 
+      qty,
+      unit,
+      onEditButtonClicked,
     } = this.props;
+
+    const description = `${qty} ${unit}`;
     
     return (
       <Card className={classes.card}>
@@ -32,12 +37,12 @@ class IngredientCardComponent extends Component {
             {title}        
           </Typography>
           <Typography component="p">
-            Small Description
+            {description}
           </Typography>
         </CardContent>
 
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Edit">
+          <IconButton aria-label="Edit" onClick={() => onEditButtonClicked(id)}>
             <EditIcon />
           </IconButton>
           <IconButton aria-label="Delete">
