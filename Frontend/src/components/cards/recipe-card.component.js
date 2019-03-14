@@ -56,6 +56,11 @@ class RecipeCardComponent extends React.Component {
     const { 
       expanded,
     } = this.state;
+
+    let avatar = 'R'
+    if (title) {
+      avatar = title[0];
+    }
     
 
     return (
@@ -64,7 +69,7 @@ class RecipeCardComponent extends React.Component {
         <CardHeader
           avatar={
             <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
+              {avatar}
             </Avatar>
           }
           title={ title }
