@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import { appConstants } from '../../utils/app.constants';
+
+import IngredientChipsComponent from '../chips/ingredient-chips.component.js'
+
 
 /**
  * Generic form component used as sign in / sign up form
@@ -16,10 +22,12 @@ import { appConstants } from '../../utils/app.constants';
 class EditRecipeFormComponent extends Component {
   render() {
     const { 
-      classes,
       recipe, // recipe 
+      classes,
       onSubmit, // submit function passed from parent component
       onFormChange, // callback for handling updates in the form
+      onIngredientAdded, // when user adds a new ingredient to the recipe
+      onIngredientDeleted, // when user deletes an ingredient
     } = this.props;
 
     let title = '', shortDescription = '', description = '', ingredients = []; 
@@ -30,7 +38,7 @@ class EditRecipeFormComponent extends Component {
       description = recipe.description;
       ingredients = recipe.ingredients;
     }
-
+    
     return (
       <div>
         <Typography component="h6" variant="h5">
@@ -48,6 +56,30 @@ class EditRecipeFormComponent extends Component {
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="Description">Description</InputLabel>
             <Input name="description" id="description" value={description} onChange={onFormChange} multiline rows='5' rowsMax='10' autoComplete="description" />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <IngredientChipsComponent ingredients={ingredients} handleDelete={onIngredientDeleted}/>
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="ingredient">Add Ingredient</InputLabel>
+            <Select
+              native
+              id='ingredient-dropdown'
+              onClick={(e) => onIngredientAdded(e)}
+              inputProps={{
+                name: 'Ingredient',
+                id: 'ingredient',
+              }}
+            >
+              <option value="" />
+                {
+                  this.props.allIngredients.map(data => {
+                    return (
+                      <option key={data.id} value={data.id}>{data.name}</option>
+                    );
+                  })
+              }
+            </Select>
           </FormControl>
         </form>
       </div>
@@ -86,4 +118,12 @@ EditRecipeFormComponent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EditRecipeFormComponent);
+const mapStateToProps = state => ({
+  allIngredients: state.ingredientsReducer.ingredients,
+});
+
+
+const mapDispatchToProps = dispatch => ({});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EditRecipeFormComponent));
