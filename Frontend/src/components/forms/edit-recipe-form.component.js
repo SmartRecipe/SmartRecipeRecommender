@@ -33,7 +33,7 @@ class EditRecipeFormComponent extends Component {
     let title = '', shortDescription = '', description = '', ingredients = []; 
     
     if (recipe !== null && recipe !== undefined && recipe) {
-      title = recipe.title;
+      title = recipe.name;
       shortDescription = recipe.short_description; 
       description = recipe.description;
       ingredients = recipe.ingredients;
