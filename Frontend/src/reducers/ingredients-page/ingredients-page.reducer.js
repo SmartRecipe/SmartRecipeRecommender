@@ -14,7 +14,7 @@ export default function ingredientsReducer(state = initialState, action = {}) {
 
       const payloadIngredientId = action.ingredient.id;
 
-      const remainingIngredients = ingredients.filter((ingredient) => ingredient.id != payloadIngredientId)
+      const remainingIngredients = ingredients.filter((ingredient) => ingredient.id !== payloadIngredientId)
 
       remainingIngredients.push(action.ingredient);
 
