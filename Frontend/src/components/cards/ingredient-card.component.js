@@ -55,8 +55,8 @@ class IngredientCardComponent extends Component {
 const styles = {
   card: {
     margin: 5,
-    minWidth: 150,
-    maxWidth: 150,
+    width: '100%',  
+    maxWidth: '100%',
     minHeight: '100%',
   },
   bullet: {
