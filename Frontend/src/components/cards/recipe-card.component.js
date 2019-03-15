@@ -83,6 +83,15 @@ class RecipeCardComponent extends React.Component {
           </Typography>
         </CardContent>
 
+        {/* Collapse Details */}
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <IngredientChipsComponent onDelete={undefined} ingredients={ingredients} />
+            <Divider className={classes.divider}/>
+            { description }
+          </CardContent>
+        </Collapse>
+
         {/* Card Footer */}
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Add to favorites">
@@ -108,15 +117,6 @@ class RecipeCardComponent extends React.Component {
             <ExpandMoreIcon />
           </IconButton>
         </CardActions>
-
-        {/* Collapse Details */}
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <IngredientChipsComponent onDelete={undefined} ingredients={ingredients} />
-            <Divider className={classes.divider}/>
-            { description }
-          </CardContent>
-        </Collapse>
       </Card>
     );
   }
@@ -124,9 +124,9 @@ class RecipeCardComponent extends React.Component {
 
 const styles = theme => ({
   card: {
+    margin: 5,
     maxWidth: 400,
-    minHeight: 196,
-    margin: 10,
+    minHeight: '100%',
   },
   media: {
     height: 0,
