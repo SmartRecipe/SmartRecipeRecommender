@@ -232,7 +232,6 @@ class RecipesPageContainer extends Component {
             key={"recipe_item_" + i} 
             xs={12} sm={6} md={4} lg={3} xl={3}>
             <RecipeCardComponent
-              id={currentRecipe.id}
               key={currentRecipe.id}
               recipe={currentRecipe}
               onCardViewed={this.onCardViewed}

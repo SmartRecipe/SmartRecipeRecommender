@@ -101,8 +101,6 @@ class IngredientsPageContainer extends Component {
   onEditIngredientButtonClicked(id) {
     const ingredient = this.props.allIngredients.filter((ingredient) => ingredient.id === id);
 
-    console.log();
-
     this.setState({
       ...this.state,
       showDialog: true,
@@ -133,11 +131,8 @@ class IngredientsPageContainer extends Component {
             alignItems="center"
             xs={6} sm={4} md={3} lg={2} xl={1}>
             <IngredientCardComponent
-              id={currentIngredient.id}
               key={currentIngredient.id}
-              title={currentIngredient.name}
-              qty={currentIngredient.qty}
-              unit={currentIngredient.unit}
+              ingredient={currentIngredient}
               onEditButtonClicked={this.onEditIngredientButtonClicked}
             />
           </Grid>);

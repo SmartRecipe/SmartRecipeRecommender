@@ -18,13 +18,17 @@ class IngredientCardComponent extends Component {
   render(){
 
     const {
-      id,
-      title, 
       classes,
-      qty,
-      unit,
+      ingredient,
       onEditButtonClicked,
     } = this.props;
+
+    const {
+      id,
+      name: title,
+      qty, 
+      unit,
+    } = ingredient;
 
     const description = `${qty} ${unit}`;
     
