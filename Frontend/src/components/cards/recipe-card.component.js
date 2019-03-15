@@ -125,7 +125,8 @@ class RecipeCardComponent extends React.Component {
 const styles = theme => ({
   card: {
     margin: 5,
-    maxWidth: 400,
+    width: '100%',
+    maxWidth: '100%',
     // minHeight: '100%',
   },
   media: {
