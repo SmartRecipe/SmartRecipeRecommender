@@ -114,37 +114,45 @@ class IngredientsPageContainer extends Component {
 
 
   getIngredientsGrid(ingredients) {
-    const totalIngredients = ingredients.length;
+    let totalIngredients = 0;
 
-    const totalRows = totalIngredients / GRID_ROW_SIZE;
+    if (ingredients) {
+      totalIngredients = ingredients.length;
+    } 
 
-    let rows = []
+    let ingredientItemComponents = [];
 
-    for (var i = 0; i < totalRows; i++) {
-      const start = i*GRID_ROW_SIZE;
-      let end = (i+1)*GRID_ROW_SIZE;
-      end = (totalIngredients < end) ? totalIngredients : end; 
-      let cols = []
-      for (var j = start; j < end; j++) {
-        const currentIngredient = ingredients[j];
-        if ((currentIngredient !== undefined) && (currentIngredient !== null)) {
-          cols.push(
-            <Grid key={j} item xs>
-              <IngredientCardComponent
-                id={currentIngredient.id}
-                key={currentIngredient.id}
-                title={currentIngredient.name}
-                qty={currentIngredient.qty}
-                unit={currentIngredient.unit}
-                onEditButtonClicked={this.onEditIngredientButtonClicked}
-              />
-            </Grid>);
-        }
+    for (var i = 0; i < totalIngredients; i++) {
+      const currentIngredient = ingredients[i];
+      if ((currentIngredient !== undefined) && (currentIngredient !== null)) {
+        ingredientItemComponents.push(
+          <Grid 
+            item
+            key={i} 
+            container
+            spacing={0}
+            justify="center"
+            alignItems="center"
+            xs={6} sm={4} md={3} lg={2} xl={1}>
+            <IngredientCardComponent
+              id={currentIngredient.id}
+              key={currentIngredient.id}
+              title={currentIngredient.name}
+              qty={currentIngredient.qty}
+              unit={currentIngredient.unit}
+              onEditButtonClicked={this.onEditIngredientButtonClicked}
+            />
+          </Grid>);
       }
-      rows.push(<Grid key={"ing_row_" + i} container spacing={8}>{cols}</Grid>);
     }
 
-    return rows;
+    return( 
+      <Grid 
+        key={"ing_row"} 
+        container 
+        spacing={8}>
+          {ingredientItemComponents}
+      </Grid>);
   }
 
   render() {
@@ -155,7 +163,7 @@ class IngredientsPageContainer extends Component {
     const ingredientsGrid = this.getIngredientsGrid(allIngredients);
 
     return (
-        <div className="card-deck-container">
+        <div className={classes.content}>
           <Fab onClick={this.onAddButtonClicked} color="primary" aria-label="Add" className={classes.fab}>
             <AddIcon />
           </Fab>
@@ -168,11 +176,9 @@ class IngredientsPageContainer extends Component {
               onUnitChange={this.onIngredientUnitChange}
               ingredient={ingredient}/>
           }
-          <div>
-            {
-              ingredientsGrid
-            }
-          </div>
+          {
+            ingredientsGrid
+          }
         </div>
     );
   }
@@ -181,6 +187,9 @@ class IngredientsPageContainer extends Component {
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  content: {
+    marginTop: '50px',
   },
   paper: {
     padding: theme.spacing.unit * 2,
