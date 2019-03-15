@@ -202,38 +202,41 @@ class RecipesPageContainer extends Component {
   getRecipesGrid(recipes) {
     const totalRecipes = recipes.length;
 
-    const totalRows = totalRecipes / GRID_ROW_SIZE;
+    let recipeItemComponents = []
 
-    let rows = []
+    for (var i = 0; i < totalRecipes; i++) {
+      const currentRecipe = recipes[i];
 
-    for (var i = 0; i < totalRows; i++) {
-      const start = i*GRID_ROW_SIZE;
-      let end = (i+1)*GRID_ROW_SIZE;
-      end = (totalRecipes < end) ? totalRecipes : end; 
-      let cols = []
-      for (var j = start; j < end; j++) {
-        const currentRecipe = recipes[j];
-        if ((currentRecipe !== undefined) && (currentRecipe !== null)) {
-          const { id, name, short_description, description, ingredients } = currentRecipe;
-          cols.push(
-            <Grid key={"recipe_item_" + j} item sm>
-              <RecipeCardComponent
-                id={id}
-                key={id}
-                title={name}
-                description={description}
-                ingredients={ingredients}
-                shortDescription={short_description}
-                onEditButtonClicked={this.onRecipeEditButtonClicked}
-                onDeleteButtonClicked={this.onRecipeDeleteButtonClicked}
-              />
-            </Grid>);
-        }
+      if ((currentRecipe !== undefined) && (currentRecipe !== null)) {
+        const { id, name, short_description, description, ingredients } = currentRecipe;
+
+        recipeItemComponents.push(
+          <Grid 
+            item 
+            container
+            justify="center"
+            alignItems="center"
+            key={"recipe_item_" + i} 
+            xs={12} sm={6} md={4} lg={3} xl={3}>
+            <RecipeCardComponent
+              id={id}
+              key={id}
+              title={name}
+              description={description}
+              ingredients={ingredients}
+              shortDescription={short_description}
+              onEditButtonClicked={this.onRecipeEditButtonClicked}
+              onDeleteButtonClicked={this.onRecipeDeleteButtonClicked}
+            />
+          </Grid>);
       }
-      rows.push(<Grid key={"ing_row_" + i} container spacing={8}>{cols}</Grid>);
     }
 
-    return rows;
+    return (
+      <Grid key={"ing_row"} container spacing={8}>
+        {recipeItemComponents}
+      </Grid>
+    );
   }
 
   render() {
@@ -246,7 +249,7 @@ class RecipesPageContainer extends Component {
     if (recipes !== undefined && recipes !== null) recipesGrid = this.getRecipesGrid(recipes);
 
     return (
-        <div className="card-deck-container">
+        <div className={classes.content}>
           <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.onAddButtonClicked}>
             <AddIcon />
           </Fab>
@@ -271,6 +274,9 @@ class RecipesPageContainer extends Component {
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  content: {
+    marginTop: '50px',
   },
   paper: {
     padding: theme.spacing.unit * 2,
