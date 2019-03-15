@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
 import red from '@material-ui/core/colors/red';
 import Divider from '@material-ui/core/Divider';
-import Collapse from '@material-ui/core/Collapse';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -17,52 +15,38 @@ import EditIcon from '@material-ui/icons/Edit';
 import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
-import IngredientChipsComponent from '../chips/ingredient-chips.component.js'
+import IngredientChipsComponent from '../chips/ingredient-chips.component';
 
 /**
  * Generic Card component to show recipe information
  */
 class RecipeCardComponent extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      expanded: false,
-    }
-
-    this.onCardExpanded = this.onCardExpanded.bind(this);
-  }
-
-  onCardExpanded() {
-    this.setState({
-      expanded: !this.state.expanded,
-    });
-  }
-
   render() {
     const { 
+      recipe,
       classes, 
-      id,
-      title,
-      shortDescription,
-      description,
-      ingredients,
+      onCardViewed,
       onEditButtonClicked,
       onDeleteButtonClicked,
     } = this.props;
 
-    const { 
-      expanded,
-    } = this.state;
+    const {
+      id,
+      name: title,
+      ingredients,
+      short_description : shortDescription,
+    } = recipe;
 
-    let avatar = 'R'
+    let avatar = 'R';
+
     if (title) {
       avatar = title[0];
     }
-    
 
+    const showIngredientChips = (ingredients.length === 0) ? false : true;
+    
     return (
       <Card className={classes.card}>
         {/* Card Top Header */}
@@ -81,19 +65,19 @@ class RecipeCardComponent extends React.Component {
           <Typography component="p">
             { shortDescription } 
           </Typography>
+          <Divider className={classes.divider}/>
+          {
+            showIngredientChips 
+            ? <IngredientChipsComponent ingredients={ingredients}/> : 
+            <Typography component="body1">No ingredients...</Typography>
+          }
         </CardContent>
-
-        {/* Collapse Details */}
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            <IngredientChipsComponent onDelete={undefined} ingredients={ingredients} />
-            <Divider className={classes.divider}/>
-            { description }
-          </CardContent>
-        </Collapse>
 
         {/* Card Footer */}
         <CardActions className={classes.actions} disableActionSpacing>
+          <IconButton aria-label="View" onClick={() => onCardViewed(id)}>
+            <VisibilityIcon />
+          </IconButton>
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
@@ -105,16 +89,6 @@ class RecipeCardComponent extends React.Component {
           </IconButton>
           <IconButton aria-label="Share">
             <ShareIcon />
-          </IconButton>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: expanded,
-            })}
-            onClick={this.onCardExpanded}
-            aria-expanded={expanded}
-            aria-label="Show more"
-          >
-            <ExpandMoreIcon />
           </IconButton>
         </CardActions>
       </Card>
