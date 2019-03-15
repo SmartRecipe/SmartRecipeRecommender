@@ -11,6 +11,9 @@ import { addRecipe } from '../../actions/recipes-page/recipes-page.actions';
 
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
+import RecipeViewComponent from '../../components/dialogs/recipe-view-dialog.component';
+
+const newRecipe = {name: '', short_description: '', description: '', ingredients: [],};
 
 /**
  * Main Container for recipes page. 
@@ -21,16 +24,14 @@ class RecipesPageContainer extends Component {
 
     this.state = {
       showDialog: false,
-      recipe: {
-        name: '',
-        short_description: '',
-        description: '',
-        ingredients: [],
-      },
+      showViewDialog: false,
+      recipe: newRecipe,
     };
 
+    this.onCardViewed = this.onCardViewed.bind(this);
     this.onDialogClosed = this.onDialogClosed.bind(this);
     this.onDialogSubmit = this.onDialogSubmit.bind(this);
+    this.onCardViewClosed = this.onCardViewClosed.bind(this);
     this.onDialogFormChange = this.onDialogFormChange.bind(this);
     this.onAddButtonClicked = this.onAddButtonClicked.bind(this);
     this.onFormIngredientAdded = this.onFormIngredientAdded.bind(this);
@@ -56,6 +57,7 @@ class RecipesPageContainer extends Component {
   onDialogClosed() {
     this.setState({
       showDialog: false,
+      recipe: newRecipe,
     });
   }
 
@@ -191,6 +193,22 @@ class RecipesPageContainer extends Component {
 
   }
 
+  onCardViewed(id) {
+    const recipe = this.props.recipes.filter((recipe) => recipe.id === id);
+
+    this.setState({
+      showViewDialog: true,
+      recipe: recipe[0],
+    });
+  }
+
+  onCardViewClosed() {
+    this.setState({
+      showViewDialog: false,
+      recipe: newRecipe, 
+    });
+  }
+
   /**
    * Generates a grid of specified size out of 
    * all recipe components available in the store.
@@ -205,8 +223,6 @@ class RecipesPageContainer extends Component {
       const currentRecipe = recipes[i];
 
       if ((currentRecipe !== undefined) && (currentRecipe !== null)) {
-        const { id, name, short_description, description, ingredients } = currentRecipe;
-
         recipeItemComponents.push(
           <Grid 
             item 
@@ -216,12 +232,10 @@ class RecipesPageContainer extends Component {
             key={"recipe_item_" + i} 
             xs={12} sm={6} md={4} lg={3} xl={3}>
             <RecipeCardComponent
-              id={id}
-              key={id}
-              title={name}
-              description={description}
-              ingredients={ingredients}
-              shortDescription={short_description}
+              id={currentRecipe.id}
+              key={currentRecipe.id}
+              recipe={currentRecipe}
+              onCardViewed={this.onCardViewed}
               onEditButtonClicked={this.onRecipeEditButtonClicked}
               onDeleteButtonClicked={this.onRecipeDeleteButtonClicked}
             />
@@ -237,7 +251,7 @@ class RecipesPageContainer extends Component {
   }
 
   render() {
-    const { showDialog, recipe } = this.state;
+    const { showDialog, showViewDialog, recipe } = this.state;
 
     const { classes, recipes } = this.props;
 
@@ -251,14 +265,20 @@ class RecipesPageContainer extends Component {
             <AddIcon />
           </Fab>
           {
-            <AddRecipeDialog 
+            <AddRecipeDialog
+              recipe={recipe}
               open={showDialog} 
               onClose={this.onDialogClosed} 
               onSubmit={this.onDialogSubmit} 
               onFormChange={this.onDialogFormChange}
               onIngredientAdded={this.onFormIngredientAdded}
-              onIngredientDeleted={this.onFormIngredientDeleted}
-              recipe={recipe}/>
+              onIngredientDeleted={this.onFormIngredientDeleted}/>
+          }
+          {
+            <RecipeViewComponent
+              recipe={recipe}
+              open={showViewDialog}
+              onClose={this.onCardViewClosed}/>
           }
           {
             recipesGrid
