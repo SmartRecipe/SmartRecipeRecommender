@@ -31,10 +31,10 @@ class IngredientCardComponent extends Component {
     return (
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant="h6" component="h2">
+          <Typography variant="title" component="p">
             {title}        
           </Typography>
-          <Typography component="p">
+          <Typography component="h5">
             {description}
           </Typography>
         </CardContent>
@@ -54,8 +54,10 @@ class IngredientCardComponent extends Component {
 
 const styles = {
   card: {
-    minWidth: 120,
-    margin: 10,
+    margin: 5,
+    minWidth: 150,
+    maxWidth: 150,
+    minHeight: '100%',
   },
   bullet: {
     display: 'inline-block',
