@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import Avatar from '@material-ui/core/Avatar';
-import red from '@material-ui/core/colors/red';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +10,16 @@ import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
+import {
+  red, blue,
+  pink, cyan,
+  teal, lime,
+  green, brown,
+  orange, purple,
+  yellow, lightGreen,
+  lightBlue, deepPurple, amber,
+} from '@material-ui/core/colors';
+
 import EditIcon from '@material-ui/icons/Edit';
 import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -18,6 +27,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import IngredientChipsComponent from '../chips/ingredient-chips.component';
+
+const avatarColors = [
+  red[500], blue[500], pink[500], cyan[500], lightBlue[500],
+  teal[500], lime[500], green[500], orange[500], purple[500],
+  brown[500], deepPurple[500], yellow[500], lightGreen[500], amber[500]
+];
 
 /**
  * Generic Card component to show recipe information
@@ -45,6 +60,8 @@ class RecipeCardComponent extends React.Component {
       avatar = title[0];
     }
 
+    const avatarColor = avatarColors[Math.floor(Math.random()*avatarColors.length)];
+
     const showIngredientChips = (ingredients.length === 0) ? false : true;
     
     return (
@@ -52,7 +69,7 @@ class RecipeCardComponent extends React.Component {
         {/* Card Top Header */}
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
+            <Avatar aria-label="Recipe" style={{ backgroundColor: avatarColor }}>
               {avatar}
             </Avatar>
           }
@@ -123,9 +140,6 @@ const styles = theme => ({
   },
   expandOpen: {
     transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: red[500],
   },
 });
 
