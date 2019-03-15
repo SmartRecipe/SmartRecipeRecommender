@@ -126,7 +126,7 @@ const styles = theme => ({
   card: {
     margin: 5,
     maxWidth: 400,
-    minHeight: '100%',
+    // minHeight: '100%',
   },
   media: {
     height: 0,
