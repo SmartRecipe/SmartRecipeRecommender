@@ -38,6 +38,22 @@ const avatarColors = [
  * Generic Card component to show recipe information
  */
 class RecipeCardComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      avatarColor: red[500],
+    }
+
+    this.avatarColor = red[500];
+  }
+
+  componentDidMount() {
+    this.setState({
+      avatarColor: avatarColors[Math.floor(Math.random()*avatarColors.length)],
+    });
+  }
+
   render() {
     const { 
       recipe,
@@ -60,8 +76,6 @@ class RecipeCardComponent extends React.Component {
       avatar = title[0];
     }
 
-    const avatarColor = avatarColors[Math.floor(Math.random()*avatarColors.length)];
-
     const showIngredientChips = (ingredients.length === 0) ? false : true;
     
     return (
@@ -69,7 +83,7 @@ class RecipeCardComponent extends React.Component {
         {/* Card Top Header */}
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" style={{ backgroundColor: avatarColor }}>
+            <Avatar aria-label="Recipe" style={{ backgroundColor: this.state.avatarColor }}>
               {avatar}
             </Avatar>
           }
