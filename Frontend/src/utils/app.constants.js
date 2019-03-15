@@ -74,7 +74,7 @@ export const ingredientUnits = [
 /* eslint-disable */
 export const sampleRecipe = {
     name: "Shrimp and Chorizo Paella", 
-    description: "Method: \
+    description: "\
  \
 Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10 \
 minutes. \
