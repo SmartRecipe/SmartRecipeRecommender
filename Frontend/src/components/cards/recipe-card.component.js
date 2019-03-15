@@ -29,9 +29,9 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import IngredientChipsComponent from '../chips/ingredient-chips.component';
 
 const avatarColors = [
-  red[500], blue[500], pink[500], cyan[500], lightBlue[500],
-  teal[500], lime[500], green[500], orange[500], purple[500],
-  brown[500], deepPurple[500], yellow[500], lightGreen[500], amber[500]
+  red[500], blue[500], pink[500], cyan[500], lightBlue[900],
+  teal[500], lime[900], green[500], orange[500], purple[500],
+  brown[500], deepPurple[500], yellow[900], lightGreen[900], amber[500]
 ];
 
 /**
