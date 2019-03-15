@@ -15,8 +15,6 @@ import { history, menuItemProps } from '../../utils/app.constants';
 import RecipesPageContainer from '../recipes-page/recipes-page.component';
 import IngredientsPageContainer from '../ingredients-page/ingredients-page.component';
 
-const drawerWidth = 240;
-
 /**
  * Main entry point for the frontend application
  */
@@ -81,9 +79,9 @@ class App extends React.Component {
     const { 
       classes,
       currentRoute,
-      isSignInFailed,
-      isSignInSuccess,
-      isSignInPending,
+      isSignInFailed,  // eslint-disable-line
+      isSignInSuccess, // eslint-disable-line
+      isSignInPending, // eslint-disable-line
     } = this.props; 
 
     const { open } = this.state;

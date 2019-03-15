@@ -71,6 +71,7 @@ export const ingredientUnits = [
     { id: 6, val: 'pc.' },
 ];
 
+/* eslint-disable */
 export const sampleRecipe = {
     name: "Shrimp and Chorizo Paella", 
     description: "Method: \
@@ -97,3 +98,4 @@ Set aside off of the heat to let rest for 10 minutes, and then serve.",
 guests. Add 1 cup of frozen peas along with the mussels, if you like.",
     ingredients: [],
 }
+/* eslint-enable */

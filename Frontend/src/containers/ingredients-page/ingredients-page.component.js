@@ -11,8 +11,6 @@ import { addIngredient } from '../../actions/ingredients-page/ingredients-page.a
 import IngredientCardComponent from '../../components/cards/ingredient-card.component';
 import AddIngredientDialog from '../../components/dialogs/add-ingredient-dialog.component';
 
-const GRID_ROW_SIZE = 5;
-
 /**
  * Main container for ingredients page
  */

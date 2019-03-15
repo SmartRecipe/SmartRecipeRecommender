@@ -12,9 +12,6 @@ import { addRecipe } from '../../actions/recipes-page/recipes-page.actions';
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
 
-// Row size of recipe grid
-const GRID_ROW_SIZE = 4;
-
 /**
  * Main Container for recipes page. 
  */
@@ -130,7 +127,7 @@ class RecipesPageContainer extends Component {
     const id = e.target.value;
 
     for (var i = 0; i < currentIngredients.length; i++) {
-      if (currentIngredients[i].id == id) {
+      if (currentIngredients[i].id == id) {   // eslint-disable-line
         return
       }
     }
@@ -143,7 +140,7 @@ class RecipesPageContainer extends Component {
       };
 
       for (var i = 0; i < allIngredients.length; i++) {
-        if (allIngredients[i].id == id) {
+        if (allIngredients[i].id == id) {   // eslint-disable-line
           chipToAdd = allIngredients[i];
         }
       }
