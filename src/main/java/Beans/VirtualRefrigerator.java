@@ -7,14 +7,15 @@ package Beans;
 
 import Databases.RecipeDatabase;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author soup
  */
 public class VirtualRefrigerator {
-    private ArrayList<Ingredient> ingredients; //List of all ingredients in user's fridge
-    private ArrayList<Recipe> cookbook; //List of user's favorite recipes
+    private List<Ingredient> ingredients; //List of all ingredients in user's fridge
+    private List<Recipe> cookbook; //List of user's favorite recipes
     private static VirtualRefrigerator instance;
     
     private VirtualRefrigerator() {
@@ -69,11 +70,10 @@ public class VirtualRefrigerator {
      * @param quantity How much of the ingredient is being added.
      * @return Boolean stating the success of the operation.
      */
-    public boolean addIngredient(String name, float quantity) {
+    public boolean addIngredient(String name, double quantity) {
         for (Ingredient ingredient : ingredients) {
             if (ingredient.getName().equalsIgnoreCase(name)) {
-                ingredient.replenish(quantity);
-                return true; //Success!
+                return ingredient.replenish(quantity);
             }
         }
         
@@ -87,13 +87,10 @@ public class VirtualRefrigerator {
      * @param quantity How much of the ingredient is being removed.
      * @return Boolean stating the success of the operation.
      */
-    public boolean removeIngredient(String name, float quantity) {
+    public boolean useIngredient(String name, double quantity) {
         for (Ingredient ingredient : ingredients) {
             if (ingredient.getName().equalsIgnoreCase(name)) {
-                if (ingredient.use(quantity))
-                    return true; //Success!
-                else
-                    return false; //Don't have enough
+            	return ingredient.use(quantity);
             }
         }
         
@@ -116,19 +113,21 @@ public class VirtualRefrigerator {
         return null; //Ingredient not found
     }
     
-    public ArrayList<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredientsList() {
         return ingredients;
     }
     
-    public void setIngredients(ArrayList<Ingredient> ingredients) {
+    public void setIngredientsList(List<Ingredient> ingredients) {
+    	if (ingredients == null) return;
         this.ingredients = ingredients;
     }
     
-    public ArrayList<Recipe> getCookbook() {
+    public List<Recipe> getCookbook() {
         return cookbook;
     }
     
-    public void setRecipes(ArrayList<Recipe> cookbook) {
+    public void setCookbook(List<Recipe> cookbook) {
+    	if (cookbook == null) return;
         this.cookbook = cookbook;
     }
 }

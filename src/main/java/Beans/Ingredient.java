@@ -11,37 +11,41 @@ package Beans;
  */
 public class Ingredient {
     private String name;
-    private float quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
+    private double quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
                             //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.
     private NutritionInfo nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
-    public Ingredient() { }
+    public Ingredient() { 
+    	this("", 0);
+    }
     
     public Ingredient(String name, int numOwned, NutritionInfo nutVal) {
-        this.name = name;
-        this.quantity = numOwned;
-        this.nutVal = nutVal;
+        setName(name);
+        setQuantity(numOwned);
+        setNutVal(nutVal);
+    }
+    
+    public Ingredient(String name, int numOwned) {
+        this(name, numOwned, null);
     }
     
     /**
      * Adds given quantity to the amount owned.
-     * @param quantity How much of the ingredient is being added.
+     * @param quantity How much of the ingredient is being added. (must be positive)
      */
-    public void replenish(float quantity) {
+    public boolean replenish(double quantity) {
+    	if (quantity < 0) return false;
         this.quantity += quantity;
+        return true;
     }
     
     /**
      * Subtracts given quantity from the amount owned.
-     * @param amt How much of the ingredient is being used up. (If value is -1, just uses all remaining.)
+     * @param amt How much of the ingredient is being used up (must be positive)
      * @return True if there is enough of the ingredient for the operation, false if the quantity is insufficient.
      */
-    public boolean use(float amt) {
-        if (amt == -1) {
-            quantity = 0;
-            return true;
-        }
-        else if (quantity - amt >= 0) {
+    public boolean use(double amt) {
+        if (amt > 0 && quantity - amt >= 0) {
             quantity -= amt;
             return true;
         }
@@ -57,11 +61,11 @@ public class Ingredient {
         this.name = name;
     }
     
-    public float getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
     
-    public void setQuantity(float quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
