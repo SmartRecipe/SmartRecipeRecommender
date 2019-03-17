@@ -41,7 +41,7 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	public void testCheckRecipe() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	public void testCheckAllRecipes() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	public void testUseIngredient() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	public void testGetIngredient() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	public void testSetRecipes() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }

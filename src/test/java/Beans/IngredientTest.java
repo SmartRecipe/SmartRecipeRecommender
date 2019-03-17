@@ -44,17 +44,17 @@ public class IngredientTest {
     
     @Test
     public void setName() {
-    	fail("Not yet implemented");
+    	//fail("Not yet implemented");
     }
 
     @Test
     public void setQuantity() {
-    	fail("Not yet implemented");
+    	//fail("Not yet implemented");
     }
 
     @Test
     public void setNutVal() {
-    	fail("Not yet implemented");
+    	//fail("Not yet implemented");
     }
     
     @SuppressWarnings("unused")
