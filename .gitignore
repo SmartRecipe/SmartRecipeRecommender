@@ -6,3 +6,4 @@
 build/
 gen/
 .idea/
+/target/
