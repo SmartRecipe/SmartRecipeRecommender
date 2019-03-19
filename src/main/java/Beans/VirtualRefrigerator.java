@@ -66,14 +66,59 @@ public class VirtualRefrigerator {
     
     /**
      * Adds an ingredient to the refrigerator/replenishes existing ingredient.
-     * @param name The name of the ingredient being added.
-     * @param quantity How much of the ingredient is being added.
+     * @param ingredient The ingredient being added to the fridge.
      * @return Boolean stating the success of the operation.
      */
-    public boolean addIngredient(String name, double quantity) {
-        for (Ingredient ingredient : ingredients) {
-            if (ingredient.getName().equalsIgnoreCase(name)) {
-                return ingredient.replenish(quantity);
+    public boolean addIngredient(Ingredient ingredient) {
+        //If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                return ing.replenish(ingredient.getQuantity());
+            }
+        }
+        
+        //If the ingredient isn't found in the fridge, add it manually.
+        ingredients.add(ingredient);
+        return true;
+    }
+    
+    /**
+     * Adds an ingredient to the refrigerator/replenishes existing ingredient. Overloaded version that
+     * allows for the desired quantity to be added/replenished to be included as an argument.
+     * @param ingredient The ingredient being added to the fridge.
+     * @param quantity The amount of the ingredient being added to the fridge.
+     * @return Boolean stating the success of the operation.
+     */
+    public boolean addIngredient(Ingredient ingredient, double quantity) {
+        //If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                return ing.replenish(quantity);
+            }
+        }
+        
+        //If the ingredient isn't found in the fridge, add it manually.
+        ingredient.setQuantity(quantity);
+        ingredients.add(ingredient);
+        return true;
+    }
+    
+    /**
+     * Removes a given amount of an ingredient from the refrigerator.
+     * @param ingredient The ingredient being removed.
+     * @return Boolean stating the success of the operation.
+     */
+    public boolean useIngredient(Ingredient ingredient) {
+        //Search the fridge for the given ingredient and remove the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                boolean success = ing.use(ingredient.getQuantity());
+                
+                //If the ingredient has been completely used up, remove it from the fridge.
+                if (ing.getQuantity() <= 0)
+                    ingredients.remove(ing);
+                
+                return success;
             }
         }
         
@@ -81,20 +126,36 @@ public class VirtualRefrigerator {
     }
     
     /**
-     * Removes a given amount of an ingredient from the refrigerator. If quantity is set to -1, simply
-     * removes all of the ingredient owned.
-     * @param name The name of the ingredient being removed.
-     * @param quantity How much of the ingredient is being removed.
+     * Removes a given amount of an ingredient from the refrigerator. Overloaded version that allows
+     * for the desired quantity to be removed to be included as an argument.
+     * @param ingredient The ingredient being removed from the fridge.
+     * @param quantity The amount of the ingredient being removed from the fridge.
      * @return Boolean stating the success of the operation.
      */
-    public boolean useIngredient(String name, double quantity) {
-        for (Ingredient ingredient : ingredients) {
-            if (ingredient.getName().equalsIgnoreCase(name)) {
-            	return ingredient.use(quantity);
+    public boolean useIngredient(Ingredient ingredient, double quantity) {
+        //Search the fridge for the given ingredient and remove the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                boolean success = ing.use(quantity);
+                
+                //If the ingredient has been completely used up, remove it from the fridge.
+                if (ing.getQuantity() <= 0)
+                    ingredients.remove(ing);
+                
+                return success;
             }
         }
         
         return false; //Ingredient not found
+    }
+    
+    /**
+     * Removes a given ingredient entirely from the refrigerator.
+     * @param ingredient The ingredient being removed from the fridge.
+     * @return Boolean stating the success of the operation.
+     */
+    public boolean useAll(Ingredient ingredient) {
+        return ingredients.remove(ingredient);
     }
     
     /**

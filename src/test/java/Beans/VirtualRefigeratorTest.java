@@ -66,7 +66,7 @@ public class VirtualRefigeratorTest {
 		assertEquals(2, underTest.getIngredientsList().size());
 		
 		Ingredient testIngredient = new Ingredient("testIngredeint", 5);
-		underTest.addIngredient(testIngredient.getName(), testIngredient.getQuantity());
+		underTest.addIngredient(testIngredient);
 		assertEquals(3, underTest.getIngredientsList().size());	
 		assertTrue(testList.contains(testIngredient));
 	}
@@ -84,7 +84,7 @@ public class VirtualRefigeratorTest {
 		
 		assertEquals(2, underTest.getIngredientsList().size());
 		
-		underTest.addIngredient(testList.get(0).getName(), 100);
+		underTest.addIngredient(testList.get(0), 100);
 		assertEquals(2, underTest.getIngredientsList().size());
 		assertEquals(101, testList.get(0).getQuantity(), 0);
 	}
