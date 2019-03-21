@@ -60,7 +60,7 @@
             <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -111,26 +111,23 @@
                 </executions>
             </plugin>
             <plugin>
-    <groupId>org.eluder.coveralls</groupId>
-    <artifactId>coveralls-maven-plugin</artifactId>
-    <version>4.3.0</version>
-    <configuration>
-        <repoToken>yourcoverallsprojectrepositorytoken</repoToken>
-    </configuration>
-</plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
             <plugin>
-    <groupId>org.jacoco</groupId>
-    <artifactId>jacoco-maven-plugin</artifactId>
-    <version>0.7.6.201602180812</version>
-    <executions>
-        <execution>
-            <id>prepare-agent</id>
-            <goals>
-                <goal>prepare-agent</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.6.201602180812</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
