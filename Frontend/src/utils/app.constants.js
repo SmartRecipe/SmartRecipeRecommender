@@ -7,9 +7,10 @@ export const appConstants = {
 };
 
 export const apiConstants = {
-    base_url: process.env.API_BASE_URL,
-    ingredients: 'ingredients/',
+    baseUrl: process.env.REACT_APP_API_BASE_URL,
+    users: 'users/',
     recipes: 'recipes/',
+    ingredients: 'ingredients/',
 };  
 
 // constants related to in-memory ORM models 
