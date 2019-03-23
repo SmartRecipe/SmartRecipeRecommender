@@ -23,7 +23,8 @@ Collection of users
     "users": [
         { 
             "_type": "user", 
-            "id": "", "name": "", 
+            "id": "", 
+            "name": "", 
             "email": "", 
             "password": "", 
             "salt": "", 
