@@ -8,7 +8,6 @@
  *     description : '',
  * }
  */
-import { sampleRecipe } from '../../utils/app.constants';
 
 export default {
     recipes: [
