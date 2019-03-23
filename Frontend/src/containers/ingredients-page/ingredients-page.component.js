@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import Fab from '@material-ui/core/Fab';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
+import { withStyles } from '@material-ui/core/styles';
 
-import { addIngredient } from '../../actions/ingredients-page/ingredients-page.actions';
+import { addIngredient, getIngredients } from '../../actions/ingredients-page/ingredients-page.actions';
 
 import IngredientCardComponent from '../../components/cards/ingredient-card.component';
 import AddIngredientDialog from '../../components/dialogs/add-ingredient-dialog.component';
@@ -148,6 +148,10 @@ class IngredientsPageContainer extends Component {
       </Grid>);
   }
 
+  componentDidMount() {
+    this.props.getIngredients();
+  }
+
   render() {
     const { classes, allIngredients } = this.props;
 
@@ -209,6 +213,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addIngredient: (ingredient) => dispatch(addIngredient(ingredient)),
+  getIngredients: () => dispatch(getIngredients()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(IngredientsPageContainer));
