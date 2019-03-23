@@ -1,5 +1,5 @@
 export default {
-    userId: {},
+    user: null,
     isSignInPending: false,
     isSignInFailed: false,
     isSignInSuccess: false,
