@@ -14,21 +14,20 @@ export function addRecipe(recipe) {
 
   return (dispatch) => {
     if (recipe.id) {
-      apiProxy.put(`${apiConstants.base_url}${apiConstants.recipes}${recipe.id}`, recipe, '123')
+      apiProxy.put(`${apiConstants.baseUrl}${apiConstants.recipes}${recipe.id}`, recipe, '123')
       .then((response) => {
-        return apiProxy.get(`${apiConstants.base_url}${apiConstants.recipes}`, '123');
+        return apiProxy.get(`${apiConstants.baseUrl}${apiConstants.recipes}`, '123');
       })
       .then((response) => {
-        console.log(response);
         dispatch(get(response));      
       })
       .catch((e) => { // eslint-disable-line
         console.log('error getting ingredients', e);
       })
     } else {
-      apiProxy.post(`${apiConstants.base_url}${apiConstants.recipes}`, recipe, '123')
+      apiProxy.post(`${apiConstants.baseUrl}${apiConstants.recipes}`, recipe, '123')
       .then((response) => {
-        return apiProxy.get(`${apiConstants.base_url}${apiConstants.recipes}`, '123');
+        return apiProxy.get(`${apiConstants.baseUrl}${apiConstants.recipes}`, '123');
       })
       .then((response) => {
         dispatch(get(response));      
@@ -50,9 +49,8 @@ export function getRecipes() {
   }
 
   return (dispatch) => {
-    apiProxy.get(`${apiConstants.base_url}${apiConstants.recipes}`, '123')
+    apiProxy.get(`${apiConstants.baseUrl}${apiConstants.recipes}`, '123')
     .then((response) => {
-      console.log('recipes : ', response);
       dispatch(get(response));
     })
     .catch((e) => { // eslint-disable-line
