@@ -1,4 +1,11 @@
 {
+  "users": [
+    {
+      "email": "pmgaikwa@ncsu.edu",
+      "password": "123",
+      "id": 1
+    }
+  ],
   "ingredients": [
     {
       "id": "1",
