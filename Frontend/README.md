@@ -46,7 +46,6 @@ Parameters :
         "email": "",
         "password": "",
     }
-    "accessToken": "",
 }
 ```
 
@@ -61,7 +60,6 @@ Parameters :
         "email": "",
         "password": "",
     }
-    "accessToken": "",
 }
 ```
 
@@ -88,6 +86,12 @@ Collection of ingredients
 Get list of ingredients
 
 ```bash
+GET /ingredients
+
+Headers: 
+{
+    X-Access-Token: "<ACCESS_TOKEN>",
+}
 ```
 
 Add new ingredient
@@ -101,6 +105,11 @@ Parameters :
     "name": "",
     "qty": "",
     "unit": "",
+}
+
+Headers: 
+{
+    X-Access-Token: "<ACCESS_TOKEN>",
 }
 ```
 
