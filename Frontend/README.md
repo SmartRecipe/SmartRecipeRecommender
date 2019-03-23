@@ -8,35 +8,53 @@ A simple single page responsive application developed using React for Smart Reci
 * React Redux 
 * React Router v4
 * React Material
+* Json Server (For Dev Build Only)
 
 ## API Requirements
 
 The frontend application expects the backend to support CRUD operations on different data. 
 
-### User Sign Up API
+### User APIs
 
-New users create their accounts using this API. Requires backend server to accepet following arguments.
+Collection of users 
 
-* email : String
-* password : String
+```json
+{ 
+    "users": [
+        { "_type": "user", "id": "", "name": "", "email": "", "password": "", "salt": "", "createdAt": "", "updatedAt": "" }
+    ]
+}
+```
 
-Sign Up results in creating a new account and signing in the new user at the same time.
+Sign Up API
 
-On successful sign up, a new user with following attributes will be created in the database.
+```bash
+POST /signup
 
-* id : String (Unique user id)
-* email : String
-* password : String
-* salt : String (A unique salt for encryption)
+Parameters : 
+{
+    "user": {
+        "email": "",
+        "password": "",
+    }
+    "accessToken": "",
+}
+```
 
-### User Sign In API
+Sign In API
 
-Existing users sign in to the application using this API. Requires backend server to accepet following arguments.
+```bash
+POST /signin
 
-* email : String
-* password  : String
-
-The server should return the status of the request along with a unique user id and a session id when Sign In succeeds.
+Parameters : 
+{
+    "user": {
+        "email": "",
+        "password": "",
+    }
+    "accessToken": "",
+}
+```
 
 ### Ingredient API
 
