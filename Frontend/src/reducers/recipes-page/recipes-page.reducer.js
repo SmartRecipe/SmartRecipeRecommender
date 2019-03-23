@@ -12,16 +12,30 @@ export default function recipesReducer(state = initialState, action = {}) {
  switch (action.type) {
     case actionsRecipes.add:
       const { recipes } = state;
+      console.log('add reducer called');
 
-      const payloadRecipeId = action.recipe.id;
+      let found = false;
 
-      const remainingRecipes = recipes.filter((recipe) => recipe.id !== payloadRecipeId)
+      for (var i = 0; i < recipes.length; i++) {
+        if (recipes[i].id === action.recipe.id) {
+          recipes[i] = action.recipe;
+          found = true;
+        }
+      }
 
-      remainingRecipes.push(action.recipe);
+      if (!found) {
+        recipes.push(action.recipe);
+      }
 
       return {
         ...state,
-        recipes: remainingRecipes,
+        recipes,
+      };
+
+    case actionsRecipes.get:
+      return {
+        ...state,
+        recipes: action.recipes,
       };
 
     default:
