@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import { signIn } from '../../actions/auth/auth.actions';
-import { history, menuItemProps } from '../../utils/app.constants';
+import { signIn, signUp } from '../../actions/auth/auth.actions';
 import UserSignOnComponent from '../../components/forms/sign-on.component';
 
 /**
@@ -17,10 +16,15 @@ class HomePageComponent extends Component {
     super(props);
 
     this.state = {
+      user: {
+        email: '',
+        password: '',
+      },
       isSignUp: false,
     };
 
     this.onSignInClicked = this.onSignInClicked.bind(this);
+    this.onSignOnFormChanged = this.onSignOnFormChanged.bind(this);
     this.onSignInOptionSelected = this.onSignInOptionSelected.bind(this);
     this.onSignUpOptionSelected = this.onSignUpOptionSelected.bind(this);
   }
@@ -33,11 +37,46 @@ class HomePageComponent extends Component {
   onSignInClicked(e) {
     e.preventDefault();
 
-    this.props.signIn(null, null);
+    const { user, isSignUp } = this.state;
 
-    console.log('calling sign in');
+    const { email, password } = user;
 
-    history.push(menuItemProps.recipesMenu.route);
+    if (isSignUp) {
+      this.props.signUp(email, password);
+    } else {
+      this.props.signIn(email, password);
+    }
+  }
+
+  onSignOnFormChanged(e) {
+    e.preventDefault();
+
+    const { target } = e;
+
+    switch (target.id) {
+      case 'email':
+        this.setState({
+          ...this.state,
+          user: {
+            ...this.state.user,
+            email: target.value,
+          }
+        });
+        break;
+
+      case 'password':
+        this.setState({
+          ...this.state,
+          user: {
+            ...this.state.user,
+            password: target.value,
+          }
+        });
+        break;
+
+      default:
+        break;
+    }
   }
 
   onSignInOptionSelected() {
@@ -53,16 +92,27 @@ class HomePageComponent extends Component {
   }
 
   render() {
-    const { isSignUp } = this.state;
-    const { classes } = this.props;
+    const { 
+      classes, 
+      isSignInFailed,
+      isSignInPending,  
+      isSignInSuccess,
+    } = this.props;
+    
+    const { user, isSignUp } = this.state;
 
     return (
       <main className={classes.main}>
         {
           !isSignUp &&
           <UserSignOnComponent
+            user={user}
             isSignUp={false}
+            isSignInFailed={isSignInFailed}
+            isSignInPending={isSignInPending}
+            isSignInSuccess={isSignInSuccess}
             onSubmit={this.onSignInClicked}
+            onFormChange={this.onSignOnFormChanged}
             onToggleClicked={this.onSignUpOptionSelected}
             signInButtonText="Sign In"
           />
@@ -71,8 +121,13 @@ class HomePageComponent extends Component {
         {
           isSignUp &&
           <UserSignOnComponent
+            user={user}
             isSignUp={true}
             onSubmit={this.onSignInClicked}
+            isSignInFailed={isSignInFailed}
+            isSignInPending={isSignInPending}
+            isSignInSuccess={isSignInSuccess}
+            onFormChange={this.onSignOnFormChanged}
             onToggleClicked={this.onSignInOptionSelected}
             signInButtonText="Create new account"
           />
@@ -101,11 +156,15 @@ HomePageComponent.propTypes = {
 };
 
 const mapStateToProps = state => ({
-
+  user: state.authReducer.user,
+  isSignInFailed: state.authReducer.isSignInFailed,
+  isSignInPending: state.authReducer.isSignInPending,
+  isSignInSuccess: state.authReducer.isSignInSuccess,
 });
 
 const mapDispatchToProps = dispatch => ({
   signIn: (email, password) => dispatch(signIn(email, password)),
+  signUp: (email, password) => dispatch(signUp(email, password)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HomePageComponent));
