@@ -9,18 +9,28 @@ import { actionsIngredients } from '../../utils/app.constants';
  */
 export default function ingredientsReducer(state = initialState, action = {}) {
   switch (action.type) {
+    // Add new ingredient
     case actionsIngredients.add:
+      let found = false;
       const { ingredients } = state;
-
-      const payloadIngredientId = action.ingredient.id;
-
-      const remainingIngredients = ingredients.filter((ingredient) => ingredient.id !== payloadIngredientId)
-
-      remainingIngredients.push(action.ingredient);
-
+      for (var i = 0; i < ingredients.length; i++) {
+        if (ingredients[i].id === action.ingredient.id) {
+          ingredients[i] = action.ingredient;
+          found = true;
+        }
+      }
+      if (!found) {
+        ingredients.push(action.ingredient);
+      }
       return {
         ...state,
-        ingredients: remainingIngredients,
+        ingredients,
+      };
+    // Get all ingredients
+    case actionsIngredients.get:
+      return {
+        ...state,
+        ingredients: action.ingredients,
       };
 
     default:

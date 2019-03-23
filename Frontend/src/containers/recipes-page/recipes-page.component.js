@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import { addRecipe } from '../../actions/recipes-page/recipes-page.actions';
+import { addRecipe, getRecipes } from '../../actions/recipes-page/recipes-page.actions';
 
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
@@ -249,6 +249,10 @@ class RecipesPageContainer extends Component {
     );
   }
 
+  componentDidMount() {
+    this.props.getRecipes();
+  }
+
   render() {
     const { showDialog, showViewDialog, recipe } = this.state;
 
@@ -320,6 +324,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addRecipe: (recipe) => dispatch(addRecipe(recipe)),
+  getRecipes: () => dispatch(getRecipes()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RecipesPageContainer));
