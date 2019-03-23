@@ -100,7 +100,7 @@ class RecipeCardComponent extends React.Component {
           {
             showIngredientChips 
             ? <IngredientChipsComponent ingredients={ingredients}/> : 
-            <Typography component="body1">No ingredients...</Typography>
+            <Typography component="p">No ingredients...</Typography>
           }
         </CardContent>
 
@@ -132,7 +132,7 @@ const styles = theme => ({
     margin: 5,
     width: '100%',
     maxWidth: '100%',
-    // minHeight: '100%',
+    minHeight: '100%',
   },
   media: {
     height: 0,
@@ -144,6 +144,9 @@ const styles = theme => ({
   },
   actions: {
     display: 'flex',
+    // position: 'absolute',
+    align: 'bottom',
+    marginBottom: 5,
   },
   expand: {
     transform: 'rotate(0deg)',
