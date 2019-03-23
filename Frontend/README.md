@@ -82,5 +82,5 @@ To run application in production mode, replace mock API with your API.
 
 ```bash
 cd SmartRecipeRecommender/Frontend
-API_BASE_URL=<BACKEND_API_URL_HERE> yarn dev-start
+API_BASE_URL=<BACKEND_API_URL_HERE> yarn start
 ```
