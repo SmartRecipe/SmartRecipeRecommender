@@ -56,15 +56,36 @@ Parameters :
 }
 ```
 
-### Ingredient API
+### Ingredient APIs
 
-Most of the business logic of the application revolves around a list of ingredients of a user. Each ingredient comprises of following fields.
+Collection of ingredients
 
-* id : String
-* name : String
-* qty : String
-* unit : String
-* userId : String (Associates the ingredient with a user)
+```json
+{ 
+    "ingredients": [
+        { "_type": "ingredient", "id": "", "name": "", "qty": "", "unit": "", "createdAt": "", "updatedAt": "" }
+    ]
+}
+```
+
+Get list of ingredients
+
+```bash
+```
+
+Add new ingredient
+
+```bash
+POST /ingredients
+
+Parameters : 
+{
+    "id": "<OPTIONAL>",
+    "name": "",
+    "qty": "",
+    "unit": "",
+}
+```
 
 ### Recipe API
 
