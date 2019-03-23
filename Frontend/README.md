@@ -21,7 +21,15 @@ Collection of users
 ```json
 { 
     "users": [
-        { "_type": "user", "id": "", "name": "", "email": "", "password": "", "salt": "", "createdAt": "", "updatedAt": "" }
+        { 
+            "_type": "user", 
+            "id": "", "name": "", 
+            "email": "", 
+            "password": "", 
+            "salt": "", 
+            "createdAt": "", 
+            "updatedAt": "" 
+        }
     ]
 }
 ```
@@ -63,7 +71,15 @@ Collection of ingredients
 ```json
 { 
     "ingredients": [
-        { "_type": "ingredient", "id": "", "name": "", "qty": "", "unit": "", "createdAt": "", "updatedAt": "" }
+        { 
+            "_type": "ingredient", 
+            "id": "", 
+            "name": "", 
+            "qty": "", 
+            "unit": "", 
+            "createdAt": "", 
+            "updatedAt": "" 
+        }
     ]
 }
 ```
