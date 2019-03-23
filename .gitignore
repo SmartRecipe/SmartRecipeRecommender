@@ -5,4 +5,18 @@
 # ignore these whole directories
 build/
 gen/
+<<<<<<< HEAD
 .idea/
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+.idea/
+=======
+.idea/
+/target/
+>>>>>>> virtual-refrigerator
+=======
+.idea/
+/target/
+>>>>>>> dd5796d65f526e41b9d134352f167feb4a1b068e
+>>>>>>> f79f75060537aa48044b30f73605b1e4f37b9de9

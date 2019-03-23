@@ -8,33 +8,33 @@ import java.util.Map;
  */
 public class NutritionInfo {
 
-    private float servingsPerContainer;
+    private double servingsPerContainer;
     // we're doing it in grams for the sake of consistency
-    private float servingSize;
+    private double servingSize;
 
     // the following values are in g / serving
-    private float calories, totalFat, saturatedFat, transFat;
-    private float carbs, fiber, sugar, addedSugar, protein;
+    private double calories, totalFat, saturatedFat, transFat;
+    private double carbs, fiber, sugar, addedSugar, protein;
 
     // the following values are in mg / serving
-    private float cholesterol, sodium;
+    private double cholesterol, sodium;
 
     // for vitamins and all that useless nonsense
     private Map<String, Number> extras;
 
-    public NutritionInfo(float servingsPerContainer,
-                         float servingSize,
-                         float calories,
-                         float totalFat,
-                         float saturatedFat,
-                         float transFat,
-                         float carbs,
-                         float fiber,
-                         float sugar,
-                         float addedSugar,
-                         float protein,
-                         float cholesterol,
-                         float sodium) {
+    public NutritionInfo(double servingsPerContainer,
+                         double servingSize,
+                         double calories,
+                         double totalFat,
+                         double saturatedFat,
+                         double transFat,
+                         double carbs,
+                         double fiber,
+                         double sugar,
+                         double addedSugar,
+                         double protein,
+                         double cholesterol,
+                         double sodium) {
 
         this.servingsPerContainer = servingsPerContainer;
         this.servingSize = servingSize;
@@ -52,179 +52,185 @@ public class NutritionInfo {
         this.extras = new HashMap<>();
     }
 
-    public float getServingsPerContainer() {
+    /**
+     * @return The servings per container
+     */
+    public double getServingsPerContainer() {
         return servingsPerContainer;
     }
 
-    public void setServingsPerContainer(float servingsPerContainer) {
+    /**
+     * @param servingsPerContainer The servings per container
+     */
+    public void setServingsPerContainer(double servingsPerContainer) {
         this.servingsPerContainer = servingsPerContainer;
     }
 
     /**
      * @return The serving size in grams
      */
-    public float getServingSize() {
+    public double getServingSize() {
         return servingSize;
     }
 
     /**
      * @param servingSize The serving size in grams
      */
-    public void setServingSize(float servingSize) {
+    public void setServingSize(double servingSize) {
         this.servingSize = servingSize;
     }
 
     /**
      * @return The calorie information in grams per serving
      */
-    public float getCalories() {
+    public double getCalories() {
         return calories;
     }
 
     /**
      * @param calories The calorie information in grams per serving
      */
-    public void setCalories(float calories) {
+    public void setCalories(double calories) {
         this.calories = calories;
     }
 
     /**
      * @return The total fat content in grams per serving
      */
-    public float getTotalFat() {
+    public double getTotalFat() {
         return totalFat;
     }
 
     /**
      * @param totalFat The total fat content in grams per serving
      */
-    public void setTotalFat(float totalFat) {
+    public void setTotalFat(double totalFat) {
         this.totalFat = totalFat;
     }
 
     /**
      * @return The saturated fat content in grams per serving
      */
-    public float getSaturatedFat() {
+    public double getSaturatedFat() {
         return saturatedFat;
     }
 
     /**
      * @param saturatedFat The saturated fat content in grams per serving
      */
-    public void setSaturatedFat(float saturatedFat) {
+    public void setSaturatedFat(double saturatedFat) {
         this.saturatedFat = saturatedFat;
     }
 
     /**
      * @return The trans fat content in grams per serving
      */
-    public float getTransFat() {
+    public double getTransFat() {
         return transFat;
     }
 
     /**
      * @param transFat The trans fat content in grams per serving
      */
-    public void setTransFat(float transFat) {
+    public void setTransFat(double transFat) {
         this.transFat = transFat;
     }
 
     /**
      * @return The total carbohydrates in grams per serving
      */
-    public float getCarbs() {
+    public double getCarbs() {
         return carbs;
     }
 
     /**
      * @param carbs The total carbohydrates in grams per serving
      */
-    public void setCarbs(float carbs) {
+    public void setCarbs(double carbs) {
         this.carbs = carbs;
     }
 
     /**
      * @return The <emph>total</emph> fiber content in grams per serving
      */
-    public float getFiber() {
+    public double getFiber() {
         return fiber;
     }
 
     /**
      * @param fiber The <emph>total</emph> fiber content in grams per serving
      */
-    public void setFiber(float fiber) {
+    public void setFiber(double fiber) {
         this.fiber = fiber;
     }
 
     /**
      * @return The sugar content in grams per serving
      */
-    public float getSugar() {
+    public double getSugar() {
         return sugar;
     }
 
     /**
      * @param sugar The sugar content in grams per serving
      */
-    public void setSugar(float sugar) {
+    public void setSugar(double sugar) {
         this.sugar = sugar;
     }
 
     /**
      * @return The added sugars in grams per serving
      */
-    public float getAddedSugar() {
+    public double getAddedSugar() {
         return addedSugar;
     }
 
     /**
      * @param addedSugar The added sugars in grams per serving
      */
-    public void setAddedSugar(float addedSugar) {
+    public void setAddedSugar(double addedSugar) {
         this.addedSugar = addedSugar;
     }
 
     /**
      * @return The protein content in grams per serving
      */
-    public float getProtein() {
+    public double getProtein() {
         return protein;
     }
 
     /**
      * @param protein The protein content in grams per serving
      */
-    public void setProtein(float protein) {
+    public void setProtein(double protein) {
         this.protein = protein;
     }
 
     /**
      * @return The cholesterol content in milligrams per serving
      */
-    public float getCholesterol() {
+    public double getCholesterol() {
         return cholesterol;
     }
 
     /**
      * @param cholesterol The cholesterol content in milligrams per serving
      */
-    public void setCholesterol(float cholesterol) {
+    public void setCholesterol(double cholesterol) {
         this.cholesterol = cholesterol;
     }
 
     /**
      * @return The sodium content in milligrams per serving
      */
-    public float getSodium() {
+    public double getSodium() {
         return sodium;
     }
 
     /**
      * @param sodium The sodium content in milligrams per serving
      */
-    public void setSodium(float sodium) {
+    public void setSodium(double sodium) {
         this.sodium = sodium;
     }
 
@@ -267,18 +273,6 @@ public class NutritionInfo {
     }
 
     public void putLongExtra(String key, Long value) {
-        if (key != null && key.length() > 0) {
-            extras.put(key, value);
-        }
-    }
-
-    public Float getFloatExtra(String key, Float defaultValue) {
-        return (key != null && extras.containsKey(key))
-                ? (Float) extras.get(key)
-                : defaultValue;
-    }
-
-    public void putFloatExtra(String key, Float value) {
         if (key != null && key.length() > 0) {
             extras.put(key, value);
         }
