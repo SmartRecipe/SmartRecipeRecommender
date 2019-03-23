@@ -26,9 +26,9 @@ export function addIngredient(ingredient={}) {
       id: id,
     }
 
-    apiProxy.post(`${apiConstants.base_url}${apiConstants.ingredients}`, ingredient, '123')
+    apiProxy.post(`${apiConstants.baseUrl}${apiConstants.ingredients}`, ingredient, '123')
     .then((response) => {
-      return apiProxy.get(`${apiConstants.base_url}${apiConstants.ingredients}`, '123');
+      return apiProxy.get(`${apiConstants.baseUrl}${apiConstants.ingredients}`, '123');
     })
     .then((response) => {
       console.log(response);
@@ -50,7 +50,7 @@ export function getIngredients() {
   }
 
   return (dispatch) => {
-    apiProxy.get(`${apiConstants.base_url}${apiConstants.ingredients}`, '123')
+    apiProxy.get(`${apiConstants.baseUrl}${apiConstants.ingredients}`, '123')
     .then((response) => {
       console.log(response);
       dispatch(get(response));
