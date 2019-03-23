@@ -5,7 +5,9 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
+    "es6-promise": "^4.2.6",
     "history": "^4.7.2",
+    "json-server": "^0.14.2",
     "react": "^16.8.4",
     "react-bootstrap": "^1.0.0-beta.5",
     "react-burger-menu": "^2.6.5",
@@ -22,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev-start": "./node_modules/.bin/json-server --port 3001 ./src/utils/db.json && react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"

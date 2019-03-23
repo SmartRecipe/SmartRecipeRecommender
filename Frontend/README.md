@@ -69,13 +69,18 @@ Make sure you have these packages installed in order to build the project
 
 #### Development Build
 
-To run the frontend application in development mode, use following commands 
+Development version uses a mock backend API launched on port 3001. Make sure that the port is available. To run application in dev mode, run following commands
 
 ```bash
 cd SmartRecipeRecommender/Frontend
-yarn start
+API_BASE_URL='http://localhost:3001/' yarn dev-start
 ```
 
 #### Production Build
 
-In progress...
+To run application in production mode, replace mock API with your API. 
+
+```bash
+cd SmartRecipeRecommender/Frontend
+API_BASE_URL=<BACKEND_API_URL_HERE> yarn dev-start
+```
