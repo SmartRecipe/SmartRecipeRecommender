@@ -12,6 +12,7 @@ export default function authReducer(state = initialState, action = {}) {
     case actionsSignIn.pending:
       return {
         ...state,
+        user: null,
         isSignInFailed: false,
         isSignInSuccess: false,
         isSignInPending: action.isSignInPending,
@@ -20,6 +21,7 @@ export default function authReducer(state = initialState, action = {}) {
     case actionsSignIn.success:
       return {
         ...state,
+        user: action.user,
         isSignInFailed: false,
         isSignInPending: false,
         isSignInSuccess: action.isSignInSuccess,
@@ -28,6 +30,7 @@ export default function authReducer(state = initialState, action = {}) {
     case actionsSignIn.failed:
       return {
         ...state,
+        user: null, 
         isSignInPending: false,
         isSignInSuccess: false,
         isSignInFailed: action.isSignInFailed,
@@ -36,6 +39,7 @@ export default function authReducer(state = initialState, action = {}) {
     case actionsSignIn.signout:
       return {
         ...state,
+        user: null,
         isSignInFailed: false,
         isSignInPending: false,
         isSignInSuccess: false,
