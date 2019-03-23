@@ -138,7 +138,7 @@ Development version uses a mock backend API launched on port 3001. Make sure tha
 
 ```bash
 cd SmartRecipeRecommender/Frontend
-REACT_APP_API_BASE_URL='http://localhost:3001/' yarn dev-start
+REACT_APP_API_BASE_URL='http://localhost:3001/' yarn start
 ```
 
 #### Production Build
@@ -147,5 +147,5 @@ To run application in production mode, replace mock API with your API.
 
 ```bash
 cd SmartRecipeRecommender/Frontend
-REACT_APP_API_BASE_URL=<BACKEND_API_URL_HERE> yarn start
+REACT_APP_API_BASE_URL=<BACKEND_API_URL_HERE> yarn prod-start
 ```
