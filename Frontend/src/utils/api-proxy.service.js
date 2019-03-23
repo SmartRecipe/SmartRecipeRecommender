@@ -1,7 +1,5 @@
 import 'whatwg-fetch';
 
-import { appConstants } from './app.constants';
-
 const promise = require('es6-promise');
 
 /**
