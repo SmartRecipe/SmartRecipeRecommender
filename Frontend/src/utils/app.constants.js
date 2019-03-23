@@ -6,6 +6,12 @@ export const appConstants = {
     appTitle: "Smart Recipe Recommender",
 };
 
+export const apiConstants = {
+    base_url: process.env.API_BASE_URL,
+    ingredients: 'ingredients/',
+    recipes: 'recipes/',
+};  
+
 // constants related to in-memory ORM models 
 export const ormConstants = {
     nameIngredientModel: 'Ingredient',
@@ -44,6 +50,7 @@ export const actionsSignIn = {
 
 // constants related to ingredient actions
 export const actionsIngredients = {
+    get: "ACTION_GET_INGREDIENTS",
     add: "ACTION_ADD_INGREDIENT",
     delete: "ACTION_DELETE_INGREDIENT",
     update: "ACTION_UPDATE_INGREDIENT",
@@ -51,6 +58,7 @@ export const actionsIngredients = {
 
 // constants related to recipe actions
 export const actionsRecipes = {
+    get: "ACTION_GET_INGREDIENTS",
     add: "ACTION_ADD_RECIPE",
     delete: "ACTION_DELETE_RECIPE",
     update: "ACTION_UPDATE_RECIPE",
