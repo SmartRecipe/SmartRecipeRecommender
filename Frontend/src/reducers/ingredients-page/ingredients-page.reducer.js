@@ -26,13 +26,34 @@ export default function ingredientsReducer(state = initialState, action = {}) {
         ...state,
         ingredients,
       };
+
     // Get all ingredients
     case actionsIngredients.get:
+      if (action.ingredients !== undefined) {
+        return {
+          ...state,
+          ingredients: action.ingredients,
+          isPending: false,
+          isFailed: false,
+        };
+      } else {
+        return state;
+      }
+
+    case actionsIngredients.pending:
       return {
         ...state,
-        ingredients: action.ingredients,
+        isPending: true,
+        isFailed: false,
       };
 
+    case actionsIngredients.failed:
+      return {
+        ...state,
+        isPending: false,
+        isFailed: true,
+      };
+    
     default:
       return state;
   }
