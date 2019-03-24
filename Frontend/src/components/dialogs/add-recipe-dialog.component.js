@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -50,7 +49,7 @@ class AddRecipeDialog extends Component {
       onIngredientAdded,
       onIngredientDeleted,
     } = this.props;
-  
+
     return (
       <Dialog open={open} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Recipe</DialogTitle>
@@ -75,10 +74,4 @@ class AddRecipeDialog extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  allIngredients: state.ingredientsReducer.ingredients,
-});
-
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddRecipeDialog);
+export default AddRecipeDialog;
