@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardContent from '@material-ui/core/CardContent';
 
+// Upper right menu on ingredient card
 const menuOptions = ['Edit', 'Delete'];
 
 const MENU_ITEM_HEIGHT = 48;
@@ -29,18 +30,25 @@ class IngredientCardComponent extends Component {
     this.onMenuClosed = this.onMenuClosed.bind(this);
   }
   
+  /**
+   * When Edit / Delete ingredient menu is opened
+   */
   onMenuOpened(e) {
     this.setState({ anchorEl: e.currentTarget });
   }
 
+  /**
+   * When Edit / Delete ingredient menu is closed
+   */
   onMenuClosed(option, id) {
-    const { onEditButtonClicked } = this.props;
+    const { onEditButtonClicked, onDeleteButtonClicked } = this.props;
 
     switch(option) {
       case menuOptions[0]:
         onEditButtonClicked(id);
         break;
       case menuOptions[1]:
+        onDeleteButtonClicked(id);
         break;
       default:
         break;
