@@ -92,16 +92,11 @@ class RecipeCardComponent extends React.Component {
         />
 
         {/* Short Description */}
-        <CardContent>
+        <CardContent className={classes.content}>
           <Typography component="p">
             { shortDescription } 
           </Typography>
-          <Divider className={classes.divider}/>
-          {
-            showIngredientChips 
-            ? <IngredientChipsComponent ingredients={ingredients}/> : 
-            <Typography component="p">No ingredients...</Typography>
-          }
+          
         </CardContent>
 
         {/* Card Footer */}
@@ -138,15 +133,17 @@ const styles = theme => ({
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
+  content: {
+    height: 90,
+    overflow: 'hidden',
+  },
   divider: {
     marginTop: 15,
     marginBottom: 15,
   },
   actions: {
     display: 'flex',
-    // position: 'absolute',
     align: 'bottom',
-    marginBottom: 5,
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -165,3 +162,11 @@ RecipeCardComponent.propTypes = {
 };
 
 export default withStyles(styles)(RecipeCardComponent);
+
+/*
+    {
+      showIngredientChips 
+      ? <IngredientChipsComponent ingredients={ingredients}/> : 
+      <Typography component="p">No ingredients...</Typography>
+    }
+*/
