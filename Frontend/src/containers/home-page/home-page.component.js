@@ -48,6 +48,10 @@ class HomePageComponent extends Component {
     }
   }
 
+  /**
+   * When values in the Sign On forms change
+   * @param  {Object} e Event
+   */
   onSignOnFormChanged(e) {
     e.preventDefault();
 
@@ -79,12 +83,18 @@ class HomePageComponent extends Component {
     }
   }
 
+  /**
+   * When user switches the form to 'Sign In' form
+   */
   onSignInOptionSelected() {
     this.setState({
       isSignUp: false,
     });
   }
 
+  /**
+   * When user switches the form to 'Sign Up' form
+   */
   onSignUpOptionSelected() {
     this.setState({
       isSignUp: true,
