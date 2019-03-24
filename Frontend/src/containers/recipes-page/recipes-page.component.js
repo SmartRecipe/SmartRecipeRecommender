@@ -4,10 +4,12 @@ import Fab from '@material-ui/core/Fab';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import { addRecipe, getRecipes } from '../../actions/recipes-page/recipes-page.actions';
+import { getIngredients } from '../../actions/ingredients-page/ingredients-page.actions';
+import { addRecipe, getRecipes, deleteRecipe } from '../../actions/recipes-page/recipes-page.actions';
 
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
@@ -190,7 +192,7 @@ class RecipesPageContainer extends Component {
   }
 
   onRecipeDeleteButtonClicked(id) {
-
+    this.props.deleteRecipe(id);
   }
 
   onCardViewed(id) {
@@ -256,17 +258,28 @@ class RecipesPageContainer extends Component {
   render() {
     const { showDialog, showViewDialog, recipe } = this.state;
 
-    const { classes, recipes } = this.props;
+    const { 
+      classes, 
+      recipes,
+      recipesRequestFailed,
+      recipesRequestPending,
+    } = this.props;
 
-    let recipesGrid = []
+    let recipesGrid = []; 
 
     if (recipes !== undefined && recipes !== null) recipesGrid = this.getRecipesGrid(recipes);
+
+    const contentClass = recipesRequestPending ? classes.contentHidden : classes.content;
 
     return (
         <div className={classes.content}>
           <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.onAddButtonClicked}>
             <AddIcon />
           </Fab>
+          {
+            recipesRequestPending &&
+            <CircularProgress className={classes.progress} thickness={4} size={72}/>
+          }
           {
             <AddRecipeDialog
               recipe={recipe}
@@ -298,6 +311,10 @@ const styles = theme => ({
   content: {
     marginTop: '50px',
   },
+  contentHidden: {
+    opacity: 0.5,
+    marginTop: '50px',
+  },
   paper: {
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
@@ -309,6 +326,13 @@ const styles = theme => ({
     bottom: 0,
     right: 0,
   },
+  progress: {
+    top: '50%',
+    left: '50%',
+    marginTop: -20,
+    marginLeft: -20,
+    position: 'absolute',
+  },
 });
 
 RecipesPageContainer.propTypes = {
@@ -319,12 +343,16 @@ const mapStateToProps = state => ({
   recipes: state.recipesReducer.recipes,
   currentRoute: state.navigationReducer.currentRoute,
   allIngredients: state.ingredientsReducer.ingredients,
+  recipesRequestFailed: state.recipesReducer.isFailed,
+  recipesRequestPending: state.recipesReducer.isPending,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  addRecipe: (recipe) => dispatch(addRecipe(recipe)),
   getRecipes: () => dispatch(getRecipes()),
+  getIngredients: () => dispatch(getIngredients()),
+  deleteRecipe: (id) => dispatch(deleteRecipe(id)),
+  addRecipe: (recipe) => dispatch(addRecipe(recipe)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(RecipesPageContainer));
