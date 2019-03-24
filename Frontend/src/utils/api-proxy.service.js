@@ -85,27 +85,26 @@ export const apiProxy = {
         });
     });
   },
-  // delete: (resourceUrl, params) => {
-  //   const Promise = promise.Promise;
-  //   const requestHeaders = new Headers();
-  //   requestHeaders.append('Content-Type', 'application/json');
+  delete: (resourceUrl, accessToken) => {
+    const Promise = promise.Promise;
 
-  //   return new Promise((resolve, reject) => {
-  //     fetch(resourceUrl, {
-  //       credentials: 'same-origin',
-  //       method: 'delete',
-  //       headers: requestHeaders,
-  //       body: JSON.stringify(params),
-  //     })
-  //       .then(checkStatus)
-  //       .then((response) => {
-  //         resolve(response.json());
-  //       })
-  //       .catch((err) => {
-  //         reject(err);
-  //       });
-  //   });
-  // },
+    // Prepare Headers
+    const headers = getHeaders(accessToken);
+
+    return new Promise((resolve, reject) => {
+      fetch(resourceUrl, {
+        credentials: 'same-origin',
+        method: 'delete',
+        headers: headers,
+      })
+        .then((response) => {
+          resolve(response.json());
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
   // patch: (resourceUrl, params) => {
   //   const Promise = promise.Promise;
   //   const requestHeaders = new Headers();
