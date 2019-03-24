@@ -4,46 +4,45 @@ import { actionsSignIn } from '../../utils/app.constants';
 import { history, menuItemProps } from '../../utils/app.constants';
 
 /**
+ * Sets request as pending
+ */
+function setSignInPending() {
+  return { type: actionsSignIn.pending };
+}
+
+/**
+ * Sets request as succeded
+ */
+function setSignInSuccess(user) {
+  return { type: actionsSignIn.success, user };
+}
+
+/**
+ * Sets request as failed
+ */
+function setSignInFailed() {
+  return { type: actionsSignIn.failed };
+}
+
+/**
  * Creates new user
  * @param  {String} email    
  * @param  {String} password 
- * @return {Object} User        
  */
 export function signUp(email, password) {
-  /**
-   * @param {Boolean}
-   */
-  function setSignInPending(isSignInPending) {
-    return { type: actionsSignIn.pending, isSignInPending};
-  }
-
-  /**
-   * @param {Boolean}
-   */
-  function setSignInSuccess(isSignInSuccess, user) {
-    return { type: actionsSignIn.success, isSignInSuccess, user };
-  }
-
-  /**
-   * @param {Boolean}
-   */
-  function setSignInFailed(isSignInFailed) {
-    return { type: actionsSignIn.failed, isSignInFailed};
-  }
-
   return (dispatch) => {
     const user = {
       email,
       password
     };
 
-    dispatch(setSignInPending(true));
+    dispatch(setSignInPending());
     apiProxy.post(`${apiConstants.baseUrl}${apiConstants.users}`, user, '123')
       .then((response) => {
-        dispatch(setSignInSuccess(true, response));
+        dispatch(setSignInSuccess(response));
       })
       .catch((e) => { // eslint-disable-line
-        dispatch(setSignInFailed(true));
+        dispatch(setSignInFailed());
         console.log('error getting the user', e);
       }
     );
@@ -51,41 +50,19 @@ export function signUp(email, password) {
 }
 
 /**
- * Sign in new user
+ * Sign in existing user
  * @param  {object} Email
  * @param  {object} Password
- * @return
  */
 export function signIn(email, password) {
-  /**
-   * @param {Boolean}
-   */
-  function setSignInPending(isSignInPending) {
-    return { type: actionsSignIn.pending, isSignInPending};
-  }
-
-  /**
-   * @param {Boolean}
-   */
-  function setSignInSuccess(isSignInSuccess, user) {
-    return { type: actionsSignIn.success, isSignInSuccess, user};
-  }
-
-  /**
-   * @param {Boolean}
-   */
-  function setSignInFailed(isSignInFailed) {
-    return { type: actionsSignIn.failed, isSignInFailed};
-  }
-
   return (dispatch) => {
     const user = {
       email,
       password
     }; 
 
-    dispatch(setSignInPending(true));
-    dispatch(setSignInSuccess(true, user));
+    dispatch(setSignInPending());
+    dispatch(setSignInSuccess(user));
     history.push(menuItemProps.recipesMenu.route);
   };
 }
@@ -99,7 +76,7 @@ export function signOut(email, password) {
   /**
    * @param {Boolean}
    */
-  function setSignOut(isSignInSuccess) {
+  function setSignOut() {
     return { type: actionsSignIn.signout };
   }
 
