@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import IngredientChipsComponent from '../chips/ingredient-chips.component';
 
 /**
- * Dialog which shows recipe in a detailed dialog
+ * Dialog which shows recipe in a detailed view
  */
 class RecipeViewCard extends Component {
   render() {
