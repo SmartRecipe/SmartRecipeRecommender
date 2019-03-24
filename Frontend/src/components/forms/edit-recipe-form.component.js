@@ -33,6 +33,12 @@ class EditRecipeFormComponent extends Component {
       description = recipe.description;
       ingredients = recipe.ingredients;
     }
+
+    let { allIngredients } = this.props;
+
+    if (!allIngredients || allIngredients === undefined) {
+      allIngredients = [];
+    }
     
     return (
       <div>
@@ -68,12 +74,12 @@ class EditRecipeFormComponent extends Component {
             >
               <option value="" />
                 {
-                  this.props.allIngredients.map(data => {
+                  allIngredients.map(data => {
                     return (
                       <option key={data.id} value={data.id}>{data.name}</option>
                     );
                   })
-              }
+                }
             </Select>
           </FormControl>
         </form>
