@@ -5,8 +5,13 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { addIngredient, getIngredients } from '../../actions/ingredients-page/ingredients-page.actions';
+import { 
+  addIngredient, 
+  getIngredients, 
+  deleteIngredient,
+} from '../../actions/ingredients-page/ingredients-page.actions';
 
 import IngredientCardComponent from '../../components/cards/ingredient-card.component';
 import AddIngredientDialog from '../../components/dialogs/add-ingredient-dialog.component';
@@ -31,6 +36,7 @@ class IngredientsPageContainer extends Component {
     this.onDialogSubmit = this.onDialogSubmit.bind(this);
     this.onDialogFormChange = this.onDialogFormChange.bind(this);
     this.onAddButtonClicked = this.onAddButtonClicked.bind(this);
+    this.onIngredientDeleted = this.onIngredientDeleted.bind(this);
     this.onIngredientUnitChange = this.onIngredientUnitChange.bind(this);
     this.onEditIngredientButtonClicked = this.onEditIngredientButtonClicked.bind(this);
   }
@@ -41,13 +47,18 @@ class IngredientsPageContainer extends Component {
     });
   }
 
-  onIngredientDeleted() {
-    
+  onIngredientDeleted(id) {
+    this.props.deleteIngredient(id);
   }
 
   onDialogClosed() {
     this.setState({
       showDialog: false,
+      ingredient: {
+        name: '',
+        qty: '',
+        unit: '',
+      }
     });
   }
 
@@ -55,7 +66,6 @@ class IngredientsPageContainer extends Component {
     this.onDialogClosed();
 
     this.props.addIngredient(ingredient);
-
   }
 
   onDialogFormChange(e) {
@@ -134,6 +144,7 @@ class IngredientsPageContainer extends Component {
               key={currentIngredient.id}
               ingredient={currentIngredient}
               onEditButtonClicked={this.onEditIngredientButtonClicked}
+              onDeleteButtonClicked={this.onIngredientDeleted}
             />
           </Grid>);
       }
@@ -153,17 +164,28 @@ class IngredientsPageContainer extends Component {
   }
 
   render() {
-    const { classes, allIngredients } = this.props;
+    const { 
+      classes, 
+      allIngredients,
+      ingredientRequestFailed,
+      ingredientRequestPending,
+    } = this.props;
 
     const { ingredient, showDialog } = this.state;
 
     const ingredientsGrid = this.getIngredientsGrid(allIngredients);
 
+    const contentClass = ingredientRequestPending ? classes.contentHidden : classes.content;
+
     return (
-        <div className={classes.content}>
+        <div className={contentClass}>
           <Fab onClick={this.onAddButtonClicked} color="primary" aria-label="Add" className={classes.fab}>
             <AddIcon />
           </Fab>
+          {
+            ingredientRequestPending &&
+            <CircularProgress className={classes.progress} thickness={4} size={72}/>
+          }
           {
             <AddIngredientDialog 
               open={showDialog} 
@@ -188,6 +210,10 @@ const styles = theme => ({
   content: {
     marginTop: '50px',
   },
+  contentHidden: {
+    opacity: 0.5,
+    marginTop: '50px',
+  },
   paper: {
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
@@ -199,6 +225,13 @@ const styles = theme => ({
     bottom: 0,
     right: 0,
   },
+  progress: {
+    top: '50%',
+    left: '50%',
+    marginTop: -20,
+    marginLeft: -20,
+    position: 'absolute',
+  },
 });
 
 IngredientsPageContainer.propTypes = {
@@ -208,11 +241,14 @@ IngredientsPageContainer.propTypes = {
 const mapStateToProps = state => ({
   allIngredients: state.ingredientsReducer.ingredients,
   currentRoute: state.navigationReducer.currentRoute,
+  ingredientRequestFailed: state.ingredientsReducer.isFailed,
+  ingredientRequestPending: state.ingredientsReducer.isPending,
 });
 
 
 const mapDispatchToProps = dispatch => ({
   addIngredient: (ingredient) => dispatch(addIngredient(ingredient)),
+  deleteIngredient: (id) => dispatch(deleteIngredient(id)),
   getIngredients: () => dispatch(getIngredients()),
 });
 
