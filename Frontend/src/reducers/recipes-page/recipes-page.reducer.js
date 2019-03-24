@@ -12,7 +12,6 @@ export default function recipesReducer(state = initialState, action = {}) {
  switch (action.type) {
     case actionsRecipes.add:
       const { recipes } = state;
-      console.log('add reducer called');
 
       let found = false;
 
@@ -36,6 +35,22 @@ export default function recipesReducer(state = initialState, action = {}) {
       return {
         ...state,
         recipes: action.recipes,
+        isFailed: false,
+        isPending: false,
+      };
+
+    case actionsRecipes.pending:
+      return {
+        ...state,
+        isPending: true,
+        isFailed: false,
+      };
+
+    case actionsRecipes.failed:
+      return {
+        ...state,
+        isFailed: true,
+        isPending: false,
       };
 
     default:
