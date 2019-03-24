@@ -20,16 +20,10 @@
       "unit": "oz."
     },
     {
-      "id": "3",
-      "name": "Bacon",
-      "qty": "1",
-      "unit": "lbs."
-    },
-    {
       "id": "4",
-      "name": "Spinach",
-      "qty": "1",
-      "unit": "lbs."
+      "name": "Spinach Paste",
+      "qty": "16",
+      "unit": "gms."
     },
     {
       "id": "5",
@@ -68,12 +62,6 @@
       "unit": "lbs."
     },
     {
-      "id": "11",
-      "name": "Orange Juice",
-      "qty": "24",
-      "unit": "oz."
-    },
-    {
       "id": "12",
       "name": "Honey",
       "qty": "8",
@@ -86,23 +74,17 @@
       "unit": "pc."
     },
     {
-      "name": "a",
+      "name": "Bacon",
       "qty": "2",
-      "unit": "gms.",
-      "id": "a0752990-4d0c-11e9-ad5c-6de649006574"
-    },
-    {
-      "name": "b",
-      "qty": "123",
-      "unit": "gms.",
-      "id": "1e3e3e20-4d0d-11e9-bcee-ffb767504c65"
+      "unit": "oz.",
+      "id": "874665d0-4dc3-11e9-8595-23658e172b52"
     }
   ],
   "recipes": [
     {
       "id": "1",
       "name": "Shrimp and Chorizo Paella 1",
-      "short_description": "",
+      "short_description": "This is an amazing recipe.",
       "description": "",
       "ingredients": [
         {
@@ -122,16 +104,28 @@
     {
       "id": "2",
       "name": "Shrimp and Chorizo Paella 2",
-      "short_description": "",
+      "short_description": "This is an amazing recipe.",
       "description": "",
-      "ingredients": []
-    },
-    {
-      "id": "3",
-      "name": "Shrimp and Chorizo Paella 3",
-      "short_description": "",
-      "description": "",
-      "ingredients": []
+      "ingredients": [
+        {
+          "id": "1",
+          "name": "Whole Wheat",
+          "qty": "1",
+          "unit": "lbs."
+        },
+        {
+          "id": "4",
+          "name": "Spinach Paste",
+          "qty": "16",
+          "unit": "gms."
+        },
+        {
+          "id": "6",
+          "name": "Canola Oil",
+          "qty": "24",
+          "unit": "oz."
+        }
+      ]
     },
     {
       "id": "4",
@@ -144,15 +138,14 @@
           "name": "Whole Wheat",
           "qty": "1",
           "unit": "lbs."
+        },
+        {
+          "id": "8",
+          "name": "Smoked Turkey",
+          "qty": "1",
+          "unit": "lbs."
         }
       ]
-    },
-    {
-      "id": "5",
-      "name": "Shrimp and Chorizo Paella 5",
-      "short_description": "",
-      "description": "",
-      "ingredients": []
     }
   ]
 }
