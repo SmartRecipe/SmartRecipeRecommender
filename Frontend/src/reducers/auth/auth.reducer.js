@@ -14,8 +14,8 @@ export default function authReducer(state = initialState, action = {}) {
         ...state,
         user: null,
         isSignInFailed: false,
+        isSignInPending: true,
         isSignInSuccess: false,
-        isSignInPending: action.isSignInPending,
       };
 
     case actionsSignIn.success:
@@ -23,17 +23,17 @@ export default function authReducer(state = initialState, action = {}) {
         ...state,
         user: action.user,
         isSignInFailed: false,
+        isSignInSuccess: true,
         isSignInPending: false,
-        isSignInSuccess: action.isSignInSuccess,
       };
 
     case actionsSignIn.failed:
       return {
         ...state,
         user: null, 
+        isSignInFailed: true,
         isSignInPending: false,
         isSignInSuccess: false,
-        isSignInFailed: action.isSignInFailed,
       };
 
     case actionsSignIn.signout:
