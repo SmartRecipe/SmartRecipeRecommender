@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
  */
 class RecipeCardComponent2 extends Component {
   render(){
-
     const { 
       title, 
       classes,
