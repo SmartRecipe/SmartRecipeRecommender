@@ -16,6 +16,7 @@ public class User {
     private String email;
     private int userID;
     private VirtualRefrigerator fridge;
+    private Cookbook cookbook;
     
     public User() { }
     
@@ -25,6 +26,7 @@ public class User {
         this.email = email;
         this.userID = userID;
         fridge = VirtualRefrigerator.getInstance();
+        cookbook = Cookbook.getInstance();
     }
 
     public String getName() {
@@ -65,5 +67,13 @@ public class User {
     
     public void setFridge(VirtualRefrigerator fridge) {
         this.fridge = fridge;
+    }
+    
+    public Cookbook getCookbook() {
+        return cookbook;
+    }
+    
+    public void setCookbook(Cookbook cookbook) {
+        this.cookbook = cookbook;
     }
 }
