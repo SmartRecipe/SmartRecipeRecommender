@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Servlets;
 
 import Beans.Recipe;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author soup
  */
 public class CookbookServlet extends HttpServlet {
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
@@ -32,10 +32,10 @@ public class CookbookServlet extends HttpServlet {
             throws ServletException, IOException {
         Gson gson = new Gson();
         String action = request.getParameter("action");
-        Recipe recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
         
         switch (action) {
             case "add_recipe":
+                Recipe recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
                 RecipeDatabase.addRecipe(recipe);
                 request.getServletContext().getRequestDispatcher("recipe.js").forward(request, response);
                 break;
@@ -44,7 +44,7 @@ public class CookbookServlet extends HttpServlet {
                 request.getServletContext().getRequestDispatcher("index.js").forward(request, response);
         }
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -59,7 +59,7 @@ public class CookbookServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -73,7 +73,7 @@ public class CookbookServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
     /**
      * Returns a short description of the servlet.
      *
@@ -83,5 +83,5 @@ public class CookbookServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    
 }
