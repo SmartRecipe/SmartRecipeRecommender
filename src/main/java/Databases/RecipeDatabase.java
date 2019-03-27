@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import Beans.Recipe;
 import Beans.VirtualRefrigerator;
+import java.util.List;
 
 /**
  *
@@ -60,8 +61,8 @@ public class RecipeDatabase {
         }
     }
     
-    public static ArrayList<Recipe> getAllRecipes() {
-        ArrayList<Recipe> recipes = new ArrayList<>();
+    public static List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
         
         try {
             java.util.Properties config = new java.util.Properties();
@@ -104,7 +105,7 @@ public class RecipeDatabase {
     }
     
     public static Recipe getRecipe(String name) {
-        ArrayList<Recipe> recipes = getAllRecipes();
+        List<Recipe> recipes = getAllRecipes();
         
         for (Recipe recipe : recipes) {
             if (recipe.getName().equals(name))
