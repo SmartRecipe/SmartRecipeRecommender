@@ -126,6 +126,9 @@ Parameters :
     "name": "",
     "qty": "",
     "unit": "",
+    "user": "",
+    "createdAt": "",
+    "updatedAt": "",
 }
 
 Headers : 
