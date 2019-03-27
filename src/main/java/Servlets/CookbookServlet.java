@@ -38,16 +38,16 @@ public class CookbookServlet extends HttpServlet {
             case "add_recipe":
                 Recipe recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
                 RecipeDatabase.addRecipe(recipe);
-                request.getServletContext().getRequestDispatcher("recipe.js").forward(request, response);
+                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
             case "get_recipes":
                 List<Recipe> recipes = RecipeDatabase.getAllRecipes();
                 request.setAttribute("recipes", recipes);
-                request.getServletContext().getRequestDispatcher("recipe.js").forward(request, response);
+                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
             default:
                 //Shouldn't ever get here.
-                request.getServletContext().getRequestDispatcher("index.js").forward(request, response);
+                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
         }
     }
