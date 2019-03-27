@@ -9,6 +9,7 @@ import Beans.Recipe;
 import Databases.RecipeDatabase;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,15 @@ public class CookbookServlet extends HttpServlet {
                 RecipeDatabase.addRecipe(recipe);
                 request.getServletContext().getRequestDispatcher("recipe.js").forward(request, response);
                 break;
+            case "get_recipes":
+                List<Recipe> recipes = RecipeDatabase.getAllRecipes();
+                request.setAttribute("recipes", recipes);
+                request.getServletContext().getRequestDispatcher("recipe.js").forward(request, response);
+                break;
             default:
                 //Shouldn't ever get here.
                 request.getServletContext().getRequestDispatcher("index.js").forward(request, response);
+                break;
         }
     }
     

@@ -16,6 +16,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
@@ -60,8 +61,8 @@ public class UserDatabase {
         }
     }
     
-    public static ArrayList<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    public static List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
         
         try {
             java.util.Properties config = new java.util.Properties();
@@ -104,7 +105,7 @@ public class UserDatabase {
     }
     
     public static User getUser(String name) {
-        ArrayList<User> users = getAllUsers();
+        List<User> users = getAllUsers();
         
         for (User user : users) {
             if (user.getName().equals(name))
