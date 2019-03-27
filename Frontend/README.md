@@ -153,7 +153,8 @@ Collection of recipes
             "short_description": "", 
             "description": "", 
             "ingredients": [], 
-            "user": "", 
+            "user": "",
+            "is_favourite": Boolean, 
             "createdAt": "", 
             "updatedAt": "" 
         }
