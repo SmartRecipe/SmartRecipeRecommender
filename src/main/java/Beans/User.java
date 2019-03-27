@@ -5,12 +5,14 @@
  */
 package Beans;
 
+import java.io.Serializable;
+
 /**
  *
  * @author soup
  */
-public class User {
-    
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
     private String username;
     private String email;
