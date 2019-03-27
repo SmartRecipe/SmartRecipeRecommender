@@ -47,6 +47,14 @@ Parameters :
         "password": "",
     }
 }
+
+Response :
+{
+    "user": {
+        "token": "",
+        "email": "",
+    }
+}
 ```
 
 Sign In API
@@ -59,6 +67,14 @@ Parameters :
     "user": {
         "email": "",
         "password": "",
+    }
+}
+
+Response :
+{
+    "user": {
+        "token": "",
+        "email": "",
     }
 }
 ```
@@ -88,9 +104,14 @@ Get list of ingredients
 ```bash
 GET /ingredients
 
-Headers: 
+Headers : 
 {
     X-Access-Token: "<ACCESS_TOKEN>",
+}
+
+Response : 
+{
+    "ingredients": [],
 }
 ```
 
@@ -107,21 +128,78 @@ Parameters :
     "unit": "",
 }
 
-Headers: 
+Headers : 
 {
     X-Access-Token: "<ACCESS_TOKEN>",
+}
+
+Response : 
+{
+    "ingredient": {},
 }
 ```
 
 ### Recipe API
 
-A recipe is made of following fields.
+Collection of recipes
 
-* name : String
-* short_description : String
-* description : String
-* ingredients : List(Ingredient)
-* userId : String (Associates the recipe with a user)
+```json
+{ 
+    "recipes": [
+        { 
+            "_type": "recipe", 
+            "id": "", 
+            "name": "", 
+            "short_description": "", 
+            "description": "", 
+            "ingredients": [], 
+            "user": "", 
+            "createdAt": "", 
+            "updatedAt": "" 
+        }
+    ]
+}
+```
+
+Get list of recipes
+
+```bash
+GET /recipes
+
+Headers: 
+{
+    X-Access-Token: "<ACCESS_TOKEN>",
+}
+
+Response: 
+{
+    "recipes": [],
+}
+```
+
+Add new recipe
+
+```bash
+POST /recipes
+
+Parameters : 
+{
+    "id": "<OPTIONAL>",
+    "name": "",
+    "qty": "",
+    "unit": "",
+}
+
+Headers: 
+{
+    X-Access-Token: "<ACCESS_TOKEN>",
+}
+
+Response: 
+{
+    "recipe": {},
+}
+```
 
 ## Installation & Usage
 
