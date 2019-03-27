@@ -104,14 +104,25 @@ public class UserDatabase {
         return users;
     }
     
-    public static User getUser(String name) {
+    public static User getUser(String email) {
         List<User> users = getAllUsers();
         
         for (User user : users) {
-            if (user.getName().equals(name))
+            if (user.getEmail().equalsIgnoreCase(email))
                 return user;
         }
         
         return null;
+    }
+    
+    public static User login(String email, String password) {
+        //Note: This is a temporary implementation of the login functionality, and so it's naturally insecure. It will be updated later with security measures including salts and hashes.
+        
+        User user = getUser(email);
+        
+        if (user.getPassword().equalsIgnoreCase(password))
+            return user;
+        else
+            return null;
     }
 }

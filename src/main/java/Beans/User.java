@@ -16,6 +16,7 @@ public class User implements Serializable {
     private String name;
     private String username;
     private String email;
+    private String password;
     private int userID;
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
@@ -53,6 +54,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public int getUserID() {
