@@ -5,7 +5,15 @@
 */
 package Servlets;
 
+import Beans.Recipe;
+import Beans.User;
+import Databases.RecipeDatabase;
+import Databases.UserDatabase;
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +33,48 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request,
+                                  HttpServletResponse response)
             throws ServletException, IOException {
-        //Pretty much all of our code will go in here.
+        Gson gson = new Gson();
+        String action = request.getParameter("action");
+
+        User user;
+        switch (action) {
+            case "sign_up":
+                String json = request.getParameter("user");
+                user = gson.fromJson(json, User.class);
+                user.setPassword(request.getParameter("password"));
+                UserDatabase.addUser(user);
+                request.setAttribute("user", user);
+                request.setAttribute("token", UUID.randomUUID());
+                request.getServletContext()
+                        .getRequestDispatcher("index.html")
+                        .forward(request, response);
+                break;
+            case "login":
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                user = UserDatabase.login(email, password);
+                if (user == null) {
+                    request.getServletContext()
+                            .getRequestDispatcher("login.html")
+                            .forward(request, response);
+                } else {
+                    request.setAttribute("user", user);
+                    request.setAttribute("token", UUID.randomUUID());
+                    request.getServletContext()
+                            .getRequestDispatcher("index.html")
+                            .forward(request, response);
+                }
+                break;
+            default:
+                //Shouldn't ever get here.
+                request.getServletContext()
+                        .getRequestDispatcher("error.html")
+                        .forward(request, response);
+                break;
+        }
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
