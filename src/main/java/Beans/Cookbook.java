@@ -5,6 +5,7 @@
 */
 package Beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
  *
  * @author soup
  */
-public class Cookbook {
+public class Cookbook implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static Cookbook instance;
     private List<Recipe> history; //List of all the recipes the user has made before.
     private List<Recipe> favorites; //List of all the recipes the user has marked as a favorite.

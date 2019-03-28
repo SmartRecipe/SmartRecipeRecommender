@@ -6,6 +6,7 @@
 package Beans;
 
 import Databases.RecipeDatabase;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,8 @@ import java.util.List;
  *
  * @author soup
  */
-public class VirtualRefrigerator {
+public class VirtualRefrigerator implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static VirtualRefrigerator instance;
     private List<Ingredient> ingredients; //List of all ingredients in user's fridge
     

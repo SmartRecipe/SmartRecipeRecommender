@@ -5,15 +5,18 @@
  */
 package Beans;
 
+import java.io.Serializable;
+
 /**
  *
  * @author soup
  */
-public class User {
-    
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
     private String username;
     private String email;
+    private String password;
     private int userID;
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
@@ -51,6 +54,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public int getUserID() {

@@ -16,6 +16,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
@@ -60,8 +61,8 @@ public class UserDatabase {
         }
     }
     
-    public static ArrayList<User> getAllUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    public static List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
         
         try {
             java.util.Properties config = new java.util.Properties();
@@ -103,14 +104,25 @@ public class UserDatabase {
         return users;
     }
     
-    public static User getUser(String name) {
-        ArrayList<User> users = getAllUsers();
+    public static User getUser(String email) {
+        List<User> users = getAllUsers();
         
         for (User user : users) {
-            if (user.getName().equals(name))
+            if (user.getEmail().equalsIgnoreCase(email))
                 return user;
         }
         
         return null;
+    }
+    
+    public static User login(String email, String password) {
+        //Note: This is a temporary implementation of the login functionality, and so it's naturally insecure. It will be updated later with security measures including salts and hashes.
+        
+        User user = getUser(email);
+        
+        if (user.getPassword().equalsIgnoreCase(password))
+            return user;
+        else
+            return null;
     }
 }
