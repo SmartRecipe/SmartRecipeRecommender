@@ -6,6 +6,7 @@
 package Beans;
 
 import Databases.RecipeDatabase;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +14,13 @@ import java.util.List;
  *
  * @author soup
  */
-public class VirtualRefrigerator {
-    private List<Ingredient> ingredients; //List of all ingredients in user's fridge
-    private List<Recipe> cookbook; //List of user's favorite recipes
+public class VirtualRefrigerator implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static VirtualRefrigerator instance;
+    private List<Ingredient> ingredients; //List of all ingredients in user's fridge
     
     private VirtualRefrigerator() {
         ingredients = new ArrayList<>();
-        cookbook = new ArrayList<>();
     }
     
     public static VirtualRefrigerator getInstance() {
@@ -181,14 +181,5 @@ public class VirtualRefrigerator {
     public void setIngredientsList(List<Ingredient> ingredients) {
     	if (ingredients == null) return;
         this.ingredients = ingredients;
-    }
-    
-    public List<Recipe> getCookbook() {
-        return cookbook;
-    }
-    
-    public void setCookbook(List<Recipe> cookbook) {
-    	if (cookbook == null) return;
-        this.cookbook = cookbook;
     }
 }

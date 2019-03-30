@@ -5,17 +5,21 @@
  */
 package Beans;
 
+import java.io.Serializable;
+
 /**
  *
  * @author soup
  */
-public class User {
-    
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
     private String username;
     private String email;
+    private String password;
     private int userID;
     private VirtualRefrigerator fridge;
+    private Cookbook cookbook;
     
     public User() { }
     
@@ -25,6 +29,7 @@ public class User {
         this.email = email;
         this.userID = userID;
         fridge = VirtualRefrigerator.getInstance();
+        cookbook = Cookbook.getInstance();
     }
 
     public String getName() {
@@ -51,6 +56,14 @@ public class User {
         this.email = email;
     }
     
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     public int getUserID() {
         return userID;
     }
@@ -65,5 +78,13 @@ public class User {
     
     public void setFridge(VirtualRefrigerator fridge) {
         this.fridge = fridge;
+    }
+    
+    public Cookbook getCookbook() {
+        return cookbook;
+    }
+    
+    public void setCookbook(Cookbook cookbook) {
+        this.cookbook = cookbook;
     }
 }
