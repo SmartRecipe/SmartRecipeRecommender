@@ -14,6 +14,7 @@ import { addRecipe, getRecipes, deleteRecipe } from '../../actions/recipes-page/
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
 import RecipeViewComponent from '../../components/dialogs/recipe-view-dialog.component';
+import RecipeShareComponent from '../../components/dialogs/social-share-dialog.component';
 
 const newRecipe = {name: '', short_description: '', description: '', ingredients: [],};
 
@@ -25,7 +26,7 @@ class RecipesPageContainer extends Component {
     super(props);
 
     this.state = {
-      showDialog: false,
+      showShareDialog: false,
       showViewDialog: false,
       recipe: newRecipe,
     };
@@ -48,7 +49,7 @@ class RecipesPageContainer extends Component {
    */
   onAddButtonClicked() {
     this.setState({
-      showDialog: true,
+      showViewDialog: true,
     });
   } 
 
@@ -58,7 +59,7 @@ class RecipesPageContainer extends Component {
    */
   onDialogClosed() {
     this.setState({
-      showDialog: false,
+      showViewDialog: false,
       recipe: newRecipe,
     });
   }
@@ -186,7 +187,7 @@ class RecipesPageContainer extends Component {
     const recipe = this.props.recipes.filter((recipe) => recipe.id === id);
 
     this.setState({
-      showDialog: true,
+      showViewDialog: true,
       recipe: recipe[0],
     });
   }
@@ -195,19 +196,30 @@ class RecipesPageContainer extends Component {
     this.props.deleteRecipe(id);
   }
 
-  onCardViewed(id) {
+  onCardViewed(id, action) {
     const recipe = this.props.recipes.filter((recipe) => recipe.id === id);
 
-    this.setState({
-      showViewDialog: true,
-      recipe: recipe[0],
-    });
+    switch(action) {
+      case 'VIEW':
+        this.setState({
+          showViewDialog: true,
+          recipe: recipe[0],
+        });
+      case 'SHARE':
+        this.setState({
+          showShareDialog: true,
+          recipe: recipe[0],
+        });
+      default:
+        break;
+    }
   }
 
   onCardViewClosed() {
     this.setState({
-      showViewDialog: false,
       recipe: newRecipe, 
+      showViewDialog: false,
+      showShareDialog: false,
     });
   }
 
@@ -256,7 +268,7 @@ class RecipesPageContainer extends Component {
   }
 
   render() {
-    const { showDialog, showViewDialog, recipe } = this.state;
+    const { showShareDialog, showViewDialog, recipe } = this.state;
 
     const { 
       classes, 
@@ -283,7 +295,7 @@ class RecipesPageContainer extends Component {
           {
             <AddRecipeDialog
               recipe={recipe}
-              open={showDialog} 
+              open={showViewDialog} 
               onClose={this.onDialogClosed} 
               onSubmit={this.onDialogSubmit} 
               onFormChange={this.onDialogFormChange}
@@ -294,6 +306,12 @@ class RecipesPageContainer extends Component {
             <RecipeViewComponent
               recipe={recipe}
               open={showViewDialog}
+              onClose={this.onCardViewClosed}/>
+          }
+          {
+            <RecipeShareComponent 
+              recipe={recipe}
+              open={showShareDialog}
               onClose={this.onCardViewClosed}/>
           }
           {
