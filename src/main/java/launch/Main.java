@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        String webappDirLocation = "Frontend/src/";
+        String webappDirLocation = "Frontend/public/";
         Tomcat tomcat = new Tomcat();
 
         //The port that we should run on can be set into an environment variable
