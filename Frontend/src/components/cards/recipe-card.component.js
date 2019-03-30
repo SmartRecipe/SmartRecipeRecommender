@@ -101,7 +101,7 @@ class RecipeCardComponent extends React.Component {
 
         {/* Card Footer */}
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="View" onClick={() => onCardViewed(id)}>
+          <IconButton aria-label="View" onClick={() => onCardViewed(id, 'VIEW')}>
             <VisibilityIcon />
           </IconButton>
           <IconButton aria-label="Add to favorites">
@@ -113,7 +113,7 @@ class RecipeCardComponent extends React.Component {
           <IconButton aria-label="Delete" onClick={() => onDeleteButtonClicked(id)}>
             <DeleteIcon />
           </IconButton>
-          <IconButton aria-label="Share">
+          <IconButton aria-label="Share" onClick={() => onCardViewed(id, 'SHARE')}>
             <ShareIcon />
           </IconButton>
         </CardActions>
