@@ -12,8 +12,9 @@ import { addRecipe } from '../../actions/recipes-page/recipes-page.actions';
 import RecipeCardComponent from '../../components/cards/recipe-card.component';
 import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.component';
 import RecipeViewComponent from '../../components/dialogs/recipe-view-dialog.component';
+import SocialShareDialogComponent from '../../components/dialogs/social-share-dialog.component';
 
-const newRecipe = {name: '', short_description: '', description: '', ingredients: [],};
+const newRecipe = { name: '', short_description: '', description: '', ingredients: [] };
 
 /**
  * Main Container for recipes page. 
@@ -23,9 +24,8 @@ class RecipesPageContainer extends Component {
     super(props);
 
     this.state = {
-      showDialog: false,
-      showViewDialog: false,
       recipe: newRecipe,
+      showViewDialog: false,
     };
 
     this.onCardViewed = this.onCardViewed.bind(this);
@@ -46,7 +46,7 @@ class RecipesPageContainer extends Component {
    */
   onAddButtonClicked() {
     this.setState({
-      showDialog: true,
+      showViewDialog: true,
     });
   } 
 
@@ -56,7 +56,7 @@ class RecipesPageContainer extends Component {
    */
   onDialogClosed() {
     this.setState({
-      showDialog: false,
+      showViewDialog: false,
       recipe: newRecipe,
     });
   }
@@ -184,7 +184,7 @@ class RecipesPageContainer extends Component {
     const recipe = this.props.recipes.filter((recipe) => recipe.id === id);
 
     this.setState({
-      showDialog: true,
+      showViewDialog: true,
       recipe: recipe[0],
     });
   }
@@ -250,7 +250,7 @@ class RecipesPageContainer extends Component {
   }
 
   render() {
-    const { showDialog, showViewDialog, recipe } = this.state;
+    const { showViewDialog, recipe } = this.state;
 
     const { classes, recipes } = this.props;
 
@@ -266,7 +266,7 @@ class RecipesPageContainer extends Component {
           {
             <AddRecipeDialog
               recipe={recipe}
-              open={showDialog} 
+              open={showViewDialog} 
               onClose={this.onDialogClosed} 
               onSubmit={this.onDialogSubmit} 
               onFormChange={this.onDialogFormChange}
@@ -278,6 +278,13 @@ class RecipesPageContainer extends Component {
               recipe={recipe}
               open={showViewDialog}
               onClose={this.onCardViewClosed}/>
+          }
+          {
+            <SocialShareDialogComponent
+              recipe={recipe}
+              open={showViewDialog}
+              onClose={this.onCardViewClosed}
+            />
           }
           {
             recipesGrid
