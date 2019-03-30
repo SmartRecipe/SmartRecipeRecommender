@@ -16,7 +16,7 @@ import AddRecipeDialog from '../../components/dialogs/add-recipe-dialog.componen
 import RecipeViewComponent from '../../components/dialogs/recipe-view-dialog.component';
 import RecipeShareComponent from '../../components/dialogs/social-share-dialog.component';
 
-const newRecipe = {name: '', short_description: '', description: '', ingredients: [],};
+const newRecipe = { name: '', short_description: '', description: '', ingredients: [] };
 
 /**
  * Main Container for recipes page. 
