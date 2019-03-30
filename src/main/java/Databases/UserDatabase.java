@@ -7,6 +7,7 @@ package Databases;
 
 import Beans.User;
 import Beans.VirtualRefrigerator;
+
 import com.google.gson.Gson;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -15,73 +16,50 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bson.Document;
 
 /**
  *
  * @author soup
  */
-public class UserDatabase {
-    private static Gson gson = new Gson();
-    private static Session ssh;
+public class UserDatabase extends BaseDatabase {
+	
+	private static UserDatabase instance = null;
     
-    public static void addUser(User user) {
+	private static final String DB_NAME = "smartrecipedb";
+	
+	private UserDatabase(){}
+	
+	public static UserDatabase getInstance() {
+		if (instance == null) {
+			instance = new UserDatabase();
+		}
+		return instance;
+	}
+	
+	
+    public void addUser(User user) {
         String userJSON = gson.toJson(user);
         
-        try {
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            JSch jsch = new JSch();
-            jsch.addIdentity("/home/soup/.ssh/id_rsa");
-            
-            ssh = null;
-            ssh = jsch.getSession("ubuntu", "35.153.73.71", 22);
-            ssh.setConfig(config);
-            ssh.connect();
-            ssh.setPortForwardingL(6666, "35.153.73.71", 27017);
-            
-            MongoClient mongo = new MongoClient("localhost", 6666);
-            MongoDatabase database = mongo.getDatabase("smartuserdb");
+        if (setupConnection(DB_NAME)) {
             MongoCollection<Document> users = database.getCollection("users");
-            
             users.insertOne(Document.parse(userJSON));
-        } catch (JSchException ex) {
-            Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ssh.delPortForwardingL(6666);
-            } catch (JSchException ex) {
-                Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ssh.disconnect();
         }
+        closeConnection();
     }
     
-    public static List<User> getAllUsers() {
+    public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         
-        try {
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            JSch jsch = new JSch();
-            jsch.addIdentity("/home/soup/.ssh/id_rsa");
-            
-            ssh = null;
-            ssh = jsch.getSession("ubuntu", "35.153.73.71", 22);
-            ssh.setConfig(config);
-            ssh.connect();
-            ssh.setPortForwardingL(6666, "35.153.73.71", 27017);
-            
-            MongoClient mongo = new MongoClient("localhost", 6666);
-            MongoDatabase database = mongo.getDatabase("smartuserdb");
+        if (setupConnection(DB_NAME)) {
             MongoCollection<Document> userCol = database.getCollection("users");
             MongoCursor<Document> cursor;
-            
-            
             cursor = userCol.find().iterator();
             try {
                 while (cursor.hasNext())
@@ -90,21 +68,13 @@ public class UserDatabase {
                 cursor.close();
             }
             
-        } catch (JSchException ex) {
-            Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ssh.delPortForwardingL(6666);
-            } catch (JSchException ex) {
-                Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ssh.disconnect();
-        }
+        } 
+        closeConnection();
         
         return users;
     }
     
-    public static User getUser(String email) {
+    public User getUser(String email) {
         List<User> users = getAllUsers();
         
         for (User user : users) {
@@ -115,7 +85,7 @@ public class UserDatabase {
         return null;
     }
     
-    public static User login(String email, String password) {
+    public User login(String email, String password) {
         //Note: This is a temporary implementation of the login functionality, and so it's naturally insecure. It will be updated later with security measures including salts and hashes.
         
         User user = getUser(email);

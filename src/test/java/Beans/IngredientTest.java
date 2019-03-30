@@ -49,6 +49,7 @@ public class IngredientTest {
 
     @Test
     public void setQuantity() {
+    	//Test for negative
     	//fail("Not yet implemented");
     }
 

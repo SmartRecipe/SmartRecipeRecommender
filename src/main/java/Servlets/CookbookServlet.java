@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author soup
  */
 public class CookbookServlet extends HttpServlet {
-    
+	
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
@@ -37,11 +37,11 @@ public class CookbookServlet extends HttpServlet {
         switch (action) {
             case "add_recipe":
                 Recipe recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
-                RecipeDatabase.addRecipe(recipe);
+                RecipeDatabase.getInstance().addRecipe(recipe);
                 request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
             case "get_recipes":
-                List<Recipe> recipes = RecipeDatabase.getAllRecipes();
+                List<Recipe> recipes = RecipeDatabase.getInstance().getAllRecipes();
                 request.setAttribute("recipes", recipes);
                 request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
