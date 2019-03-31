@@ -1,1 +1,1 @@
-web
+web: java -jar 

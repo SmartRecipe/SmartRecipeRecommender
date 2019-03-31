@@ -2,7 +2,7 @@
 *.xml
 *.iml
 
-!target/*-jar-with-dependencies.jar
+!./target/*.jar
 
 # ignore these whole directories
 build/
