@@ -2,7 +2,6 @@
 *.xml
 *.iml
 
-!./target/*.jar
 
 # ignore these whole directories
 build/
@@ -11,3 +10,6 @@ gen/
 target/
 tomcat.8080/
 build
+
+# exclude following files
+!./target/*.jar
