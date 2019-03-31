@@ -1,7 +1,0 @@
-#!/bin/bash
-
-mvn package
-
-if [ "$?" -eq 0 ]; then
-	java -cp target/SmartRecipeRecommender-1.0-SNAPSHOT-jar-with-dependencies.jar launch.Main
-fi

@@ -1,4 +1,0 @@
-language: java
-services: mongodb
-after_success:
-  - mvn clean test jacoco:report coveralls:report

@@ -4,4 +4,21 @@
 
 # Smart Recipe Recommender
 
-    
+The backend application for Smart Recipe Recommender.
+
+## Requirements
+
+* Java 8+
+
+## Build
+
+This project requires a MongoDB server for the backend. Set following environment variables. 
+
+```bash
+SSH_KEY = '<SSH_KEY_TO_CONNECT_TO_MONGO_SERVER>'
+DB_ADDRESS = '<MONGO_SERVER_DNS>' 
+DB_PORT = '<MONGO_SERVER_PORT>' 
+DB_NAME = '<MONGO_DATABASE_NAME>'
+```
+
+ 

@@ -1,6 +1,0 @@
-#!/bin/bash
-
-src="./*"
-dst="/home/pranav/Desktop/smartrecipefrontend/"
-
-cp -r ${src} ${dst}

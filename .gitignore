@@ -1,9 +1,0 @@
-# ignore these files
-*.xml
-*.iml
-
-# ignore these whole directories
-build/
-gen/
-.idea/
-target/
