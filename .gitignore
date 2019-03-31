@@ -2,6 +2,8 @@
 *.xml
 *.iml
 
+!target/*-jar-with-dependencies.jar
+
 # ignore these whole directories
 build/
 gen/
