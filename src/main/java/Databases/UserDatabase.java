@@ -65,7 +65,6 @@ public class UserDatabase extends BaseDatabase {
             } finally {
                 cursor.close();
             }
-            
         } 
         closeConnection();
         
@@ -88,7 +87,7 @@ public class UserDatabase extends BaseDatabase {
         
         User user = getUser(email);
         
-        if (user.getPassword().equalsIgnoreCase(password))
+        if (user != null && user.getPassword().equalsIgnoreCase(password))
             return user;
         else
             return null;
