@@ -52,9 +52,9 @@ public class LoginServlet extends HttpServlet {
                 ServletUtils.sendResponse(response, gson.toJson(user));
                 break;
             case "login":
-                String email = "";
-                String password = "";
-                user = UserDatabase.login(email, password);
+                String json = ServletUtils.getBody(request);
+                List<String> params = gson.fromJson(json);
+                System.out.println(params);
                 if (user == null) {
                     request.getServletContext()
                             .getRequestDispatcher("/login.html")
