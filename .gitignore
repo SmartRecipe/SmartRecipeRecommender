@@ -12,4 +12,4 @@ tomcat.8080/
 build
 
 # exclude following files
-!./target/*.jar
+!target/*.jar
