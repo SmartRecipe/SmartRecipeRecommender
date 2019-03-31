@@ -37,14 +37,13 @@ public class UserDatabase {
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
             jsch.addIdentity("/home/pranav/.ssh/Pranav-Master-Key-Pair.pem");
-            
-            ssh = null;
+
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
             ssh.setConfig(config);
             ssh.connect();
-            ssh.setPortForwardingL(6666, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
+            ssh.setPortForwardingL(DBUtils.DB_PORT_FORWARDING, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
             
-            MongoClient mongo = new MongoClient("localhost", 6666);
+            MongoClient mongo = new MongoClient("localhost", DBUtils.DB_PORT_FORWARDING);
             MongoDatabase database = mongo.getDatabase(DBUtils.ENV_DB_NAME);
             MongoCollection<Document> users = database.getCollection("users");
             
@@ -53,7 +52,7 @@ public class UserDatabase {
             Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                ssh.delPortForwardingL(6666);
+                ssh.delPortForwardingL(DBUtils.DB_PORT_FORWARDING);
             } catch (JSchException ex) {
                 Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -69,14 +68,13 @@ public class UserDatabase {
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
             jsch.addIdentity("/home/pranav/.ssh/Pranav-Master-Key-Pair.pem");
-            
-            ssh = null;
+
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
             ssh.setConfig(config);
             ssh.connect();
-            ssh.setPortForwardingL(6666, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
+            ssh.setPortForwardingL(DBUtils.DB_PORT_FORWARDING, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
             
-            MongoClient mongo = new MongoClient("localhost", 6666);
+            MongoClient mongo = new MongoClient("localhost", DBUtils.DB_PORT_FORWARDING);
             MongoDatabase database = mongo.getDatabase( DBUtils.ENV_DB_NAME);
             MongoCollection<Document> userCol = database.getCollection("users");
             MongoCursor<Document> cursor;
@@ -94,7 +92,7 @@ public class UserDatabase {
             Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                ssh.delPortForwardingL(6666);
+                ssh.delPortForwardingL(DBUtils.DB_PORT_FORWARDING);
             } catch (JSchException ex) {
                 Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -120,7 +118,7 @@ public class UserDatabase {
         
         User user = getUser(email);
         
-        if (user.getPassword().equalsIgnoreCase(password))
+        if (user != null && user.getPassword().equalsIgnoreCase(password))
             return user;
         else
             return null;
