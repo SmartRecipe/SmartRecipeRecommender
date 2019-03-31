@@ -52,20 +52,20 @@ public class LoginServlet extends HttpServlet {
                 ServletUtils.sendResponse(response, gson.toJson(user));
                 break;
             case "login":
-                String json = ServletUtils.getBody(request);
-                List<String> params = gson.fromJson(json);
-                System.out.println(params);
-                if (user == null) {
-                    request.getServletContext()
-                            .getRequestDispatcher("/login.html")
-                            .forward(request, response);
-                } else {
-                    request.setAttribute("user", user);
-                    request.setAttribute("token", UUID.randomUUID());
-                    request.getServletContext()
-                            .getRequestDispatcher("/index.html")
-                            .forward(request, response);
-                }
+                // String json = ServletUtils.getBody(request);
+                // List<String> params = gson.fromJson(json);
+                // System.out.println(params);
+                // if (user == null) {
+                //     request.getServletContext()
+                //             .getRequestDispatcher("/login.html")
+                //             .forward(request, response);
+                // } else {
+                //     request.setAttribute("user", user);
+                //     request.setAttribute("token", UUID.randomUUID());
+                //     request.getServletContext()
+                //             .getRequestDispatcher("/index.html")
+                //             .forward(request, response);
+                // }
                 break;
             default:
                 //Shouldn't ever get here.
