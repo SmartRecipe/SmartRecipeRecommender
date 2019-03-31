@@ -5,6 +5,7 @@
  */
 package Beans;
 
+import java.util.UUID;
 import java.io.Serializable;
 
 /**
@@ -17,13 +18,13 @@ public class User implements Serializable {
     private String username;
     private String email;
     private String password;
-    private int userID;
+    private UUID userID;
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
     
     public User() { }
     
-    public User(String name, String username, String email, int userID) {
+    public User(String name, String username, String email, UUID userID) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -64,11 +65,11 @@ public class User implements Serializable {
         this.password = password;
     }
     
-    public int getUserID() {
+    public UUID getUserID() {
         return userID;
     }
     
-    public void setUserID(int userID) {
+    public void setUserID(UUID userID) {
         this.userID = userID;
     }
     
