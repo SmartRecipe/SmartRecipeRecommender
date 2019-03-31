@@ -36,7 +36,7 @@ public class UserDatabase {
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            jsch.addIdentity("/home/pranav/.ssh/Pranav-Master-Key-Pair.pem");
+            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
             
             ssh = null;
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
@@ -68,7 +68,7 @@ public class UserDatabase {
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            jsch.addIdentity("/home/pranav/.ssh/Pranav-Master-Key-Pair.pem");
+            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
             
             ssh = null;
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);

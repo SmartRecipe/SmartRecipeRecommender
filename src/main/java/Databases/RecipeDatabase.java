@@ -39,7 +39,7 @@ public class RecipeDatabase {
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            jsch.addIdentity(DBUtils.ENV_SSH_KEY);
+            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
             
             ssh = null;
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
@@ -71,7 +71,7 @@ public class RecipeDatabase {
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
-            jsch.addIdentity(DBUtils.ENV_SSH_KEY);
+            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
             
             ssh = null;
             ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
