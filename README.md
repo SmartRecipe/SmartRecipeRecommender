@@ -12,13 +12,13 @@ The backend application for Smart Recipe Recommender.
 
 ## Build
 
-This project requires a MongoDB server for the backend. Set following environment variables. 
+This project requires a MongoDB server for the backend. Here is an example Bash script which will help you set up the ENV vars. Please note that since the project is deployed on Heroku, there is no way to store a SSH key on deployment environment. Therefore, you need to store the contents of your private key in SSH_KEY variable instead of a path to the key. 
 
 ```bash
-SSH_KEY = '<SSH_KEY_TO_CONNECT_TO_MONGO_SERVER>'
-DB_ADDRESS = '<MONGO_SERVER_DNS>' 
-DB_PORT = '<MONGO_SERVER_PORT>' 
-DB_NAME = '<MONGO_DATABASE_NAME>'
+export SSH_KEY=$(cat <PATH_TO_YOUR_KEY>)
+export DB_NAME='<MONGO_DB_NAME>'
+export DB_ADDRESS='<MONGO_DB_ADDRESS>'
+export DB_PORT='<MONGO_DB_PORT>'
 ```
 
  

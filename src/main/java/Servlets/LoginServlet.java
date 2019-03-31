@@ -13,6 +13,10 @@ import Databases.UserDatabase;
 import com.google.gson.Gson;
 
 import java.util.List;
+import Databases.UserDatabase;
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.UUID;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -42,30 +46,32 @@ public class LoginServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         User user;
+        UserDatabase db = UserDatabase.getInstance();
+
         switch (action) {
             case "sign_up":
                 String json = ServletUtils.getBody(request);
                 user = gson.fromJson(json, User.class);
                 user.setPassword(user.getPassword());
                 user.setUserID(UUID.randomUUID());
-                UserDatabase.addUser(user);
+                db.addUser(user);
                 ServletUtils.sendResponse(response, gson.toJson(user));
                 break;
             case "login":
-                // String json = ServletUtils.getBody(request);
-                // List<String> params = gson.fromJson(json);
-                // System.out.println(params);
-                // if (user == null) {
-                //     request.getServletContext()
-                //             .getRequestDispatcher("/login.html")
-                //             .forward(request, response);
-                // } else {
-                //     request.setAttribute("user", user);
-                //     request.setAttribute("token", UUID.randomUUID());
-                //     request.getServletContext()
-                //             .getRequestDispatcher("/index.html")
-                //             .forward(request, response);
-                // }
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                user = db.login(email, password);
+                if (user == null) {
+                    request.getServletContext()
+                            .getRequestDispatcher("login.html")
+                            .forward(request, response);
+                } else {
+                    request.setAttribute("user", user);
+                    request.setAttribute("token", UUID.randomUUID());
+                    request.getServletContext()
+                            .getRequestDispatcher("index.html")
+                            .forward(request, response);
+                }
                 break;
             default:
                 //Shouldn't ever get here.
@@ -113,6 +119,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
     
 }

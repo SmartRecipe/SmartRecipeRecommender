@@ -5,86 +5,47 @@
  */
 package Databases;
 
-import com.google.gson.Gson;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
+import Databases.BaseDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import com.mongodb.client.MongoCursor;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import Beans.Recipe;
-import Beans.VirtualRefrigerator;
 import java.util.List;
-import Databases.DBUtils;
 
 /**
  *
  * @author soup
  */
-public class RecipeDatabase {
-    private static Gson gson = new Gson();
-    private static Session ssh;
-
-    private DBUtils dbUtils = new DBUtils();
-    
-    public static void addRecipe(Recipe recipe) {
+public class RecipeDatabase extends BaseDatabase {
+	
+	private static RecipeDatabase instance = null;
+		
+	private RecipeDatabase() {
+	}
+	
+	public static RecipeDatabase getInstance() {
+		if (instance == null) {
+			instance = new RecipeDatabase();
+		}
+		return instance;
+	}
+	
+    public void addRecipe(Recipe recipe) {
         String recipeJSON = gson.toJson(recipe);
         
-        try {
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            JSch jsch = new JSch();
-            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
-            
-            ssh = null;
-            ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
-            ssh.setConfig(config);
-            ssh.connect();
-            ssh.setPortForwardingL(6666, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
-            
-            MongoClient mongo = new MongoClient("localhost", 6666);
-            MongoDatabase database = mongo.getDatabase(DBUtils.ENV_DB_NAME);
-            MongoCollection<Document> recipes = database.getCollection("recipes");
-            
+        if (setupConnection(BaseDatabase.ENV_DB_NAME)) {
+        	MongoCollection<Document> recipes = database.getCollection("recipes");
             recipes.insertOne(Document.parse(recipeJSON));
-        } catch (JSchException ex) {
-            Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ssh.delPortForwardingL(6666);
-            } catch (JSchException ex) {
-                Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ssh.disconnect();
         }
+        closeConnection();
     }
     
-    public static List<Recipe> getAllRecipes() {
+    public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
-        
-        try {
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            JSch jsch = new JSch();
-            jsch.addIdentity("ubuntu", DBUtils.ENV_SSH_KEY.getBytes(), null, null);
-            
-            ssh = null;
-            ssh = jsch.getSession("ubuntu", DBUtils.ENV_DB_ADDRESS, DBUtils.SSH_PORT);
-            ssh.setConfig(config);
-            ssh.connect();
-            ssh.setPortForwardingL(6666, DBUtils.ENV_DB_ADDRESS, DBUtils.ENV_DB_PORT);
-            
-            MongoClient mongo = new MongoClient("localhost", 6666);
-            MongoDatabase database = mongo.getDatabase(DBUtils.ENV_DB_NAME);
-            MongoCollection<Document> recipeCol = database.getCollection("recipes");
+        if(setupConnection(BaseDatabase.ENV_DB_NAME)) {
+        	MongoCollection<Document> recipeCol = database.getCollection("recipes");
             MongoCursor<Document> cursor;
-            
-            
             cursor = recipeCol.find().iterator();
             try {
                 while (cursor.hasNext())
@@ -92,22 +53,13 @@ public class RecipeDatabase {
             } finally {
                 cursor.close();
             }
-            
-        } catch (JSchException ex) {
-            Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ssh.delPortForwardingL(6666);
-            } catch (JSchException ex) {
-                Logger.getLogger(VirtualRefrigerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ssh.disconnect();
         }
+        closeConnection();
         
         return recipes;
     }
     
-    public static Recipe getRecipe(String name) {
+    public Recipe getRecipe(String name) {
         List<Recipe> recipes = getAllRecipes();
         
         for (Recipe recipe : recipes) {
