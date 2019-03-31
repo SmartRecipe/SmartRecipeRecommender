@@ -56,7 +56,7 @@ public class VirtualRefrigerator implements Serializable {
     public ArrayList<Recipe> checkAllRecipes() {
         ArrayList<Recipe> validRecipes = new ArrayList<>();
         
-        for (Recipe recipe : RecipeDatabase.getAllRecipes()) {
+        for (Recipe recipe : RecipeDatabase.getInstance().getAllRecipes()) {
             if (checkRecipe(recipe))
                 validRecipes.add(recipe);
         }

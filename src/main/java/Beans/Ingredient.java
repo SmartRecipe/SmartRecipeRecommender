@@ -76,4 +76,9 @@ public class Ingredient {
     public void setNutVal(NutritionInfo nutVal) {
         this.nutVal = nutVal;
     }   
+    
+    @Override
+    public String toString() {
+    	return this.getName()+": "+this.getQuantity();
+    }
 }

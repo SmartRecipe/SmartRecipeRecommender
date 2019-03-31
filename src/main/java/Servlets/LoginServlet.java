@@ -5,14 +5,11 @@
 */
 package Servlets;
 
-import Beans.Recipe;
 import Beans.User;
-import Databases.RecipeDatabase;
 import Databases.UserDatabase;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                 String json = request.getParameter("user");
                 user = gson.fromJson(json, User.class);
                 user.setPassword(request.getParameter("password"));
-                UserDatabase.addUser(user);
+                UserDatabase.getInstance().addUser(user);
                 request.setAttribute("user", user);
                 request.setAttribute("token", UUID.randomUUID());
                 request.getServletContext()
@@ -55,7 +52,7 @@ public class LoginServlet extends HttpServlet {
             case "login":
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
-                user = UserDatabase.login(email, password);
+                user = UserDatabase.getInstance().login(email, password);
                 if (user == null) {
                     request.getServletContext()
                             .getRequestDispatcher("login.html")
@@ -114,6 +111,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
     
 }
