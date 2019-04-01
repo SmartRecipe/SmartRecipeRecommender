@@ -64,13 +64,13 @@ public class LoginServlet extends BaseServlet {
                 user = gson.fromJson(requestBody, User.class);
                 user = userDb.login(user.getEmail(), user.getPassword());
                 if (user == null) {
-                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "Login error");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
                 } else {
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
                 }
                 break;
             default:
-                sendResponse(response, STATUS_HTTP_NOT_FOUND, "Not found");
+                sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
                 break;
         }
     }
