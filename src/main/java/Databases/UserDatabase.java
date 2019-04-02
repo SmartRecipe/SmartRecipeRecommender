@@ -87,7 +87,7 @@ public class UserDatabase extends BaseDatabase {
         
         User user = getUser(email);
         
-        if (user != null && user.getPassword().equalsIgnoreCase(password))
+        if (user != null && user.getPassword().equals(password))
             return user;
         else
             return null;
