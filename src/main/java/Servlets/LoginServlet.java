@@ -6,19 +6,13 @@
 package Servlets;
 
 import Beans.User;
-import Beans.Recipe;
 import Servlets.BaseServlet;
-import Databases.RecipeDatabase;
-
-import java.util.List;
 import com.google.gson.Gson;
 import Databases.UserDatabase;
 
 import java.util.UUID;
 import java.io.IOException;
-import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
     )
 public class LoginServlet extends BaseServlet {
     
+    private static final long serialVersionUID = -5655886484095458445L;
     public static final String info = "Login Servlet";
 
     /**
@@ -44,13 +39,22 @@ public class LoginServlet extends BaseServlet {
                                   HttpServletResponse response)
             throws ServletException, IOException {
         Gson gson = new Gson();
-        String action = request.getParameter("action");
+        String action = request != null ? request.getParameter("action") : "";
+        if (action == null)
+            action = "";
 
         User user;
         String requestBody = "";
         UserDatabase userDb = UserDatabase.getInstance();
         
         switch (action) {
+        case "":
+            user = new User();
+            user.setPassword("testpwd");
+            user.setUserID(UUID.randomUUID());
+            userDb.addUser(user);
+            sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
+            break;
             case "sign_up":
                 requestBody = getBody(request);
                 user = gson.fromJson(requestBody, User.class);

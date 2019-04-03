@@ -28,11 +28,14 @@ import org.bson.Document;
  *
  * @author soup
  */
-public class UserDatabase extends BaseDatabase {
+public class UserDatabase {
 	
 	private static UserDatabase instance = null;
+	private MongoConnection conn = null;
     	
-	private UserDatabase(){}
+	private UserDatabase(){
+	    conn = MongoConnection.getInstance();
+	}
 	
 	public static UserDatabase getInstance() {
 		if (instance == null) {
@@ -43,19 +46,21 @@ public class UserDatabase extends BaseDatabase {
 	
 	
     public void addUser(User user) {
+        Gson gson = new Gson();
         String userJSON = gson.toJson(user);
-        
-        if (setupConnection(BaseDatabase.ENV_DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
             MongoCollection<Document> users = database.getCollection("users");
             users.insertOne(Document.parse(userJSON));
         }
-        closeConnection();
     }
     
     public List<User> getAllUsers() {
+        Gson gson = new Gson();
         List<User> users = new ArrayList<>();
         
-        if (setupConnection(BaseDatabase.ENV_DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
             MongoCollection<Document> userCol = database.getCollection("users");
             MongoCursor<Document> cursor;
             cursor = userCol.find().iterator();
@@ -66,7 +71,6 @@ public class UserDatabase extends BaseDatabase {
                 cursor.close();
             }
         } 
-        closeConnection();
         
         return users;
     }
