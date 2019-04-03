@@ -118,37 +118,35 @@ public class VirtualRefigeratorTest {
             new Object[] { r5, createIngredientList(10), false } //Ingredient name changed case
         };
     }
-    
-    
-    /**
-     * Test method for {@link Beans.VirtualRefrigerator#checkAllRecipes()}.
-     */
-    @Test
-    @Parameters(method = "parametersCheckAllRecipes")
-    public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, int expectedRecipes) {
-        VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
-        underTest.setIngredientsList(userIngredients);
-        when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
-        ArrayList<Recipe> retVal = underTest.checkAllRecipes();
-        assertNotNull(retVal);
-        assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
-        if (dbRecipes != null) {
-            verify(mockDB, times(dbRecipes.size())).getAllRecipes();
-        }
-    }
-    
-    private ArrayList<Recipe> createRecipeList(int lowIngNum, int highIngNum) {
-        ArrayList<Recipe> recipeList = new ArrayList<>();
-        for (int i=lowIngNum; i<=highIngNum; i++) {
-            recipeList.add(createRecipe(i));
-        }
-        return recipeList;
-    }
-    
-    @SuppressWarnings("unused")
-    private Object[] parametersCheckAllRecipes() {
-        
-        return new Object[] {
+	
+
+	/**
+	 * Test method for {@link Beans.VirtualRefrigerator#checkAllRecipes()}.
+	 */
+	@Test
+	@Parameters(method = "parametersCheckAllRecipes")
+	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, int expectedRecipes) {
+		VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
+		underTest.setIngredientsList(userIngredients);
+		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
+		ArrayList<Recipe> retVal = underTest.checkAllRecipes();
+		assertNotNull(retVal);
+		verify(mockDB, times(1)).getAllRecipes();
+		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
+	}
+	
+	private ArrayList<Recipe> createRecipeList(int lowIngNum, int highIngNum) {
+		ArrayList<Recipe> recipeList = new ArrayList<>();
+		for (int i=lowIngNum; i<=highIngNum; i++) {
+			recipeList.add(createRecipe(i));
+		}
+		return recipeList;
+	}
+	
+	@SuppressWarnings("unused")
+	private Object[] parametersCheckAllRecipes() {
+		
+        return new Object[] { 
             new Object[] { createRecipeList(5, 15), createIngredientList(10), 6 },
             new Object[] { createRecipeList(10, 15), createIngredientList(10), 1 },
             new Object[] { createRecipeList(10, 15), createIngredientList(2), 0 }

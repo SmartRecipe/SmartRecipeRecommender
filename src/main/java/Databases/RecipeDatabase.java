@@ -5,9 +5,12 @@
  */
 package Databases;
 
+import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+
 import java.util.ArrayList;
 import Beans.Recipe;
 import java.util.List;
@@ -16,13 +19,13 @@ import java.util.List;
  *
  * @author soup
  */
-public class RecipeDatabase extends BaseDatabase {
-	
+public class RecipeDatabase {
+    	
 	private static RecipeDatabase instance = null;
-	
-	private static final String DB_NAME = "smartrecipedb";
-	
+    private MongoConnection conn = null;
+		
 	private RecipeDatabase() {
+	    conn  = MongoConnection.getInstance();
 	}
 	
 	public static RecipeDatabase getInstance() {
@@ -33,18 +36,21 @@ public class RecipeDatabase extends BaseDatabase {
 	}
 	
     public void addRecipe(Recipe recipe) {
+        Gson gson = new Gson();
         String recipeJSON = gson.toJson(recipe);
         
-        if (setupConnection(DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
         	MongoCollection<Document> recipes = database.getCollection("recipes");
             recipes.insertOne(Document.parse(recipeJSON));
         }
-        closeConnection();
     }
     
     public List<Recipe> getAllRecipes() {
+        Gson gson = new Gson();
         List<Recipe> recipes = new ArrayList<>();
-        if(setupConnection(DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
         	MongoCollection<Document> recipeCol = database.getCollection("recipes");
             MongoCursor<Document> cursor;
             cursor = recipeCol.find().iterator();
@@ -55,7 +61,6 @@ public class RecipeDatabase extends BaseDatabase {
                 cursor.close();
             }
         }
-        closeConnection();
         
         return recipes;
     }

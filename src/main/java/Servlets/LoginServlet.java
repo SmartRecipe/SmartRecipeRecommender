@@ -6,22 +6,26 @@
 package Servlets;
 
 import Beans.User;
-import Databases.UserDatabase;
+import Servlets.BaseServlet;
 import com.google.gson.Gson;
+import Databases.UserDatabase;
 
-import java.io.IOException;
 import java.util.UUID;
+import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author soup
- */
-public class LoginServlet extends HttpServlet {
+@WebServlet(
+        name = "LoginServlet",
+        urlPatterns = {"/signon"}
+    )
+public class LoginServlet extends BaseServlet {
     
+    private static final long serialVersionUID = -5655886484095458445L;
+    public static final String info = "Login Servlet";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
@@ -30,77 +34,49 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    @Override
     protected void processRequest(HttpServletRequest request,
                                   HttpServletResponse response)
             throws ServletException, IOException {
         Gson gson = new Gson();
-        String action = request.getParameter("action");
+        String action = request != null ? request.getParameter("action") : "";
+        if (action == null)
+            action = "";
 
         User user;
+        String requestBody = "";
+        UserDatabase userDb = UserDatabase.getInstance();
+        
         switch (action) {
+        case "":
+            user = new User();
+            user.setPassword("testpwd");
+            user.setUserID(UUID.randomUUID());
+            userDb.addUser(user);
+            sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
+            break;
             case "sign_up":
-                String json = request.getParameter("user");
-                user = gson.fromJson(json, User.class);
-                user.setPassword(request.getParameter("password"));
-                UserDatabase.getInstance().addUser(user);
-                request.setAttribute("user", user);
-                request.setAttribute("token", UUID.randomUUID());
-                request.getServletContext()
-                        .getRequestDispatcher("index.html")
-                        .forward(request, response);
+                requestBody = getBody(request);
+                user = gson.fromJson(requestBody, User.class);
+                user.setPassword(user.getPassword());
+                user.setUserID(UUID.randomUUID());
+                userDb.addUser(user);
+                sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
                 break;
             case "login":
-                String email = request.getParameter("email");
-                String password = request.getParameter("password");
-                user = UserDatabase.getInstance().login(email, password);
+                requestBody = getBody(request);
+                user = gson.fromJson(requestBody, User.class);
+                user = userDb.login(user.getEmail(), user.getPassword());
                 if (user == null) {
-                    request.getServletContext()
-                            .getRequestDispatcher("login.html")
-                            .forward(request, response);
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
                 } else {
-                    request.setAttribute("user", user);
-                    request.setAttribute("token", UUID.randomUUID());
-                    request.getServletContext()
-                            .getRequestDispatcher("index.html")
-                            .forward(request, response);
+                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
                 }
                 break;
             default:
-                //Shouldn't ever get here.
-                request.getServletContext()
-                        .getRequestDispatcher("error.html")
-                        .forward(request, response);
+                sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
                 break;
         }
-    }
-    
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-    
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
     }
     
     /**
@@ -110,7 +86,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return info;
     }
     
 }

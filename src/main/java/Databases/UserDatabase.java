@@ -28,13 +28,14 @@ import org.bson.Document;
  *
  * @author soup
  */
-public class UserDatabase extends BaseDatabase {
+public class UserDatabase {
 	
 	private static UserDatabase instance = null;
-    
-	private static final String DB_NAME = "smartrecipedb";
-	
-	private UserDatabase(){}
+	private MongoConnection conn = null;
+    	
+	private UserDatabase(){
+	    conn = MongoConnection.getInstance();
+	}
 	
 	public static UserDatabase getInstance() {
 		if (instance == null) {
@@ -45,19 +46,21 @@ public class UserDatabase extends BaseDatabase {
 	
 	
     public void addUser(User user) {
+        Gson gson = new Gson();
         String userJSON = gson.toJson(user);
-        
-        if (setupConnection(DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
             MongoCollection<Document> users = database.getCollection("users");
             users.insertOne(Document.parse(userJSON));
         }
-        closeConnection();
     }
     
     public List<User> getAllUsers() {
+        Gson gson = new Gson();
         List<User> users = new ArrayList<>();
         
-        if (setupConnection(DB_NAME)) {
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
             MongoCollection<Document> userCol = database.getCollection("users");
             MongoCursor<Document> cursor;
             cursor = userCol.find().iterator();
@@ -67,9 +70,7 @@ public class UserDatabase extends BaseDatabase {
             } finally {
                 cursor.close();
             }
-            
         } 
-        closeConnection();
         
         return users;
     }
@@ -90,7 +91,7 @@ public class UserDatabase extends BaseDatabase {
         
         User user = getUser(email);
         
-        if (user.getPassword().equalsIgnoreCase(password))
+        if (user != null && user.getPassword().equalsIgnoreCase(password))
             return user;
         else
             return null;

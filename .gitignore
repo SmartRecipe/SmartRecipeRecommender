@@ -1,9 +1,16 @@
 # ignore these files
 *.xml
+!pom.xml
 *.iml
+
 
 # ignore these whole directories
 build/
 gen/
 .idea/
 target/
+tomcat.8080/
+build
+
+# exclude following files
+!target/*.jar
