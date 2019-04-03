@@ -33,16 +33,29 @@ public class VirtualRefrigerator implements Serializable {
     /**
      * Checks a given recipe to see if the user has all necessary ingredients to make it.
      * @param recipe The recipe being checked.
-     * @return True if the user can make, false if not.
+     * @return True if the user can make the recipe, false if not.
      */
     public boolean checkRecipe(Recipe recipe) {
+        if (recipe == null || ingredients.isEmpty())
+            return false;
+        
+        //I've looked at this like a million different ways and this is the solution I came up with.
+        //It's late and I'm tired. Don't judge me.
+        
+        boolean haveIngredient;
+        
         for (Ingredient needed : recipe.getIngredients()) {
+            haveIngredient = false;
+            
             for (Ingredient owned : ingredients) {
-                if (needed.getName().equals(owned.getName())) {
-                    if (owned.getQuantity() < needed.getQuantity())
-                        return false;
+                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.getQuantity() >= needed.getQuantity()) {
+                    haveIngredient = true;
+                    break;
                 }
             }
+            
+            if (!haveIngredient)
+                return false;
         }
         
         return true;
@@ -70,16 +83,16 @@ public class VirtualRefrigerator implements Serializable {
      * @return Boolean stating the success of the operation.
      */
     public boolean addIngredient(Ingredient ingredient) {
-        //If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
-        for (Ingredient ing : ingredients) {
-            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-                return ing.replenish(ingredient.getQuantity());
-            }
-        }
-        
-        //If the ingredient isn't found in the fridge, add it manually.
-        ingredients.add(ingredient);
-        return true;
+//If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
+for (Ingredient ing : ingredients) {
+    if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+        return ing.replenish(ingredient.getQuantity());
+    }
+}
+
+//If the ingredient isn't found in the fridge, add it manually.
+ingredients.add(ingredient);
+return true;
     }
     
     /**
@@ -90,17 +103,17 @@ public class VirtualRefrigerator implements Serializable {
      * @return Boolean stating the success of the operation.
      */
     public boolean addIngredient(Ingredient ingredient, double quantity) {
-        //If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
-        for (Ingredient ing : ingredients) {
-            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-                return ing.replenish(quantity);
-            }
-        }
-        
-        //If the ingredient isn't found in the fridge, add it manually.
-        ingredient.setQuantity(quantity);
-        ingredients.add(ingredient);
-        return true;
+//If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
+for (Ingredient ing : ingredients) {
+    if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+        return ing.replenish(quantity);
+    }
+}
+
+//If the ingredient isn't found in the fridge, add it manually.
+ingredient.setQuantity(quantity);
+ingredients.add(ingredient);
+return true;
     }
     
     /**
@@ -109,20 +122,23 @@ public class VirtualRefrigerator implements Serializable {
      * @return Boolean stating the success of the operation.
      */
     public boolean useIngredient(Ingredient ingredient) {
-        //Search the fridge for the given ingredient and remove the given quantity.
-        for (Ingredient ing : ingredients) {
-            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-                boolean success = ing.use(ingredient.getQuantity());
-                
-                //If the ingredient has been completely used up, remove it from the fridge.
-                if (ing.getQuantity() <= 0)
-                    ingredients.remove(ing);
-                
-                return success;
-            }
-        }
+        if (ingredient == null || ingredients.isEmpty())
+            return false;
         
-        return false; //Ingredient not found
+//Search the fridge for the given ingredient and remove the given quantity.
+for (Ingredient ing : ingredients) {
+    if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
+        boolean success = ing.use(ingredient.getQuantity());
+        
+//If the ingredient has been completely used up, remove it from the fridge.
+if (ing.getQuantity() <= 0)
+    ingredients.remove(ing);
+
+return success;
+    }
+}
+
+return false; //Ingredient not found
     }
     
     /**
@@ -133,20 +149,23 @@ public class VirtualRefrigerator implements Serializable {
      * @return Boolean stating the success of the operation.
      */
     public boolean useIngredient(Ingredient ingredient, double quantity) {
-        //Search the fridge for the given ingredient and remove the given quantity.
-        for (Ingredient ing : ingredients) {
-            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-                boolean success = ing.use(quantity);
-                
-                //If the ingredient has been completely used up, remove it from the fridge.
-                if (ing.getQuantity() <= 0)
-                    ingredients.remove(ing);
-                
-                return success;
-            }
-        }
+        if (ingredient == null || ingredients.isEmpty())
+            return false;
         
-        return false; //Ingredient not found
+//Search the fridge for the given ingredient and remove the given quantity.
+for (Ingredient ing : ingredients) {
+    if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
+        boolean success = ing.use(quantity);
+        
+//If the ingredient has been completely used up, remove it from the fridge.
+if (ing.getQuantity() <= 0)
+    ingredients.remove(ing);
+
+return success;
+    }
+}
+
+return false; //Ingredient not found
     }
     
     /**
@@ -166,7 +185,7 @@ public class VirtualRefrigerator implements Serializable {
      */
     public Ingredient getIngredient(String name) {
         for (Ingredient ingredient : ingredients) {
-            if (ingredient.getName().equalsIgnoreCase(name)) {
+            if (ingredient != null && ingredient.getName().equalsIgnoreCase(name)) {
                 return ingredient; //Success!
             }
         }
@@ -179,7 +198,7 @@ public class VirtualRefrigerator implements Serializable {
     }
     
     public void setIngredientsList(List<Ingredient> ingredients) {
-    	if (ingredients == null) return;
+        if (ingredients == null) return;
         this.ingredients = ingredients;
     }
 }
