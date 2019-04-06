@@ -53,6 +53,7 @@ public class LoginServlet extends BaseServlet {
                 user = gson.fromJson(requestBody, User.class);
                 if (user == null) {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                    break;
                 }
                 if (user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty()) {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user information\" }");
@@ -68,6 +69,7 @@ public class LoginServlet extends BaseServlet {
                 user = gson.fromJson(requestBody, User.class);
                 if (user == null) {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                    break;
                 }
                 user = userDb.login(user.getEmail(), user.getPassword());
                 if (user == null) {
