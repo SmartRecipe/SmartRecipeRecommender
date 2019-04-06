@@ -140,9 +140,9 @@ public class CookbookServletTest {
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("ing1", 1));
-        ingredients.add(new Ingredient("ing2", 2));
-        ingredients.add(new Ingredient("ing3", 3));
+        ingredients.add(new Ingredient("ing1", 1, "cups"));
+        ingredients.add(new Ingredient("ing2", 2, "cups"));
+        ingredients.add(new Ingredient("ing3", 3, "cups"));
         recipe.setIngredients(ingredients);
         String recipeJSON = gson.toJson(recipe);
         when(request.getParameter("recipe")).thenReturn(recipeJSON);
@@ -173,7 +173,7 @@ public class CookbookServletTest {
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("ing1", 1));
+        ingredients.add(new Ingredient("ing1", 1, "cups"));
         recipe.setIngredients(ingredients);
         String recipeJSON = gson.toJson(recipe);
         recipeJSON = recipeJSON.substring(5); //Corrupt the message //TODO test with blank string too
@@ -203,9 +203,9 @@ public class CookbookServletTest {
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("ing1", 1));
-        ingredients.add(new Ingredient("ing2", 2));
-        ingredients.add(new Ingredient("ing3", 3));
+        ingredients.add(new Ingredient("ing1", 1, "cups"));
+        ingredients.add(new Ingredient("ing2", 2, "cups"));
+        ingredients.add(new Ingredient("ing3", 3, "cups"));
         recipe.setIngredients(ingredients);
         ArrayList<Recipe> recipes = new ArrayList<>();
         recipes.add(recipe);

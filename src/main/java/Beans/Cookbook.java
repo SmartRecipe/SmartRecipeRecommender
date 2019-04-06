@@ -15,20 +15,17 @@ import java.util.List;
  */
 public class Cookbook implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static Cookbook instance;
     private List<Recipe> history; //List of all the recipes the user has made before.
     private List<Recipe> favorites; //List of all the recipes the user has marked as a favorite.
     
-    private Cookbook() {
+    public Cookbook() {
         history = new ArrayList<>();
         favorites = new ArrayList<>();
     }
     
-    public static Cookbook getInstance() {
-        if (instance == null)
-            instance = new Cookbook();
-        
-        return instance;
+    public Cookbook(List<Recipe> history, List<Recipe> favorites) {
+        this.history = history;
+        this.favorites = favorites;
     }
     
     /**

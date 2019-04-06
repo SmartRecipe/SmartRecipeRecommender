@@ -29,8 +29,8 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.userID = userID;
-        fridge = VirtualRefrigerator.getInstance();
-        cookbook = Cookbook.getInstance();
+        fridge = new VirtualRefrigerator();
+        cookbook = new Cookbook();
     }
 
     public String getName() {

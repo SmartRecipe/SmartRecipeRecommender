@@ -5,28 +5,40 @@
  */
 package Beans;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.measure.Unit;
+import javax.measure.quantity.Volume;
+
+import tec.units.indriya.quantity.Quantities;
+
 /**
  *
  * @author soup
  */
 public class Ingredient {
+    private static final Logger logger = Logger.getLogger(Ingredient.class.getName());
+    
     private String name;
     private double quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
                             //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.
+    private String unit;
     private NutritionInfo nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
     public Ingredient() { 
-    	this("", 0);
+    	this("", 0, "");
     }
     
-    public Ingredient(String name, int numOwned, NutritionInfo nutVal) {
+    public Ingredient(String name, int numOwned, String unit, NutritionInfo nutVal) {
         setName(name);
         setQuantity(numOwned);
+        setUnit(unit);
         setNutVal(nutVal);
     }
     
-    public Ingredient(String name, int numOwned) {
-        this(name, numOwned, null);
+    public Ingredient(String name, int numOwned, String unit) {
+        this(name, numOwned, unit, null);
     }
     
     /**
@@ -68,6 +80,14 @@ public class Ingredient {
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
+    
+    public String getUnit() {
+        return unit;
+    }
+    
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     public NutritionInfo getNutVal() {
         return nutVal;
@@ -75,10 +95,27 @@ public class Ingredient {
 
     public void setNutVal(NutritionInfo nutVal) {
         this.nutVal = nutVal;
-    }   
+    } 
     
+    public boolean hasEnough(Ingredient needed) {
+        if (needed == null) {
+            return true;
+        }
+        Unit<Volume> thisUnit = VolumeUnits.fromString(this.getUnit());
+        Unit<Volume> otherUnit = VolumeUnits.fromString(needed.getUnit());
+        if (thisUnit == null) {
+            logger.log(Level.SEVERE, "Unable to parse own ingredient: "+this);
+            return false;
+        } else if (otherUnit == null) {
+            logger.log(Level.WARNING, "Unable to parse other ingredient: "+needed);
+            return true;
+        }
+        return Quantities.getQuantity(this.getQuantity(), thisUnit).isGreaterThanOrEqualTo(
+                Quantities.getQuantity(needed.getQuantity(), otherUnit));
+    }
+  
     @Override
     public String toString() {
-    	return this.getName()+": "+this.getQuantity();
+    	return this.getName()+": "+this.getQuantity() +" "+this.getUnit();
     }
 }
