@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -33,6 +35,9 @@ public class CookbookServletTest {
     HttpServletResponse response;
     ServletContext context;
     
+    StringWriter stringWriter;
+    PrintWriter writer;
+    
     RecipeDatabase mockDB;
 	
 	@Before
@@ -44,6 +49,10 @@ public class CookbookServletTest {
         
         when(request.getServletContext()).thenReturn(context);
         when(context.getRequestDispatcher(anyString())).thenReturn(dispatcher);
+        
+        stringWriter = new StringWriter();
+        writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
         
         mockDB = mock(RecipeDatabase.class);
 		try {
@@ -122,9 +131,7 @@ public class CookbookServletTest {
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        //XXX should this be error.html or index.html?
-        // modeling after the login servlet that takes you to an error page
-        verify(context, times(1)).getRequestDispatcher("error.html"); // verify dispatcher called correctly
+        verify(context, times(1)).getRequestDispatcher("index.html"); // verify dispatcher called correctly
 	}
 	
 	/**
@@ -165,7 +172,7 @@ public class CookbookServletTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testProcessBadAddRequest() throws IOException {
+	public void testProcessCorruptAddRequest() throws IOException {
         
         when(request.getParameter("action")).thenReturn("add_recipe");
         
@@ -187,7 +194,7 @@ public class CookbookServletTest {
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(request, atLeast(1)).getParameter("recipe"); 
-        verify(mockDB, times(1)).addRecipe(any(Recipe.class));
+        verify(mockDB, times(0)).addRecipe(any(Recipe.class));
         verify(context, times(1)).getRequestDispatcher("index.html");
 	}
 	

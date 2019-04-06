@@ -48,16 +48,16 @@ public class LoginServlet extends BaseServlet {
         UserDatabase userDb = UserDatabase.getInstance();
         
         switch (action) {
-        case "":
-            user = new User();
-            user.setPassword("testpwd");
-            user.setUserID(UUID.randomUUID());
-            userDb.addUser(user);
-            sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
-            break;
             case "sign_up":
                 requestBody = getBody(request);
                 user = gson.fromJson(requestBody, User.class);
+                if (user == null) {
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                }
+                if (user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty()) {
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user information\" }");
+                    break;
+                }
                 user.setPassword(user.getPassword());
                 user.setUserID(UUID.randomUUID());
                 userDb.addUser(user);
@@ -66,6 +66,9 @@ public class LoginServlet extends BaseServlet {
             case "login":
                 requestBody = getBody(request);
                 user = gson.fromJson(requestBody, User.class);
+                if (user == null) {
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                }
                 user = userDb.login(user.getEmail(), user.getPassword());
                 if (user == null) {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");

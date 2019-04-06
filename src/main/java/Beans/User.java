@@ -22,7 +22,14 @@ public class User implements Serializable {
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
     
-    public User() { }
+    public User() {
+        this.name = "";
+        this.username = "";
+        this.email = "";
+        this.userID = UUID.randomUUID();
+        fridge = new VirtualRefrigerator();
+        cookbook = new Cookbook();
+    }
     
     public User(String name, String username, String email, UUID userID) {
         this.name = name;
@@ -38,6 +45,7 @@ public class User implements Serializable {
     }
 
     public void setName(String name) {
+        if (name == null) return;
         this.name = name;
     }
 
@@ -46,6 +54,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
+        if (username == null) return;
         this.username = username;
     }
 
@@ -54,6 +63,7 @@ public class User implements Serializable {
     }
 
     public void setEmail(String email) {
+        if (email == null) return;
         this.email = email;
     }
     
@@ -62,6 +72,7 @@ public class User implements Serializable {
     }
     
     public void setPassword(String password) {
+        if (password == null) return;
         this.password = password;
     }
     
@@ -70,6 +81,7 @@ public class User implements Serializable {
     }
     
     public void setUserID(UUID userID) {
+        if (userID == null) return;
         this.userID = userID;
     }
     
@@ -78,6 +90,7 @@ public class User implements Serializable {
     }
     
     public void setFridge(VirtualRefrigerator fridge) {
+        if (fridge == null) return;
         this.fridge = fridge;
     }
     
@@ -86,6 +99,7 @@ public class User implements Serializable {
     }
     
     public void setCookbook(Cookbook cookbook) {
+        if (cookbook == null) return;
         this.cookbook = cookbook;
     }
 }

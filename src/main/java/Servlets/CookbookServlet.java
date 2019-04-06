@@ -44,7 +44,15 @@ public class CookbookServlet extends BaseServlet {
         
         switch (action) {
             case "add_recipe":
-                Recipe recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
+                Recipe recipe = null;
+                try {
+                    recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
+                } catch (Exception e) {
+                    //TODO handle this correctly
+                    request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
+                    //sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
+                    break;
+                }
                 RecipeDatabase.getInstance().addRecipe(recipe);
                 request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
                 break;
