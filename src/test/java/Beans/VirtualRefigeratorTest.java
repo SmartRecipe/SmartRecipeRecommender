@@ -28,12 +28,14 @@ import junitparams.Parameters;
 public class VirtualRefigeratorTest {
     
     RecipeDatabase mockDB;
+    VirtualRefrigerator underTest;
     
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        underTest = new VirtualRefrigerator();
         mockDB = mock(RecipeDatabase.class);
         try {
             Field instance = RecipeDatabase.class.getDeclaredField("instance");
@@ -68,7 +70,7 @@ public class VirtualRefigeratorTest {
     private ArrayList<Ingredient> createIngredientList(int numIngredients) {
         ArrayList<Ingredient> baseIngredients = new ArrayList<>();
         for (int i=0; i<numIngredients; i++) {
-            baseIngredients.add(new Ingredient("ing"+i, i+1));
+            baseIngredients.add(new Ingredient("ing"+i, i+1, "cups"));
         }
         return baseIngredients;
     }
@@ -85,7 +87,6 @@ public class VirtualRefigeratorTest {
     @Test
     @Parameters(method = "parametersCheckRecipe")
     public void testCheckRecipe(Recipe dbRecipe, ArrayList<Ingredient> userIngredients, boolean expectedValue ) {
-        VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
         underTest.setIngredientsList(userIngredients);
         assertEquals(expectedValue, underTest.checkRecipe(dbRecipe));
     }
@@ -126,7 +127,6 @@ public class VirtualRefigeratorTest {
 	@Test
 	@Parameters(method = "parametersCheckAllRecipes")
 	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, int expectedRecipes) {
-		VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
 		underTest.setIngredientsList(userIngredients);
 		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
 		ArrayList<Recipe> retVal = underTest.checkAllRecipes();
@@ -158,15 +158,14 @@ public class VirtualRefigeratorTest {
      */
     @Test
     public void testAddNewIngredient() {
-        VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
         ArrayList<Ingredient> testList = new ArrayList<>();
-        testList.add(new Ingredient("ing1", 1));
-        testList.add(new Ingredient("ing2", 1));
+        testList.add(new Ingredient("ing1", 1, "cups"));
+        testList.add(new Ingredient("ing2", 1, "cups"));
         underTest.setIngredientsList(testList);
         
         assertEquals(2, underTest.getIngredientsList().size());
         
-        Ingredient testIngredient = new Ingredient("testIngredeint", 5);
+        Ingredient testIngredient = new Ingredient("testIngredeint", 5, "cups");
         underTest.addIngredient(testIngredient);
         assertEquals(3, underTest.getIngredientsList().size());
         assertTrue(testList.contains(testIngredient));
@@ -177,10 +176,9 @@ public class VirtualRefigeratorTest {
      */
     @Test
     public void testAddExistingIngredient() {
-        VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
         ArrayList<Ingredient> testList = new ArrayList<>();
-        testList.add(new Ingredient("ing1", 1));
-        testList.add(new Ingredient("ing2", 1));
+        testList.add(new Ingredient("ing1", 1, "cups"));
+        testList.add(new Ingredient("ing2", 1, "cups"));
         underTest.setIngredientsList(testList);
         
         assertEquals(2, underTest.getIngredientsList().size());
@@ -193,12 +191,11 @@ public class VirtualRefigeratorTest {
     @Test
     @Parameters(method = "parametersUseAllIngredient")
     public void testUseAllIngredient(List<Ingredient> ingredientList, Ingredient ingredient, boolean expectedReturn) {
-        VirtualRefrigerator virtualRefrigerator = Beans.VirtualRefrigerator.getInstance();
         int origLength = ingredientList.size();
-        virtualRefrigerator.setIngredientsList(ingredientList);
-        boolean returnVal = virtualRefrigerator.useAll(ingredient);
-        List<Ingredient> currentIngredients = virtualRefrigerator.getIngredientsList();
-        assertNotNull(virtualRefrigerator);
+        underTest.setIngredientsList(ingredientList);
+        boolean returnVal = underTest.useAll(ingredient);
+        List<Ingredient> currentIngredients = underTest.getIngredientsList();
+        assertNotNull(underTest);
         assertEquals(expectedReturn, returnVal);
         assertNotNull(currentIngredients);
         if (expectedReturn) {
@@ -213,12 +210,11 @@ public class VirtualRefigeratorTest {
     @Parameters(method = "parametersUseIngredient")
     public void testUseIngredient(List<Ingredient> ingredientList, Ingredient ingredient,
             boolean expectedReturn, double expectedQuantity) {
-        VirtualRefrigerator virtualRefrigerator = Beans.VirtualRefrigerator.getInstance();
-        virtualRefrigerator.setIngredientsList(ingredientList);
-        boolean returnVal = virtualRefrigerator.useIngredient(ingredient);
+        underTest.setIngredientsList(ingredientList);
+        boolean returnVal = underTest.useIngredient(ingredient);
         
-        List<Beans.Ingredient> currentIngredients = virtualRefrigerator.getIngredientsList();
-        assertNotNull(virtualRefrigerator);
+        List<Beans.Ingredient> currentIngredients = underTest.getIngredientsList();
+        assertNotNull(underTest);
         assertEquals(expectedReturn, returnVal);
         assertNotNull(currentIngredients);
         if (ingredient != null && currentIngredients.contains(ingredient)) {
@@ -236,12 +232,11 @@ public class VirtualRefigeratorTest {
     @Parameters(method = "parametersUseIngredientQuantity")
     public void testUseIngredientQuantity(List<Ingredient> ingredientList, Ingredient ingredient, int quantity,
             boolean expectedReturn, double expectedQuantity) {
-        VirtualRefrigerator virtualRefrigerator = Beans.VirtualRefrigerator.getInstance();
-        virtualRefrigerator.setIngredientsList(ingredientList);
-        boolean returnVal = virtualRefrigerator.useIngredient(ingredient, quantity);
+        underTest.setIngredientsList(ingredientList);
+        boolean returnVal = underTest.useIngredient(ingredient, quantity);
         
-        List<Beans.Ingredient> currentIngredients = virtualRefrigerator.getIngredientsList();
-        assertNotNull(virtualRefrigerator);
+        List<Beans.Ingredient> currentIngredients = underTest.getIngredientsList();
+        assertNotNull(underTest);
         assertEquals(expectedReturn, returnVal);
         assertNotNull(currentIngredients);
         if (ingredient != null && currentIngredients.contains(ingredient)) {
@@ -258,11 +253,10 @@ public class VirtualRefigeratorTest {
     @Test
     @Parameters(method = "parametersGetIngredient")
     public void testGetIngredient(List<Ingredient> ingredientList, String name, Ingredient expectedIngredient) {
-        VirtualRefrigerator virtualRefrigerator = Beans.VirtualRefrigerator.getInstance();
-        virtualRefrigerator.setIngredientsList(ingredientList);
-        Ingredient returnVal = virtualRefrigerator.getIngredient(name);
-        List<Ingredient> currentIngredients = virtualRefrigerator.getIngredientsList();
-        assertNotNull(virtualRefrigerator);
+        underTest.setIngredientsList(ingredientList);
+        Ingredient returnVal = underTest.getIngredient(name);
+        List<Ingredient> currentIngredients = underTest.getIngredientsList();
+        assertNotNull(underTest);
         assertEquals("Unable to find: "+name, expectedIngredient, returnVal);
         assertNotNull(currentIngredients);
     }
@@ -272,10 +266,9 @@ public class VirtualRefigeratorTest {
      */
     @Test
     public void testSetIngredients() {
-        VirtualRefrigerator underTest = VirtualRefrigerator.getInstance();
         ArrayList<Ingredient> testList = new ArrayList<>();
-        testList.add(new Ingredient("ing1", 1));
-        testList.add(new Ingredient("ing2", 1));
+        testList.add(new Ingredient("ing1", 1, "cups"));
+        testList.add(new Ingredient("ing2", 1, "cups"));
         
         //Check normal array
         underTest.setIngredientsList(testList);
@@ -294,34 +287,34 @@ public class VirtualRefigeratorTest {
     @SuppressWarnings("unused")
     private Object[] parametersUseIngredientQuantity() {
         ArrayList<Ingredient> ingredients1 = new ArrayList<>();
-        Ingredient ing1 = new Ingredient("Test1", 10);
+        Ingredient ing1 = new Ingredient("Test1", 10, "cups");
         ingredients1.add(ing1);
         
         ArrayList<Ingredient> ingredients2 = new ArrayList<>();
-        Ingredient ing2 = new Ingredient("Test2", 10);
+        Ingredient ing2 = new Ingredient("Test2", 10, "cups");
         ingredients2.add(ing2);
         
         ArrayList<Ingredient> ingredients3 = new ArrayList<>();
-        Ingredient ing3 = new Ingredient("Test3", 8);
+        Ingredient ing3 = new Ingredient("Test3", 8, "cups");
         ingredients3.add(ing3);
         
         ArrayList<Ingredient> ingredients4 = new ArrayList<>();
-        Ingredient ing4 = new Ingredient("Test4", 8);
+        Ingredient ing4 = new Ingredient("Test4", 8, "cups");
         ingredients4.add(ing4);
         
         ArrayList<Ingredient> ingredients5 = new ArrayList<>();
-        Ingredient ing5 = new Ingredient("Test5", 10);
-        ingredients5.add(new Ingredient("a", 10));
-        ingredients5.add(new Ingredient("b", 10));
-        ingredients5.add(new Ingredient("c", 10));
+        Ingredient ing5 = new Ingredient("Test5", 10, "cups");
+        ingredients5.add(new Ingredient("a", 10, "cups"));
+        ingredients5.add(new Ingredient("b", 10, "cups"));
+        ingredients5.add(new Ingredient("c", 10, "cups"));
         ingredients5.add(ing5);
         
         ArrayList<Ingredient> ingredients6 = new ArrayList<>();
-        Ingredient ing6 = new Ingredient("Test6", 10);
-        ingredients6.add(new Ingredient("a", 10));
+        Ingredient ing6 = new Ingredient("Test6", 10, "cups");
+        ingredients6.add(new Ingredient("a", 10, "cups"));
         ingredients6.add(ing6);
-        ingredients6.add(new Ingredient("b", 10));
-        ingredients6.add(new Ingredient("c", 10));
+        ingredients6.add(new Ingredient("b", 10, "cups"));
+        ingredients6.add(new Ingredient("c", 10, "cups"));
         
         
         return new Object[] {
@@ -329,11 +322,11 @@ public class VirtualRefigeratorTest {
             new Object[] { ingredients2, ing2, 8, true, 2 },
             new Object[] { ingredients3, ing3, 15, false, 8 },
             new Object[] { ingredients4, ing4, -1, false, 8 },
-            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2)}), null, 0, false, 8 },
-            new Object[] { null, new Ingredient("test", 2), 0, false, 5 },
-            new Object[] { Arrays.asList(new Ingredient[] {null}), new Ingredient("test", 2), 0, false, 5 },
+            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2, "cups")}), null, 0, false, 8 },
+            new Object[] { null, new Ingredient("test", 2, "cups"), 0, false, 5 },
+            new Object[] { Arrays.asList(new Ingredient[] {null}), new Ingredient("test", 2, "cups"), 0, false, 5 },
             new Object[] { ingredients5, ing5, 4, true, 6 },
-            new Object[] { new ArrayList<Ingredient>(), new Ingredient(null, 5), 4, false, 6 },
+            new Object[] { new ArrayList<Ingredient>(), new Ingredient(null, 5, "cups"), 4, false, 6 },
             new Object[] { ingredients6, ing6, 10, true, 0 }
         };
     }
@@ -341,64 +334,64 @@ public class VirtualRefigeratorTest {
     @SuppressWarnings("unused")
     private Object[] parametersUseIngredient() {
         ArrayList<Ingredient> ingredients1 = new ArrayList<>();
-        Ingredient ing1 = new Ingredient("Test1", 10);
+        Ingredient ing1 = new Ingredient("Test1", 10, "cups");
         ingredients1.add(ing1);
         
         ArrayList<Ingredient> ingredients2 = new ArrayList<>();
-        Ingredient ing2 = new Ingredient("Test2", 10);
+        Ingredient ing2 = new Ingredient("Test2", 10, "cups");
         ingredients2.add(ing2);
         
         ArrayList<Ingredient> ingredients3 = new ArrayList<>();
-        Ingredient ing3 = new Ingredient("Test3", 8);
+        Ingredient ing3 = new Ingredient("Test3", 8, "cups");
         ingredients3.add(ing3);
         
         ArrayList<Ingredient> ingredients4 = new ArrayList<>();
-        Ingredient ing4 = new Ingredient("Test4", 8);
+        Ingredient ing4 = new Ingredient("Test4", 8, "cups");
         ingredients4.add(ing4);
         
         ArrayList<Ingredient> ingredients5 = new ArrayList<>();
-        Ingredient ing5 = new Ingredient("Test5", 10);
-        ingredients5.add(new Ingredient("a", 10));
-        ingredients5.add(new Ingredient("b", 10));
-        ingredients5.add(new Ingredient("c", 10));
+        Ingredient ing5 = new Ingredient("Test5", 10, "cups");
+        ingredients5.add(new Ingredient("a", 10, "cups"));
+        ingredients5.add(new Ingredient("b", 10, "cups"));
+        ingredients5.add(new Ingredient("c", 10, "cups"));
         ingredients5.add(ing5);
         
         ArrayList<Ingredient> ingredients6 = new ArrayList<>();
-        Ingredient ing6 = new Ingredient("Test6", 10);
-        ingredients6.add(new Ingredient("a", 10));
+        Ingredient ing6 = new Ingredient("Test6", 10, "cups");
+        ingredients6.add(new Ingredient("a", 10, "cups"));
         ingredients6.add(ing6);
-        ingredients6.add(new Ingredient("b", 10));
-        ingredients6.add(new Ingredient("c", 10));
+        ingredients6.add(new Ingredient("b", 10, "cups"));
+        ingredients6.add(new Ingredient("c", 10, "cups"));
         
         
         return new Object[] {
-            new Object[] { ingredients1, new Ingredient(ing1.getName(), 5), true, 5 },
-            new Object[] { ingredients2, new Ingredient(ing2.getName(), 8), true, 2 },
-            new Object[] { ingredients3, new Ingredient(ing3.getName(), 15), false, 8 },
-            new Object[] { ingredients4, new Ingredient(ing4.getName(), -1), false, 8 },
-            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2)}), new Ingredient(null, 0), false, 8 },
-            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2)}), null, false, 8 },
-            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2)}), new Ingredient("a", 5), false, 5 },
-            new Object[] { Arrays.asList(new Ingredient[] {null}), new Ingredient("test", 2), false, 5 },
-            new Object[] { ingredients5, new Ingredient(ing5.getName(), 4), true, 6 },
-            new Object[] { ingredients6, new Ingredient(ing6.getName(), 10), true, 0 }
+            new Object[] { ingredients1, new Ingredient(ing1.getName(), 5, "cups"), true, 5 },
+            new Object[] { ingredients2, new Ingredient(ing2.getName(), 8, "cups"), true, 2 },
+            new Object[] { ingredients3, new Ingredient(ing3.getName(), 15, "cups"), false, 8 },
+            new Object[] { ingredients4, new Ingredient(ing4.getName(), -1, "cups"), false, 8 },
+            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2, "cups")}), new Ingredient(null, 0, "cups"), false, 8 },
+            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2, "cups")}), null, false, 8 },
+            new Object[] { Arrays.asList(new Ingredient[] {new Ingredient("test", 2, "cups")}), new Ingredient("a", 5, "cups"), false, 5 },
+            new Object[] { Arrays.asList(new Ingredient[] {null}), new Ingredient("test", 2, "cups"), false, 5 },
+            new Object[] { ingredients5, new Ingredient(ing5.getName(), 4, "cups"), true, 6 },
+            new Object[] { ingredients6, new Ingredient(ing6.getName(), 10, "cups"), true, 0 }
         };
     }
     
     @SuppressWarnings("unused")
     private Object[] parametersUseAllIngredient() {
         ArrayList<Ingredient> ingredients1 = new ArrayList<>();
-        Ingredient ing1 = new Ingredient("Test", 10);
+        Ingredient ing1 = new Ingredient("Test", 10, "cups");
         ingredients1.add(ing1);
         
         ArrayList<Ingredient> nullIngredients = new ArrayList<>();
         nullIngredients.add(null);
         
         ArrayList<Ingredient> ingredients5 = new ArrayList<>();
-        Ingredient ing5 = new Ingredient("Test", 10);
-        ingredients5.add(new Ingredient("a", 10));
-        ingredients5.add(new Ingredient("b", 10));
-        ingredients5.add(new Ingredient("c", 10));
+        Ingredient ing5 = new Ingredient("Test", 10, "cups");
+        ingredients5.add(new Ingredient("a", 10, "cups"));
+        ingredients5.add(new Ingredient("b", 10, "cups"));
+        ingredients5.add(new Ingredient("c", 10, "cups"));
         ingredients5.add(ing5);
         
         
@@ -406,24 +399,24 @@ public class VirtualRefigeratorTest {
             new Object[] { ingredients1, ing1, true },
             new Object[] { new ArrayList<Ingredient>(), null, false },
             new Object[] { ingredients5, ing5, true },
-            new Object[] { new ArrayList<Ingredient>(), new Ingredient("test", 5), false }
+            new Object[] { new ArrayList<Ingredient>(), new Ingredient("test", 5, "cups"), false }
         };
     }
     
     @SuppressWarnings("unused")
     private Object[] parametersGetIngredient() {
         ArrayList<Ingredient> ingredients1 = new ArrayList<>();
-        Ingredient ing1 = new Ingredient("Test", 10);
+        Ingredient ing1 = new Ingredient("Test", 10, "cups");
         ingredients1.add(ing1);
         
         ArrayList<Ingredient> nullIngredients = new ArrayList<>();
         nullIngredients.add(null);
         
         ArrayList<Ingredient> ingredients5 = new ArrayList<>();
-        Ingredient ing5 = new Ingredient("Test", 10);
-        ingredients5.add(new Ingredient("a", 10));
-        ingredients5.add(new Ingredient("b", 10));
-        ingredients5.add(new Ingredient("c", 10));
+        Ingredient ing5 = new Ingredient("Test", 10, "cups");
+        ingredients5.add(new Ingredient("a", 10, "cups"));
+        ingredients5.add(new Ingredient("b", 10, "cups"));
+        ingredients5.add(new Ingredient("c", 10, "cups"));
         ingredients5.add(ing5);
         
         

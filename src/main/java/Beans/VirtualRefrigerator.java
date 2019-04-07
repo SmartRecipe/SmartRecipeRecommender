@@ -16,18 +16,14 @@ import java.util.List;
  */
 public class VirtualRefrigerator implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static VirtualRefrigerator instance;
     private List<Ingredient> ingredients; //List of all ingredients in user's fridge
     
-    private VirtualRefrigerator() {
+    public VirtualRefrigerator() {
         ingredients = new ArrayList<>();
     }
     
-    public static VirtualRefrigerator getInstance() {
-        if (instance == null)
-            instance = new VirtualRefrigerator();
-        
-        return instance;
+    public VirtualRefrigerator(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
     
     /**
@@ -44,11 +40,11 @@ public class VirtualRefrigerator implements Serializable {
         
         boolean haveIngredient;
         
-        for (Ingredient needed : recipe.getIngredients()) {
+        for (Ingredient needed : recipe.getIngredients()) {                
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
-                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.getQuantity() >= needed.getQuantity()) {
+                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.hasEnough(needed)) {
                     haveIngredient = true;
                     break;
                 }

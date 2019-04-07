@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
@@ -29,14 +31,21 @@ import Databases.UserDatabase;
 
 @RunWith(JUnitParamsRunner.class)
 public class LoginServletTest {
+    
+    LoginServlet underTest;
+    
 	HttpServletRequest request;     
     HttpServletResponse response;
     ServletContext context;
     
     UserDatabase mockDB;
+    StringWriter stringWriter;
+    PrintWriter writer;
+    Gson gson = new Gson();
 	
 	@Before
     public void setUp() throws Exception {
+	    underTest = spy(new LoginServlet());
 		request = mock(HttpServletRequest.class);       
         response = mock(HttpServletResponse.class);
         context = mock(ServletContext.class);
@@ -44,6 +53,9 @@ public class LoginServletTest {
         
         when(request.getServletContext()).thenReturn(context);
         when(context.getRequestDispatcher(anyString())).thenReturn(dispatcher);
+        stringWriter = new StringWriter();
+        writer = new PrintWriter(stringWriter);
+        when(response.getWriter()).thenReturn(writer);
         
         mockDB = mock(UserDatabase.class);
 		try {
@@ -76,11 +88,9 @@ public class LoginServletTest {
         
         when(request.getParameter("action")).thenReturn("bad_action");
         
-        LoginServlet spyTest = spy(new LoginServlet());
-
         try {
-        	spyTest.doGet(request, response);
-        	verify(spyTest, times(1)).processRequest(request, response);
+        	underTest.doGet(request, response);
+        	verify(underTest, times(1)).processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
@@ -95,10 +105,9 @@ public class LoginServletTest {
         
         when(request.getParameter("action")).thenReturn("bad_action");
         
-        LoginServlet spyTest = spy(new LoginServlet());
         try {
-        	spyTest.doPost(request, response);
-        	verify(spyTest, times(1)).processRequest(request, response);
+        	underTest.doPost(request, response);
+        	verify(underTest, times(1)).processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
@@ -115,13 +124,13 @@ public class LoginServletTest {
         when(request.getParameter("action")).thenReturn("bad_action");
 
         try {
-        	new LoginServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(context, times(1)).getRequestDispatcher("error.html"); // verify dispatcher called correctly
+        //verify(context, times(1)).getRequestDispatcher("error.html"); // verify dispatcher called correctly
 	}
 	
 	/**
@@ -133,26 +142,23 @@ public class LoginServletTest {
         
         when(request.getParameter("action")).thenReturn("sign_up");
         
-        Gson gson = new Gson();
         User user = new User();
         user.setEmail("test");
         user.setName("testName");
-        when(request.getParameter("user")).thenReturn(gson.toJson(user));
-        when(request.getParameter("password")).thenReturn("testpassword");
+        user.setPassword("testpassword");
+        String userJson = gson.toJson(user);
+        
+        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
 
         try {
-        	new LoginServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("user");
-        verify(request, atLeast(1)).getParameter("password");
         verify(mockDB, times(1)).addUser(any(User.class)); //TODO compare actual user information once User.equals workss
-        verify(request, times(1)).setAttribute(eq("user"), any(User.class)); 
-        verify(request, times(1)).setAttribute(eq("token"), any(UUID.class)); 
-        verify(context, times(1)).getRequestDispatcher("index.html");
+        //verify(context, times(1)).getRequestDispatcher("index.html");
         //TODO run again and verify token is different
 	}
 	
@@ -165,22 +171,23 @@ public class LoginServletTest {
         
 		//TODO test corrupted user, test empty password, test missing parameters
         when(request.getParameter("action")).thenReturn("sign_up");
+
+        User user = new User();
+        user.setName("");
+        user.setPassword("testpassword");
+        String userJson = gson.toJson(user);
         
-        when(request.getParameter("user")).thenReturn("");
-        when(request.getParameter("password")).thenReturn("testpassword");
+        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
 
         try {
-        	new LoginServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("user");
         verify(mockDB, times(0)).addUser(any(User.class));
-        verify(request, times(0)).setAttribute(eq("user"), any(User.class)); 
-        verify(request, times(0)).setAttribute(eq("token"), anyString()); 
-        verify(context, times(1)).getRequestDispatcher("error.html");
+        //verify(context, times(1)).getRequestDispatcher("error.html");
 	}
 	
 	/**
@@ -196,25 +203,28 @@ public class LoginServletTest {
         user.setEmail("test");
         user.setName("testName");
         user.setPassword("testpassword");
-        when(request.getParameter("email")).thenReturn(user.getEmail());
-        when(request.getParameter("password")).thenReturn(user.getPassword());
+        String userJson = gson.toJson(user);
+        
+        LoginServlet underTest = spy(new LoginServlet());
+        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
+        
+        //when(request.getParameter("email")).thenReturn(user.getEmail());
+        //when(request.getParameter("password")).thenReturn(user.getPassword());
         
         when(mockDB.login(anyString(), anyString())).thenReturn(user);
 
         try {
-        	new LoginServlet().processRequest(request, response);
+            underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("email");
-        verify(request, atLeast(1)).getParameter("password");
         verify(mockDB, times(1)).login(user.getEmail(), user.getPassword());
-        verify(request, times(1)).setAttribute("user", user); 
-        verify(request, times(1)).setAttribute(eq("token"), any(UUID.class)); 
-        verify(context, times(1)).getRequestDispatcher("index.html");
-        //TODO run again and verify token is different
+        
+        writer.flush(); // it may not have been flushed yet...
+        //TODO check returned string
+        //assertTrue(stringWriter.toString().contains("My expected string"));
 	}
 	
 	/**
@@ -230,24 +240,21 @@ public class LoginServletTest {
         user.setEmail("test");
         user.setName("testName");
         user.setPassword("testpassword");
-        when(request.getParameter("email")).thenReturn(user.getEmail());
-        when(request.getParameter("password")).thenReturn(user.getPassword()+"change");
+        String userJson = gson.toJson(user);
         
-        when(mockDB.login(anyString(), anyString())).thenReturn(null);
+        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
 
+        when(mockDB.login(anyString(), anyString())).thenReturn(null);
         try {
-        	new LoginServlet().processRequest(request, response);
+        
+            underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("email");
-        verify(request, atLeast(1)).getParameter("password");
-        verify(mockDB, times(1)).login(user.getEmail(), user.getPassword()+"change");
-        verify(request, times(0)).setAttribute("user", user); 
-        verify(request, times(0)).setAttribute(eq("token"), any(UUID.class)); 
-        verify(context, times(1)).getRequestDispatcher("login.html");
+        verify(mockDB, times(1)).login(user.getEmail(), user.getPassword());
+        //verify(context, times(1)).getRequestDispatcher("login.html");
 	}
 	
 	
