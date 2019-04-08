@@ -58,11 +58,10 @@ public class CookbookServlet extends BaseServlet {
                 break;
             case "get_recipes":
                 List<Recipe> recipes = RecipeDatabase.getInstance().getAllRecipes();
-                request.setAttribute("recipes", recipes);
-                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
+                sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipes));
                 break;
             default:
-                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
+                sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
                 break;
         }
     }
