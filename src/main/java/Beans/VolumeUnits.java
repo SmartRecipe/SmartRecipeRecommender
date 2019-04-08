@@ -61,8 +61,10 @@ public enum VolumeUnits {
             sb.append(unit.getUnitRepresentation().getName());
             sb.append("\", ");
         }
-        //Remove last comma and space
-        sb.setLength(sb.length() - 2);
+        if (sb.substring(sb.length() - 2).equals(", ")) {
+            //Remove last comma and space
+            sb.setLength(sb.length() - 2);   
+        }
         sb.append("]}");
         return sb.toString();
     }

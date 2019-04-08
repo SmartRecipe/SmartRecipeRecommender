@@ -30,15 +30,15 @@ public class Ingredient {
     	this("", 0, "");
     }
     
-    public Ingredient(String name, int numOwned, String unit, NutritionInfo nutVal) {
+    public Ingredient(String name, double quantity, String unit, NutritionInfo nutVal) {
         setName(name);
-        setQuantity(numOwned);
+        setQuantity(quantity);
         setUnit(unit);
         setNutVal(nutVal);
     }
     
-    public Ingredient(String name, int numOwned, String unit) {
-        this(name, numOwned, unit, null);
+    public Ingredient(String name, double quantity, String unit) {
+        this(name, quantity, unit, null);
     }
     
     /**

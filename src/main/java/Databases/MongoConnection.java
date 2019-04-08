@@ -49,7 +49,8 @@ public class MongoConnection {
 
             MongoClientURI uri = null;
             if (ssh != null) {
-                uri = new MongoClientURI("mongodb://" + ENV_DB_ADDRESS + ":" + SSH_FORWARD_PORT + "/" + ENV_DB_NAME,
+                //Use localhost because port forwarding handles the IP address
+                uri = new MongoClientURI("mongodb://127.0.0.1:" + SSH_FORWARD_PORT + "/" + ENV_DB_NAME,
                         options);
             } else {
                 uri = new MongoClientURI("mongodb://localhost:27017/" + ENV_DB_NAME, options);
@@ -90,6 +91,7 @@ public class MongoConnection {
                 ssh.setConfig(config);
                 ssh.connect();
                 ssh.setPortForwardingL(SSH_FORWARD_PORT, ENV_DB_ADDRESS, ENV_DB_PORT);
+                logger.info("SSH Forwarding successfully set");
             } catch (JSchException e) {
                 logger.log(Level.SEVERE, "Error occurred while setting up ssh forwarding", e);
             }

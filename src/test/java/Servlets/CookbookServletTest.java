@@ -134,6 +134,25 @@ public class CookbookServletTest {
         verify(context, times(1)).getRequestDispatcher("index.html"); // verify dispatcher called correctly
 	}
 	
+    /**
+     * Test method for {@link CookbookServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException 
+     */
+    @Test
+    public void testProcessMissingParameterRequest() throws IOException {
+        
+        when(request.getParameter("action")).thenReturn(null);
+
+        try {
+            new CookbookServlet().processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+
+        verify(request, atLeast(1)).getParameter("action"); // Verify action checked
+        //verify(context, times(1)).getRequestDispatcher("index.html"); // verify dispatcher called correctly
+    }
+	
 	/**
 	 * Test method for {@link CookbookServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
      * @throws IOException 

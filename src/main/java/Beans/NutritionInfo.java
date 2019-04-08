@@ -52,6 +52,9 @@ public class NutritionInfo {
         this.extras = new HashMap<>();
     }
 
+    public NutritionInfo() {
+    }
+
     /**
      * @return The servings per container
      */

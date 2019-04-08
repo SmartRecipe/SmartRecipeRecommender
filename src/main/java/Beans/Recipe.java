@@ -17,20 +17,22 @@ public class Recipe {
     private NutritionInfo nutVal; //Nutritional value per serving
     private ArrayList<Ingredient> ingredients;
     private ArrayList<String> instructions;
-    private String servingSize;
-    private float totalServings;
+    private int totalServings;
+    private double timeRequired;
     
-    public Recipe() { }
+    public Recipe() { 
+        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0);
+    }
     
     public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
-            String servingSize, float totalServings) {
-        this.name = name;
-        this.desc = desc;
-        this.nutVal = nutVal;
-        this.ingredients = ingredients;
-        this.instructions = instructions;
-        this.servingSize = servingSize;
-        this.totalServings = totalServings;
+            int totalServings, double timeRequired) {
+        setName(name);
+        setDesc(desc);
+        setNutVal(nutVal);
+        setIngredients(ingredients);
+        setInstructions(instructions);
+        setTotalServings(totalServings);
+        setTimeRequired(timeRequired);
     }
     
     public String getName() {
@@ -38,6 +40,7 @@ public class Recipe {
     }
     
     public void setName(String name) {
+        if (name == null) name = "";
         this.name = name;
     }
     
@@ -46,6 +49,7 @@ public class Recipe {
     }
     
     public void setDesc(String desc) {
+        if (desc == null) desc = "";
         this.desc = desc;
     }
     
@@ -54,6 +58,7 @@ public class Recipe {
     }
     
     public void setNutVal(NutritionInfo nutVal) {
+        if (nutVal == null) nutVal = new NutritionInfo();
         this.nutVal = nutVal;
     }
 
@@ -62,6 +67,7 @@ public class Recipe {
     }
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
+        if (ingredients == null) ingredients = new ArrayList<>();
         this.ingredients = ingredients;
     }
 
@@ -70,22 +76,27 @@ public class Recipe {
     }
 
     public void setInstructions(ArrayList<String> instructions) {
+        if (instructions == null) instructions = new ArrayList<>();
         this.instructions = instructions;
     }
 
-    public String getServingSize() {
-        return servingSize;
-    }
-
-    public void setServingSize(String servingSize) {
-        this.servingSize = servingSize;
-    }
-
-    public float getTotalServings() {
+    public int getTotalServings() {
         return totalServings;
     }
 
-    public void setTotalServings(float totalServings) {
+    public void setTotalServings(int totalServings) {
         this.totalServings = totalServings;
+    }
+    
+    public double getTimeRequired() {
+        return timeRequired;
+    }
+
+    /**
+     * Set the time (in minutes) needed to create this recipe
+     * @param timeRequired
+     */
+    public void setTimeRequired(double timeRequired) {
+        this.timeRequired = timeRequired;
     }
 }
