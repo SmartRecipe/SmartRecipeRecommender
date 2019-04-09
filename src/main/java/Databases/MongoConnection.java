@@ -12,17 +12,17 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 
 public class MongoConnection {
-
+    
     private static final Logger logger = Logger.getLogger(MongoConnection.class.getName());
-
+    
     private static MongoConnection instance = new MongoConnection();
-
+    
     private MongoClient mongo = null;
     private Session ssh = null;
-
+    
     public static final int SSH_PORT = 22;
     public static final int SSH_FORWARD_PORT = 6666;
-
+    
     public static final String ENV_SSH_KEY = System.getenv("SSH_KEY");
     public static final int ENV_DB_PORT;
     static {
@@ -34,58 +34,43 @@ public class MongoConnection {
         }
         ENV_DB_PORT = port;
     }
-
+    
     public static final String ENV_DB_NAME = System.getenv("DB_NAME") == null ? "smartrecipedb"
             : System.getenv("DB_NAME");
     public static final String ENV_DB_ADDRESS = System.getenv("DB_ADDRESS");
-
+    
     public MongoClient getMongo() throws RuntimeException {
         if (mongo == null) {
             logger.log(Level.FINE, "Starting Mongo");
-            MongoClientOptions.Builder options = MongoClientOptions.builder().connectionsPerHost(5)
-                    .maxConnectionIdleTime((60 * 1000)) // 60 sec idle time
-                    .maxConnectionLifeTime((120 * 1000)); // 2 min lifetime max
-            ;
-
-            MongoClientURI uri = null;
-            if (ssh != null) {
-                uri = new MongoClientURI("mongodb://" + ENV_DB_ADDRESS + ":" + SSH_FORWARD_PORT + "/" + ENV_DB_NAME,
-                        options);
-            } else {
-                uri = new MongoClientURI("mongodb://localhost:27017/" + ENV_DB_NAME, options);
-            }
-
-            logger.info("About to connect to MongoDB @ " + uri.toString());
-
-            try {
-                mongo = new MongoClient(uri);
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "An error occoured when connecting to MongoDB", ex);
-            }
+            
+            mongo = new MongoClient("localhost", SSH_FORWARD_PORT);
         }
-
+        
         return mongo;
     }
-
+    
     public MongoDatabase getDatabase() {
         return getDatabase(ENV_DB_NAME);
     }
-
+    
     public MongoDatabase getDatabase(String dbName) {
         if (mongo == null || dbName == null || dbName.isEmpty()) {
             logger.log(Level.SEVERE, "getDatabase called incorrectly");
             return null;
         }
+        
         return mongo.getDatabase(dbName);
     }
-
+    
     public Session getSsh() {
         if (ssh == null && ENV_SSH_KEY != null) {
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
             try {
-                jsch.addIdentity("ubuntu", ENV_SSH_KEY.getBytes(), null, null);
+                jsch.addIdentity(ENV_SSH_KEY);
+                
+                ssh = null;
                 ssh = jsch.getSession("ubuntu", ENV_DB_ADDRESS, SSH_PORT);
                 ssh.setConfig(config);
                 ssh.connect();
@@ -96,12 +81,12 @@ public class MongoConnection {
         }
         return ssh;
     }
-
+    
     public void init() {
         getSsh();
         getMongo();
     }
-
+    
     public void close() {
         logger.info("Closing MongoDB connection");
         if (mongo != null) {
@@ -126,12 +111,12 @@ public class MongoConnection {
             ssh = null;
         }
     }
-
+    
     private MongoConnection() {
     }
-
+    
     public static MongoConnection getInstance() {
         return instance;
     }
-
+    
 }
