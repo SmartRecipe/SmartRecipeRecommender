@@ -68,7 +68,7 @@ public class MongoConnection {
             config.put("StrictHostKeyChecking", "no");
             JSch jsch = new JSch();
             try {
-                jsch.addIdentity(ENV_SSH_KEY);
+                jsch.addIdentity("private key", ENV_SSH_KEY.getBytes(), null, null);
                 
                 ssh = null;
                 ssh = jsch.getSession("ubuntu", ENV_DB_ADDRESS, SSH_PORT);
