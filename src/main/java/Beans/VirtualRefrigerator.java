@@ -60,9 +60,10 @@ public class VirtualRefrigerator implements Serializable {
     /**
      * Checks all recipes in database to determine which ones the user can make and returns a list of
      * the valid recipes.
+     * @param filters An array of the filters 
      * @return An ArrayList of the recipes the user can make with the ingredients in their fridge.
      */
-    public ArrayList<Recipe> checkAllRecipes() {
+    public ArrayList<Recipe> checkAllRecipes(String... filters) {
         ArrayList<Recipe> validRecipes = new ArrayList<>();
         
         for (Recipe recipe : RecipeDatabase.getInstance().getAllRecipes()) {

@@ -19,14 +19,14 @@ public class Recipe {
     private ArrayList<String> instructions;
     private int totalServings;
     private double timeRequired;
-    private ArrayList<String> flavorTags;
+    private ArrayList<FlavorTag> flavorTags;
     
     public Recipe() {
-        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<String>());
+        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<FlavorTag>());
     }
     
     public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
-            int totalServings, double timeRequired, ArrayList<String> flavorTags) {
+            int totalServings, double timeRequired, ArrayList<FlavorTag> flavorTags) {
         this.name = name;
         this.desc = desc;
         this.nutVal = nutVal;
@@ -101,11 +101,11 @@ public class Recipe {
         this.timeRequired = timeRequired;
     }
     
-    public ArrayList<String> getFlavorTags() {
+    public ArrayList<FlavorTag> getFlavorTags() {
         return flavorTags;
     }
     
-    public void setFlavorTags(ArrayList<String> flavorTags) {
+    public void setFlavorTags(ArrayList<FlavorTag> flavorTags) {
         this.flavorTags = flavorTags;
     }
 }
