@@ -62,6 +62,7 @@ public class LoginServlet extends BaseServlet {
                 user.setPassword(user.getPassword());
                 user.setUserID(UUID.randomUUID());
                 userDb.addUser(user);
+                request.getSession().setAttribute("user", user);
                 sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
                 break;
             case "login":
@@ -75,6 +76,7 @@ public class LoginServlet extends BaseServlet {
                 if (user == null) {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
                 } else {
+                    request.getSession().setAttribute("user", user);
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
                 }
                 break;

@@ -6,6 +6,7 @@
 package Servlets;
 
 import Beans.Recipe;
+import Beans.User;
 import Databases.RecipeDatabase;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -48,17 +50,23 @@ public class CookbookServlet extends BaseServlet {
                 try {
                     recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
                 } catch (Exception e) {
-                    //TODO handle this correctly
-                    request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
-                    //sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error; please try again later.\" }");
                     break;
                 }
                 RecipeDatabase.getInstance().addRecipe(recipe);
-                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
+                sendResponse(response, STATUS_HTTP_OK, "{ \"message\": \"Recipe added!\" }");
                 break;
             case "get_recipes":
                 List<Recipe> recipes = RecipeDatabase.getInstance().getAllRecipes();
                 sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipes));
+                break;
+            case "search_recipes":
+                HttpSession session = request.getSession(false);
+                
+                User user = (User) session.getAttribute("user");
+                
+                List<Recipe> searchRecipes = user.getFridge().checkAllRecipes();
+                sendResponse(response, STATUS_HTTP_OK, gson.toJson(searchRecipes));
                 break;
             default:
                 sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
