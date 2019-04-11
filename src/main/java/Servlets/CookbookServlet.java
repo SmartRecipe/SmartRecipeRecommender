@@ -46,7 +46,10 @@ public class CookbookServlet extends BaseServlet {
         
         Gson gson = new Gson();
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+        User user = null;
+        
+        if (session != null)
+            user = (User) session.getAttribute("user");
         String action = request.getParameter("action");
         if (action == null) action = "";
         
