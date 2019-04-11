@@ -76,7 +76,7 @@ public class CookbookServlet extends BaseServlet {
                 else
                     sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error; you are not logged in!\"");
                 break;
-            case "recommend_recipes":
+            case "recommend_recipe":
                 if (user != null) {
                     recipe = user.getFridge().recommendRecipe(user.getCookbook());
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipe));
