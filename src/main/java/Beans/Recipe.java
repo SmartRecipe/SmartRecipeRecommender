@@ -7,11 +7,17 @@ package Beans;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.SerializedName;
+import org.bson.types.ObjectId;
+
 /**
  *
  * @author soup
  */
 public class Recipe {
+    @SerializedName("_id")
+    private ObjectId id;
+
     private String name;
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
@@ -34,7 +40,16 @@ public class Recipe {
         setTotalServings(totalServings);
         setTimeRequired(timeRequired);
     }
-    
+
+    public ObjectId getId() {
+        return this.id;
+    }
+
+    public void setId(ObjectId id) {
+        if (id == null) id = new ObjectId();
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

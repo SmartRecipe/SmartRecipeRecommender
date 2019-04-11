@@ -39,22 +39,24 @@ public class CookbookServlet extends BaseServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Gson gson = new Gson();
-        String action = request.getParameter("action");
-        if (action == null) action = "";
         
+        String action = request != null ? request.getParameter("action") : "";
+
+        String requestBody = "";
+
         switch (action) {
             case "add_recipe":
+                requestBody = getBody(request);
                 Recipe recipe = null;
                 try {
-                    recipe = gson.fromJson(request.getParameter("recipe"), Recipe.class);
+                    recipe = gson.fromJson(requestBody, Recipe.class);
                 } catch (Exception e) {
-                    //TODO handle this correctly
-                    request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
-                    //sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error occurred while adding recipe.\" }");
                     break;
                 }
                 RecipeDatabase.getInstance().addRecipe(recipe);
-                request.getServletContext().getRequestDispatcher("index.html").forward(request, response);
+                recipe = RecipeDatabase.getInstance().getRecipe(recipe.getName());
+                sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipe));
                 break;
             case "get_recipes":
                 List<Recipe> recipes = RecipeDatabase.getInstance().getAllRecipes();
