@@ -22,23 +22,16 @@ public class Ingredient {
     
     private String name;
     private double quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
-                            //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.
     private String unit;
-    private NutritionInfo nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
     public Ingredient() { 
     	this("", 0, "");
     }
     
-    public Ingredient(String name, double quantity, String unit, NutritionInfo nutVal) {
-        setName(name);
-        setQuantity(quantity);
-        setUnit(unit);
-        setNutVal(nutVal);
-    }
-    
     public Ingredient(String name, double quantity, String unit) {
-        this(name, quantity, unit, null);
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
     }
     
     /**
@@ -88,14 +81,6 @@ public class Ingredient {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-
-    public NutritionInfo getNutVal() {
-        return nutVal;
-    }
-
-    public void setNutVal(NutritionInfo nutVal) {
-        this.nutVal = nutVal;
-    } 
     
     public boolean hasEnough(Ingredient needed) {
         if (needed == null) {

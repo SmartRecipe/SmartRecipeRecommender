@@ -19,14 +19,14 @@ public class Recipe {
     private ArrayList<String> instructions;
     private int totalServings;
     private double timeRequired;
-    private ArrayList<FlavorTag> flavorTags;
+    private ArrayList<String> flavorTags;
     
     public Recipe() {
-        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<FlavorTag>());
+        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<String>());
     }
     
     public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
-            int totalServings, double timeRequired, ArrayList<FlavorTag> flavorTags) {
+            int totalServings, double timeRequired, ArrayList<String> flavorTags) {
         this.name = name;
         this.desc = desc;
         this.nutVal = nutVal;
@@ -92,20 +92,16 @@ public class Recipe {
     public double getTimeRequired() {
         return timeRequired;
     }
-
-    /**
-     * Set the time (in minutes) needed to create this recipe
-     * @param timeRequired
-     */
+    
     public void setTimeRequired(double timeRequired) {
         this.timeRequired = timeRequired;
     }
     
-    public ArrayList<FlavorTag> getFlavorTags() {
+    public ArrayList<String> getFlavorTags() {
         return flavorTags;
     }
     
-    public void setFlavorTags(ArrayList<FlavorTag> flavorTags) {
+    public void setFlavorTags(ArrayList<String> flavorTags) {
         this.flavorTags = flavorTags;
     }
 }
