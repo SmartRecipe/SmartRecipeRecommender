@@ -40,24 +40,6 @@ public class Cookbook implements Serializable {
     }
     
     /**
-     * Removes a given recipe from the user's history of previously made recipes.
-     * @param argRecipe The recipe being removed.
-     * @return Boolean describing the success or failure of the operation.
-     */
-    public boolean removeFromHistory(Recipe argRecipe) {
-        if (argRecipe == null)
-            return false;
-        //Search the user's history for the given recipe and remove it.
-        for (Recipe recipe : history) {
-            if (recipe.getName().equalsIgnoreCase(argRecipe.getName())) {
-                return history.remove(recipe); //Remove the recipe.
-            }
-        }
-        
-        return false; //Recipe not found.
-    }
-    
-    /**
      * Adds a given recipe to the user's list of favorite recipes.
      * @param argRecipe The recipe being added.
      * @return Boolean describing success or failure of the operation.

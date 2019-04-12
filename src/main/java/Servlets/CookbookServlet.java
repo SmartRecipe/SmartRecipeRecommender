@@ -69,16 +69,20 @@ public class CookbookServlet extends BaseServlet {
         // Get the user object included in the request 
         try {
             user = baseRequest.getUser();
-        } catch(Exception e) {
+        } catch (Exception e) {
             user = null;
+        }
+        
+        try {
+            recipe = baseRequest.getRecipe();
+        } catch (Exception e) {
+            recipe = null;
         }
         
         switch (action) {
             case "add_recipe":
-                recipe = null;
                 try {
-                    if (RecipeDatabase.getInstance().addRecipe(baseRequest.getRecipe())) {
-                        recipe = RecipeDatabase.getInstance().getRecipe(baseRequest.getRecipe().getName());
+                    if (RecipeDatabase.getInstance().addRecipe(recipe)) {
                         baseResponse.setRecipe(recipe);
                         baseResponse.setMessage("Success");
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
@@ -100,7 +104,6 @@ public class CookbookServlet extends BaseServlet {
                 sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                 break;
             case "edit_recipe":
-                recipe = baseRequest.getRecipe();
                 try {
                     if (RecipeDatabase.getInstance().updateRecipe(recipe)) {
                         baseResponse.setMessage("Success");
@@ -146,7 +149,6 @@ public class CookbookServlet extends BaseServlet {
                 break;
             case "add_history":
                 if (user != null) {
-                    recipe = baseResponse.getRecipe();
                     if (user.getCookbook().addToHistory(recipe)) {
                         UserDatabase.getInstance().updateUser(user);
                         baseResponse.setUser(user);
@@ -167,8 +169,6 @@ public class CookbookServlet extends BaseServlet {
                 break;
             case "add_favorites":
                 if (user != null) {
-                    recipe = baseResponse.getRecipe();
-                    
                     if (user.getCookbook().addToFavorites(recipe)) {
                         UserDatabase.getInstance().updateUser(user);
                         baseResponse.setUser(user);
@@ -178,8 +178,29 @@ public class CookbookServlet extends BaseServlet {
                     else {
                         UserDatabase.getInstance().updateUser(user);
                         baseResponse.setUser(user);
-                        baseResponse.setMessage("Error adding recipe to history");
+                        baseResponse.setMessage("Error adding recipe to favorites");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
+                }
+                else {
+                    baseResponse.setMessage("Unauthorized");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                }
+                break;
+            case "remove_favorites":
+                if (user != null) {
+                    if (user.getCookbook().removeFromFavorites(recipe)) {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Success");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
+                    else {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Error remove recipe from favorites");
                     }
                 }
                 else {
