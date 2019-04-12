@@ -52,16 +52,23 @@ public class CookbookServlet extends BaseServlet {
         String requestBody = getBody(request);  // parse request body as json
         String action = request != null ? request.getParameter("action") : "";
         
-        BaseRequest baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+        BaseRequest baseRequest; 
+        BaseResponse baseResponse = new BaseResponse();
+            
+        try{
+            baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+        } catch (Exception e) {
+            baseResponse.setMessage("Bad request");
+            sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
+            return; 
+        }
 
         try {
             user = baseRequest.getUser();
         } catch(Exception e) {
             user = null;
-        }      
+        }
 
-
-        BaseResponse baseResponse = new BaseResponse();
         
         switch (action) {
             case "add_recipe":                
@@ -73,6 +80,7 @@ public class CookbookServlet extends BaseServlet {
                     baseResponse.setMessage("Success");
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                 } catch (Exception e) {
+                    System.out.println(e.toString());
                     baseResponse.setMessage("Error occurred while adding recipe.");
                     sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                     break;
@@ -110,7 +118,7 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             default:
