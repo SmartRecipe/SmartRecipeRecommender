@@ -12,14 +12,12 @@ import Servlets.utils.BaseResponse;
 import Databases.RecipeDatabase;
 import Databases.UserDatabase;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -44,10 +42,10 @@ public class CookbookServlet extends BaseServlet {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Gson gson = new Gson();
         List<Recipe> recipes;
         Recipe recipe;
-        Gson gson = new Gson();
-        User user = null;
+        User user;
         
         String filters[];
         String requestBody = getBody(request);  // parse request body as json

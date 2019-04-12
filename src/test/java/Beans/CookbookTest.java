@@ -58,20 +58,6 @@ public class CookbookTest {
     }
     
     @Test
-    @Parameters(method = "parametersRemoveFromHistory")
-    public void testRemoveFromHistory(List<Recipe> history, Recipe newRecipe, boolean expectedReturn) {
-        int origLength = history.size();
-        underTest.setHistory(history);
-        boolean success = underTest.removeFromHistory(newRecipe);
-        assertEquals(expectedReturn, success);
-        if (expectedReturn) {
-            assertEquals(origLength-1, underTest.getHistory().size());
-        } else {
-            assertEquals(origLength, underTest.getHistory().size());
-        }
-    }
-    
-    @Test
     public void testSetHistory() {
         ArrayList<Recipe> history = new ArrayList<>();
         history.add(new Recipe());
