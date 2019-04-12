@@ -116,7 +116,7 @@ public class VirtualRefrigerator implements Serializable {
         
         //First, check to make sure that filters isn't null/empty
         if (filters != null && filters.length > 0) {
-            Iterator itr = allRecipes.iterator(); //Create an iterator for the master list of recipes so we can run through it without a ConcurrentModification exception
+            Iterator<Recipe> itr = allRecipes.iterator(); //Create an iterator for the master list of recipes so we can run through it without a ConcurrentModification exception
             int tags; //We'll need an int variable to keep track of the number of tags the recipe has in common with the filter array
             
             //Iterate through the master list
