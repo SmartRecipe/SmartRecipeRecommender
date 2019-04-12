@@ -15,20 +15,17 @@ import java.util.List;
  */
 public class Cookbook implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static Cookbook instance;
     private List<Recipe> history; //List of all the recipes the user has made before.
     private List<Recipe> favorites; //List of all the recipes the user has marked as a favorite.
     
-    private Cookbook() {
+    public Cookbook() {
         history = new ArrayList<>();
         favorites = new ArrayList<>();
     }
     
-    public static Cookbook getInstance() {
-        if (instance == null)
-            instance = new Cookbook();
-        
-        return instance;
+    public Cookbook(List<Recipe> history, List<Recipe> favorites) {
+        this.history = history;
+        this.favorites = favorites;
     }
     
     /**
@@ -37,8 +34,9 @@ public class Cookbook implements Serializable {
      * @return Boolean describing the success or failure of the operation.
      */
     public boolean addToHistory(Recipe argRecipe) {
-        history.add(argRecipe); //Add the new recipe to the user's history.
-        return true; //Success!
+        if (argRecipe == null)
+            return false;
+        return history.add(argRecipe); //Add the new recipe to the user's history.
     }
     
     /**
@@ -47,11 +45,12 @@ public class Cookbook implements Serializable {
      * @return Boolean describing the success or failure of the operation.
      */
     public boolean removeFromHistory(Recipe argRecipe) {
+        if (argRecipe == null)
+            return false;
         //Search the user's history for the given recipe and remove it.
         for (Recipe recipe : history) {
             if (recipe.getName().equalsIgnoreCase(argRecipe.getName())) {
-                history.remove(recipe); //Remove the recipe.
-                return true; //Success!
+                return history.remove(recipe); //Remove the recipe.
             }
         }
         
@@ -64,6 +63,8 @@ public class Cookbook implements Serializable {
      * @return Boolean describing success or failure of the operation.
      */
     public boolean addToFavorites(Recipe argRecipe) {
+        if (argRecipe == null || argRecipe.getName() == null)
+            return false;
         //Make sure the recipe doesn't already exist within the user's favorites.
         for (Recipe recipe : favorites) {
             if (recipe.getName().equalsIgnoreCase(argRecipe.getName()))
@@ -80,10 +81,12 @@ public class Cookbook implements Serializable {
      * @return Boolean describing success or failure of the operation.
      */
     public boolean removeFromFavorites(Recipe argRecipe) {
+        if (argRecipe == null)
+            return false;
         //Search the user's favorites for the given recipe and remove it.
         for (Recipe recipe : favorites) {
             if (recipe.getName().equalsIgnoreCase(argRecipe.getName())) {
-                favorites.remove(argRecipe); //Remove the recipe.
+                favorites.remove(recipe); //Remove the recipe.
                 return true; //Success!
             }
         }
@@ -96,6 +99,7 @@ public class Cookbook implements Serializable {
     }
 
     public void setHistory(List<Recipe> history) {
+        if (history == null) return;
         this.history = history;
     }
 
@@ -104,6 +108,7 @@ public class Cookbook implements Serializable {
     }
 
     public void setFavorites(List<Recipe> favorites) {
+        if (favorites == null) return;
         this.favorites = favorites;
     }
 }
