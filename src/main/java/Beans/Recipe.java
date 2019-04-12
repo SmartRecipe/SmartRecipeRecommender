@@ -23,16 +23,16 @@ public class Recipe {
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
     private ArrayList<Ingredient> ingredients;
-    private ArrayList<String> instructions;
+    private String instructions;
     private int totalServings;
     private double timeRequired;
     private List<String> flavorTags;
     
     public Recipe() {
-        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<String>());
+        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), "", 0, 0, new ArrayList<String>());
     }
     
-    public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
+    public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, String instructions,
             int totalServings, double timeRequired, List<String> flavorTags) {
         this.name = name;
         this.desc = desc;
@@ -41,6 +41,7 @@ public class Recipe {
         this.totalServings = totalServings;
         this.timeRequired = timeRequired;
         this.flavorTags = flavorTags;
+        this.instructions = instructions;
     }
 
     public ObjectId getId() {
@@ -88,12 +89,12 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getInstructions() {
+    public String getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(ArrayList<String> instructions) {
-        if (instructions == null) instructions = new ArrayList<>();
+    public void setInstructions(String instructions) {
+        if (instructions == null) instructions = "";
         this.instructions = instructions;
     }
 

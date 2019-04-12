@@ -19,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 public class BaseServlet extends HttpServlet {
     public static final int STATUS_HTTP_OK = 200;
     public static final int STATUS_HTTP_FOUND = 204;
+    public static final int STATUS_HTTP_BAD_REQUEST = 400;
     public static final int STATUS_HTTP_UNAUTHORIZED = 401;
+    public static final int STATUS_HTTP_CONFLICT = 409;
     public static final int STATUS_HTTP_NOT_FOUND = 404;
     public static final int STATUS_HTTP_INTERNAL_ERROR = 500;
 
