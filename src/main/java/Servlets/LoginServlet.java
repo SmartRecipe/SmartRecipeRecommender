@@ -73,9 +73,15 @@ public class LoginServlet extends BaseServlet {
                 }
                 user.setPassword(user.getPassword());
                 user.setUserID(UUID.randomUUID());
-                userDb.addUser(user);
-                baseResponse.setUser(user);
-                sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                
+                if (userDb.addUser(user)) {
+                    baseResponse.setUser(user);
+                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                }
+                else {
+                    baseResponse.setMessage("Account associated with given email address already exists");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                }
                 break;
             case "login":
                 if (user == null) {

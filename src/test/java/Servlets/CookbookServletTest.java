@@ -22,6 +22,7 @@ import org.junit.Test;
 import junitparams.*;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import com.google.gson.Gson;
 
@@ -131,7 +132,9 @@ public class CookbookServletTest {
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        //verify(context, times(1)).getRequestDispatcher("index.html"); // verify dispatcher called correctly
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_NOT_FOUND, argument.getValue().intValue());
 	}
 	
     /**
@@ -150,7 +153,9 @@ public class CookbookServletTest {
         }
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        //verify(context, times(1)).getRequestDispatcher("index.html"); // verify dispatcher called correctly
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_NOT_FOUND, argument.getValue().intValue());
     }
 	
 	/**
@@ -182,7 +187,9 @@ public class CookbookServletTest {
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(request, atLeast(1)).getParameter("recipe"); 
         verify(mockDB, times(1)).addRecipe(any(Recipe.class));
-        verify(context, times(1)).getRequestDispatcher("index.html");
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_OK, argument.getValue().intValue());
 	}
 	
 	/**
@@ -214,7 +221,9 @@ public class CookbookServletTest {
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(request, atLeast(1)).getParameter("recipe"); 
         verify(mockDB, times(0)).addRecipe(any(Recipe.class));
-        verify(context, times(1)).getRequestDispatcher("index.html");
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_INTERNAL_ERROR, argument.getValue().intValue());
 	}
 	
 	/**
@@ -245,9 +254,10 @@ public class CookbookServletTest {
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        //verify(request, times(1)).setAttribute(eq("recipes"), anyCollection()); 
         verify(mockDB, times(1)).getAllRecipes();
-        //verify(context, times(1)).getRequestDispatcher("index.html");
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_OK, argument.getValue().intValue());
         //TODO verify recipes returned correctly
 	}
 	
