@@ -127,10 +127,10 @@ public class VirtualRefigeratorTest {
 	 */
 	@Test
 	@Parameters(method = "parametersCheckAllRecipes")
-	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, int expectedRecipes) {
-		underTest.setIngredientsList(userIngredients);
+	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, String[] filters, int expectedRecipes) {
+	    underTest.setIngredientsList(userIngredients);
 		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
-		ArrayList<Recipe> retVal = underTest.checkAllRecipes();
+		ArrayList<Recipe> retVal = underTest.checkAllRecipes(filters);
 		assertNotNull(retVal);
 		verify(mockDB, times(1)).getAllRecipes();
 		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
@@ -146,11 +146,16 @@ public class VirtualRefigeratorTest {
 	
 	@SuppressWarnings("unused")
 	private Object[] parametersCheckAllRecipes() {
+	    ArrayList<Recipe> r1 = createRecipeList(5, 15);
+	    r1.get(0).setFlavorTags(Arrays.asList(new String[] {"test1", "test2", "TEST3"}));
+	    r1.get(2).setFlavorTags(Arrays.asList(new String[] {"test1", "test3"}));
+	    r1.get(3).setFlavorTags(Arrays.asList(new String[] {"test1", "missing"}));
 		
         return new Object[] { 
-            new Object[] { createRecipeList(5, 15), createIngredientList(10), 6 },
-            new Object[] { createRecipeList(10, 15), createIngredientList(10), 1 },
-            new Object[] { createRecipeList(10, 15), createIngredientList(2), 0 }
+            new Object[] { createRecipeList(5, 15), createIngredientList(10), null, 6 },
+            new Object[] { r1, createIngredientList(10), new String[] {"test1", "TEST3"}, 2 },
+            new Object[] { createRecipeList(10, 15), createIngredientList(10), new String[] {}, 1 },
+            new Object[] { createRecipeList(10, 15), createIngredientList(2), null, 0 }
         };
     }
     

@@ -6,6 +6,7 @@
 package Beans;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,14 +20,14 @@ public class Recipe {
     private ArrayList<String> instructions;
     private int totalServings;
     private double timeRequired;
-    private ArrayList<String> flavorTags;
+    private List<String> flavorTags;
     
     public Recipe() {
         this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), new ArrayList<String>(), 0, 0, new ArrayList<String>());
     }
     
     public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
-            int totalServings, double timeRequired, ArrayList<String> flavorTags) {
+            int totalServings, double timeRequired, List<String> flavorTags) {
         this.name = name;
         this.desc = desc;
         this.nutVal = nutVal;
@@ -97,11 +98,11 @@ public class Recipe {
         this.timeRequired = timeRequired;
     }
     
-    public ArrayList<String> getFlavorTags() {
+    public List<String> getFlavorTags() {
         return flavorTags;
     }
     
-    public void setFlavorTags(ArrayList<String> flavorTags) {
+    public void setFlavorTags(List<String> flavorTags) {
         this.flavorTags = flavorTags;
     }
 }
