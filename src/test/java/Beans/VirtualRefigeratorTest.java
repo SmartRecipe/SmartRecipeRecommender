@@ -106,18 +106,15 @@ public class VirtualRefigeratorTest {
         Recipe r4  = createRecipe(10);
         r4.getIngredients().get(6).setName(null);
         
-        Recipe r5  = createRecipe(10);
-        r5.getIngredients().get(6).setName(r5.getIngredients().get(6).getName().toUpperCase());
-        
         return new Object[] {
             new Object[] { createRecipe(10), createIngredientList(10), true },
             new Object[] { createRecipe(10), createIngredientList(11), true },
             new Object[] { createRecipe(10), createIngredientList(9), false }, // User is missing an ingredient
-            new Object[] { r1, createIngredientList(10), false }, //Not enough quantity
-            new Object[] { r2, createIngredientList(10), true }, //More than enough quantity
-            new Object[] { r3, createIngredientList(10), false }, //Missing ingredient name
-            new Object[] { r4, createIngredientList(10), false }, //Null ingredient name
-            //new Object[] { r5, createIngredientList(10), false } //Ingredient name changed case
+            new Object[] { r1, createIngredientList(10), false }, // Not enough quantity
+            new Object[] { r2, createIngredientList(10), true }, // More than enough quantity
+            new Object[] { r3, createIngredientList(10), false }, // Missing ingredient name
+            new Object[] { r4, createIngredientList(10), false }, // Null ingredient name
+            new Object[] { null, createIngredientList(10), false } // Missing ingredient
         };
     }
 	
@@ -171,8 +168,8 @@ public class VirtualRefigeratorTest {
         
         assertEquals(2, underTest.getIngredientsList().size());
         
-        Ingredient testIngredient = new Ingredient("testIngredeint", 5, "cups");
-        underTest.addIngredient(testIngredient);
+        Ingredient testIngredient = new Ingredient("testIngredient", 5, "cups");
+        assertTrue(underTest.addIngredient(testIngredient));
         assertEquals(3, underTest.getIngredientsList().size());
         assertTrue(testList.contains(testIngredient));
     }
@@ -181,7 +178,7 @@ public class VirtualRefigeratorTest {
      * Test method for {@link Beans.VirtualRefrigerator#addIngredient(java.lang.String, double)}.
      */
     @Test
-    public void testAddExistingIngredient() {
+    public void testAddExistingIngredientWithQuantity() {
         ArrayList<Ingredient> testList = new ArrayList<>();
         testList.add(new Ingredient("ing1", 1, "cups"));
         testList.add(new Ingredient("ing2", 1, "cups"));
@@ -189,9 +186,51 @@ public class VirtualRefigeratorTest {
         
         assertEquals(2, underTest.getIngredientsList().size());
         
-        underTest.addIngredient(testList.get(0), 100);
+        Ingredient ing = new Ingredient(testList.get(0).getName(), 100, "cups"); // TODO test different unit
+        
+        assertTrue(underTest.addIngredient(ing, 100));
         assertEquals(2, underTest.getIngredientsList().size());
         assertEquals(101, testList.get(0).getQuantity(), 0);
+    }
+    
+    /**
+     * Test method for {@link Beans.VirtualRefrigerator#addIngredient(java.lang.String)}.
+     */
+    @Test
+    public void testAddExistingIngredient() {
+        List<Ingredient> testList = new ArrayList<>();
+        testList.add(new Ingredient("ing1", 1, "cups"));
+        testList.add(new Ingredient("ing2", 1, "cups"));
+        underTest = new VirtualRefrigerator(testList);
+        
+        assertEquals(2, underTest.getIngredientsList().size());
+        
+        Ingredient ing = new Ingredient(testList.get(0).getName(), 50, "cups"); // TODO test different unit
+        
+        assertTrue(underTest.addIngredient(ing));
+        assertEquals(2, underTest.getIngredientsList().size());
+        assertEquals(51, testList.get(0).getQuantity(), 0);
+    }
+    
+    /**
+     * Test method for {@link Beans.VirtualRefrigerator#addIngredient(java.lang.String)}.
+     */
+    @Test
+    public void testAddIngredientWithNull() {
+        ArrayList<Ingredient> testList = new ArrayList<>();
+        testList.add(new Ingredient("ing1", 1, "cups"));
+        testList.add(new Ingredient("ing2", 1, "cups"));
+        underTest.setIngredientsList(testList);
+        
+        assertEquals(2, underTest.getIngredientsList().size());
+        
+        assertFalse(underTest.addIngredient(null));
+        assertEquals(2, underTest.getIngredientsList().size());
+        assertEquals(1, testList.get(0).getQuantity(), 0);
+        
+        assertFalse(underTest.addIngredient(null, 50));
+        assertEquals(2, underTest.getIngredientsList().size());
+        assertEquals(1, testList.get(0).getQuantity(), 0);
     }
     
     @Test

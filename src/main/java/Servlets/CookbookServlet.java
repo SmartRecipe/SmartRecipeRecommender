@@ -77,7 +77,7 @@ public class CookbookServlet extends BaseServlet {
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipes));
                 }
                 else
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error; you are not logged in!\"");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Error; you are not logged in!\"");
                 break;
             case "recommend_recipe":
                 if (user != null) {
@@ -85,7 +85,7 @@ public class CookbookServlet extends BaseServlet {
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(recipe));
                 }
                 else
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error; you are not logged in!\"");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Error; you are not logged in!\"");
                 break;
             default:
                 sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
