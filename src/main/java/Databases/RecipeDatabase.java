@@ -13,6 +13,7 @@ import com.mongodb.client.MongoDatabase;
 
 import java.util.ArrayList;
 import Beans.Recipe;
+import com.mongodb.client.result.UpdateResult;
 import java.util.List;
 
 /**
@@ -58,17 +59,17 @@ public class RecipeDatabase {
      * @return True if successful, false if otherwise
      */
     public boolean updateRecipe(Recipe recipe) {
-        if (recipe == null)
-            return false;
-        
         Gson gson = new Gson();
         String recipeJSON = gson.toJson(recipe);
         MongoDatabase database = conn.getDatabase();
         if (database != null) {
             MongoCollection<Document> recipes = database.getCollection("recipes");
-            recipes.replaceOne(Document.parse("{ \"email\" : \"" + recipe.getName() + "\" }"), Document.parse(recipeJSON));
+            UpdateResult result = recipes.replaceOne(Document.parse("{ \"email\" : \"" + recipe.getName() + "\" }"), Document.parse(recipeJSON));
+            
+            return result.getMatchedCount() >= 1;
         }
-        return true;
+        
+        return false;
     }
     
     public List<Recipe> getAllRecipes() {
