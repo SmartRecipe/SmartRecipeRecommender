@@ -40,14 +40,25 @@ public class LoginServlet extends BaseServlet {
     protected void processRequest(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+        User user;
         Gson gson = new Gson();
         String action = request != null ? request.getParameter("action") : "";
         
-        User user = null;
-        String requestBody = getBody(request);
-        BaseRequest baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+        BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
 
+        // try to convert the request body into an instance of BaseRequest class
+        // all requests that fail to convert are malformed, we don't understand them
+        try{
+            String requestBody = getBody(request); // parse request body as json
+            baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+        } catch (Exception e) {
+            baseResponse.setMessage("Bad request");
+            sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
+            return; 
+        }
+
+        // Get the user object included in the request
         try {
             user = baseRequest.getUser();
         } catch (Exception e) {
@@ -77,7 +88,7 @@ public class LoginServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Account associated with given email address already exists");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_CONFLICT, gson.toJson(baseResponse));
                 }
                 break;
             case "login":
