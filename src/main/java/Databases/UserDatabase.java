@@ -53,6 +53,26 @@ public class UserDatabase {
         return true;
     }
     
+    /**
+     * Updates a stored user object in the database such that the original document is entirely replaced
+     * by the new one.
+     * @param user The user object being updated
+     * @return True if successful, false if otherwise
+     */
+    public boolean updateUser(User user) {
+        if (user == null)
+            return false;
+        
+        Gson gson = new Gson();
+        String userJSON = gson.toJson(user);
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
+            MongoCollection<Document> users = database.getCollection("users");
+            users.replaceOne(Document.parse("{ \"email\" : \"" + user.getEmail() + "\" }"), Document.parse(userJSON));
+        }
+        return true;
+    }
+    
     public List<User> getAllUsers() {
         Gson gson = new Gson();
         List<User> users = new ArrayList<>();
