@@ -22,23 +22,16 @@ public class Ingredient {
     
     private String name;
     private double quantity; //Will likely change later when we figure out more efficient way of quantifying ingredients.
-                            //Note: In the context of a recipe, this is how much is needed; in the context of the virtual refrigerator, this is how much is owned.
     private String unit;
-    private NutritionInfo nutVal; //Nutritional value per gram (many ways to measure ingredients, so bare mass might be most consistent)
     
     public Ingredient() { 
     	this("", 0, "");
     }
     
-    public Ingredient(String name, double quantity, String unit, NutritionInfo nutVal) {
-        setName(name);
-        setQuantity(quantity);
-        setUnit(unit);
-        setNutVal(nutVal);
-    }
-    
     public Ingredient(String name, double quantity, String unit) {
-        this(name, quantity, unit, null);
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
     }
     
     /**
@@ -88,14 +81,6 @@ public class Ingredient {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-
-    public NutritionInfo getNutVal() {
-        return nutVal;
-    }
-
-    public void setNutVal(NutritionInfo nutVal) {
-        this.nutVal = nutVal;
-    } 
     
     public boolean hasEnough(Ingredient needed) {
         if (needed == null) {
@@ -103,12 +88,9 @@ public class Ingredient {
         }
         Unit<Volume> thisUnit = VolumeUnits.fromString(this.getUnit());
         Unit<Volume> otherUnit = VolumeUnits.fromString(needed.getUnit());
-        if (thisUnit == null) {
-            logger.log(Level.SEVERE, "Unable to parse own ingredient: "+this);
-            return false;
-        } else if (otherUnit == null) {
-            logger.log(Level.WARNING, "Unable to parse other ingredient: "+needed);
-            return true;
+        if (thisUnit == null || otherUnit == null) {
+            logger.log(Level.WARNING, "Defaulting to quantity only comparison for ingredient: "+needed);
+            return this.getQuantity() >= needed.getQuantity();
         }
         return Quantities.getQuantity(this.getQuantity(), thisUnit).isGreaterThanOrEqualTo(
                 Quantities.getQuantity(needed.getQuantity(), otherUnit));

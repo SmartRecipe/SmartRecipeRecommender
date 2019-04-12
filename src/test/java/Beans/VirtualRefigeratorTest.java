@@ -67,7 +67,7 @@ public class VirtualRefigeratorTest {
      * @param numIngredients
      * @return
      */
-    private ArrayList<Ingredient> createIngredientList(int numIngredients) {
+    public static ArrayList<Ingredient> createIngredientList(int numIngredients) {
         ArrayList<Ingredient> baseIngredients = new ArrayList<>();
         for (int i=0; i<numIngredients; i++) {
             baseIngredients.add(new Ingredient("ing"+i, i+1, "cups"));
@@ -75,8 +75,9 @@ public class VirtualRefigeratorTest {
         return baseIngredients;
     }
     
-    private Recipe createRecipe(int numIngredients) {
+    public static Recipe createRecipe(int numIngredients) {
         Recipe r = new Recipe();
+        r.setName("Recipe "+numIngredients);
         r.setIngredients(createIngredientList(numIngredients));
         return r;
     }
@@ -135,7 +136,7 @@ public class VirtualRefigeratorTest {
 		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
 	}
 	
-	private ArrayList<Recipe> createRecipeList(int lowIngNum, int highIngNum) {
+	public static ArrayList<Recipe> createRecipeList(int lowIngNum, int highIngNum) {
 		ArrayList<Recipe> recipeList = new ArrayList<>();
 		for (int i=lowIngNum; i<=highIngNum; i++) {
 			recipeList.add(createRecipe(i));
