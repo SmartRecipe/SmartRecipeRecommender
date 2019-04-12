@@ -35,7 +35,10 @@ public class RecipeDatabase {
 		return instance;
 	}
 	
-    public void addRecipe(Recipe recipe) {
+    public boolean addRecipe(Recipe recipe) {
+        if (checkDuplicate(recipe.getName()))
+            return false;
+        
         Gson gson = new Gson();
         String recipeJSON = gson.toJson(recipe);
         
@@ -44,6 +47,28 @@ public class RecipeDatabase {
         	MongoCollection<Document> recipes = database.getCollection("recipes");
             recipes.insertOne(Document.parse(recipeJSON));
         }
+        
+        return true;
+    }
+    
+    /**
+     * Updates a stored recipe object in the database such that the original document is entirely replaced
+     * by the new one.
+     * @param recipe The recipe being updated
+     * @return True if successful, false if otherwise
+     */
+    public boolean updateRecipe(Recipe recipe) {
+        if (recipe == null)
+            return false;
+        
+        Gson gson = new Gson();
+        String recipeJSON = gson.toJson(recipe);
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
+            MongoCollection<Document> recipes = database.getCollection("recipes");
+            recipes.replaceOne(Document.parse("{ \"email\" : \"" + recipe.getName() + "\" }"), Document.parse(recipeJSON));
+        }
+        return true;
     }
     
     public List<Recipe> getAllRecipes() {
@@ -74,5 +99,14 @@ public class RecipeDatabase {
         }
         
         return null;
+    }
+    
+    /**
+     * Checks to see if a recipe with the given name already exists in the database
+     * @parma name The name of the recipe in question
+     * @return True if the recipe already exists in the database, false if not. 
+     */
+    private boolean checkDuplicate(String name) {
+        return getRecipe(name) != null;
     }
 }

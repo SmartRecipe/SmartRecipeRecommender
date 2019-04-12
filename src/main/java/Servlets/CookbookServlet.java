@@ -62,8 +62,12 @@ public class CookbookServlet extends BaseServlet {
                     sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error; please try again later.\" }");
                     break;
                 }
-                RecipeDatabase.getInstance().addRecipe(recipe);
-                sendResponse(response, STATUS_HTTP_OK, "{ \"message\": \"Recipe added!\" }");
+                if (RecipeDatabase.getInstance().addRecipe(recipe)) {
+                    sendResponse(response, STATUS_HTTP_OK, "{ \"message\": \"Recipe added!\" }");
+                }
+                else {
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, "{ \"message\": \"Error adding recipe to database; a recipe with that name may already exist.\" }");
+                }
                 break;
             case "get_recipes":
                 recipes = RecipeDatabase.getInstance().getAllRecipes();
