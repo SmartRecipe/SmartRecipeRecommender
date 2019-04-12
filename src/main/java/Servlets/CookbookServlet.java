@@ -10,6 +10,7 @@ import Beans.User;
 import Servlets.utils.BaseRequest;
 import Servlets.utils.BaseResponse;
 import Databases.RecipeDatabase;
+import Databases.UserDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -53,25 +54,30 @@ public class CookbookServlet extends BaseServlet {
         String action = request != null ? request.getParameter("action") : "";
         
         BaseRequest baseRequest = gson.fromJson(requestBody, BaseRequest.class);
-
+        
         try {
             user = baseRequest.getUser();
         } catch(Exception e) {
             user = null;
-        }      
-
-
+        }
+        
+        
         BaseResponse baseResponse = new BaseResponse();
         
         switch (action) {
-            case "add_recipe":                
+            case "add_recipe":
                 recipe = null;
                 try {
-                    RecipeDatabase.getInstance().addRecipe(baseRequest.getRecipe());
-                    recipe = RecipeDatabase.getInstance().getRecipe(baseRequest.getRecipe().getName());
-                    baseResponse.setRecipe(recipe);
-                    baseResponse.setMessage("Success");
-                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                    if (RecipeDatabase.getInstance().addRecipe(baseRequest.getRecipe())) {
+                        recipe = RecipeDatabase.getInstance().getRecipe(baseRequest.getRecipe().getName());
+                        baseResponse.setRecipe(recipe);
+                        baseResponse.setMessage("Success");
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                    }
+                    else {
+                        baseResponse.setMessage("Error; a recipe by that name may already exist within the database.");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
                 } catch (Exception e) {
                     baseResponse.setMessage("Error occurred while adding recipe.");
                     sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
@@ -83,6 +89,24 @@ public class CookbookServlet extends BaseServlet {
                 baseResponse.setMessage("Success");
                 baseResponse.setRecipes(recipes);
                 sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                break;
+            case "edit_recipe":
+                recipe = baseRequest.getRecipe();
+                
+                try {
+                    
+                    if (RecipeDatabase.getInstance().updateRecipe(recipe)) {
+                        baseResponse.setMessage("Success");
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                    }
+                    else {
+                        baseResponse.setMessage("Error occured while updating recipe.");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
+                } catch (Exception e) {
+                    baseResponse.setMessage("Error occurred while adding recipe");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                }
                 break;
             case "search_recipes":
                 if (user != null) {
@@ -107,6 +131,54 @@ public class CookbookServlet extends BaseServlet {
                     recipe = user.getFridge().recommendRecipe(user.getCookbook());
                     baseResponse.setRecipe(recipe);
                     sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                }
+                else {
+                    baseResponse.setMessage("Unauthorized");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                }
+                break;
+            case "add_history":
+                if (user != null) {
+                    recipe = baseResponse.getRecipe();
+                    
+                    if (user.getCookbook().addToHistory(recipe)) {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Success");
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                    }
+                    else {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Error adding recipe to history");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
+                }
+                else {
+                    baseResponse.setMessage("Unauthorized");
+                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                }
+                break;
+            case "add_favorites":
+                if (user != null) {
+                    recipe = baseResponse.getRecipe();
+                    
+                    if (user.getCookbook().addToFavorites(recipe)) {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Success");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
+                    else {
+                        UserDatabase.getInstance().updateUser(user);
+                        
+                        baseResponse.setUser(user);
+                        baseResponse.setMessage("Error adding recipe to history");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    }
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");

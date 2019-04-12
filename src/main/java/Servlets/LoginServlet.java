@@ -18,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @WebServlet(
         name = "LoginServlet",
@@ -43,8 +42,6 @@ public class LoginServlet extends BaseServlet {
             throws ServletException, IOException {
         Gson gson = new Gson();
         String action = request != null ? request.getParameter("action") : "";
-        
-        HttpSession session = request.getSession(true);
         
         User user = null;
         String requestBody = getBody(request);
