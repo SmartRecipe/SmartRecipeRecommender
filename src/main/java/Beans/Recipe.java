@@ -6,38 +6,58 @@
 package Beans;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author soup
  */
 public class Recipe {
+    @SerializedName("_id")
+    private ObjectId id;
+
     private String name;
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
     private ArrayList<Ingredient> ingredients;
-    private ArrayList<String> instructions;
-    private String servingSize;
-    private float totalServings;
+    private String instructions;
+    private int totalServings;
+    private double timeRequired;
+    private List<String> flavorTags;
     
-    public Recipe() { }
+    public Recipe() {
+        this("", "", new NutritionInfo(), new ArrayList<Ingredient>(), "", 0, 0, new ArrayList<String>());
+    }
     
-    public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, ArrayList<String> instructions,
-            String servingSize, float totalServings) {
+    public Recipe(String name, String desc, NutritionInfo nutVal, ArrayList<Ingredient> ingredients, String instructions,
+            int totalServings, double timeRequired, List<String> flavorTags) {
         this.name = name;
         this.desc = desc;
         this.nutVal = nutVal;
         this.ingredients = ingredients;
-        this.instructions = instructions;
-        this.servingSize = servingSize;
         this.totalServings = totalServings;
+        this.timeRequired = timeRequired;
+        this.flavorTags = flavorTags;
     }
-    
+
+    public ObjectId getId() {
+        return this.id;
+    }
+
+    public void setId(ObjectId id) {
+        if (id == null) id = new ObjectId();
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
     
     public void setName(String name) {
+        if (name == null) name = "";
         this.name = name;
     }
     
@@ -46,6 +66,7 @@ public class Recipe {
     }
     
     public void setDesc(String desc) {
+        if (desc == null) desc = "";
         this.desc = desc;
     }
     
@@ -54,6 +75,7 @@ public class Recipe {
     }
     
     public void setNutVal(NutritionInfo nutVal) {
+        if (nutVal == null) nutVal = new NutritionInfo();
         this.nutVal = nutVal;
     }
 
@@ -62,30 +84,40 @@ public class Recipe {
     }
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
+        if (ingredients == null) ingredients = new ArrayList<>();
         this.ingredients = ingredients;
     }
 
-    public ArrayList<String> getInstructions() {
+    public String getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(ArrayList<String> instructions) {
+    public void setInstructions(String instructions) {
+        if (instructions == null) instructions = "";
         this.instructions = instructions;
     }
 
-    public String getServingSize() {
-        return servingSize;
-    }
-
-    public void setServingSize(String servingSize) {
-        this.servingSize = servingSize;
-    }
-
-    public float getTotalServings() {
+    public int getTotalServings() {
         return totalServings;
     }
 
-    public void setTotalServings(float totalServings) {
+    public void setTotalServings(int totalServings) {
         this.totalServings = totalServings;
+    }
+    
+    public double getTimeRequired() {
+        return timeRequired;
+    }
+    
+    public void setTimeRequired(double timeRequired) {
+        this.timeRequired = timeRequired;
+    }
+    
+    public List<String> getFlavorTags() {
+        return flavorTags;
+    }
+    
+    public void setFlavorTags(List<String> flavorTags) {
+        this.flavorTags = flavorTags;
     }
 }

@@ -6,21 +6,14 @@
 package Databases;
 
 import Beans.User;
-import Beans.VirtualRefrigerator;
 
 import com.google.gson.Gson;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bson.Document;
 
@@ -45,7 +38,10 @@ public class UserDatabase {
 	}
 	
 	
-    public void addUser(User user) {
+    public boolean addUser(User user) {
+        if (checkDuplicate(user.getEmail()))
+            return false;
+        
         Gson gson = new Gson();
         String userJSON = gson.toJson(user);
         MongoDatabase database = conn.getDatabase();
@@ -53,6 +49,28 @@ public class UserDatabase {
             MongoCollection<Document> users = database.getCollection("users");
             users.insertOne(Document.parse(userJSON));
         }
+        
+        return true;
+    }
+    
+    /**
+     * Updates a stored user object in the database such that the original document is entirely replaced
+     * by the new one.
+     * @param user The user object being updated
+     * @return True if successful, false if otherwise
+     */
+    public boolean updateUser(User user) {
+        if (user == null)
+            return false;
+        
+        Gson gson = new Gson();
+        String userJSON = gson.toJson(user);
+        MongoDatabase database = conn.getDatabase();
+        if (database != null) {
+            MongoCollection<Document> users = database.getCollection("users");
+            users.replaceOne(Document.parse("{ \"email\" : \"" + user.getEmail() + "\" }"), Document.parse(userJSON));
+        }
+        return true;
     }
     
     public List<User> getAllUsers() {
@@ -91,9 +109,18 @@ public class UserDatabase {
         
         User user = getUser(email);
         
-        if (user != null && user.getPassword().equalsIgnoreCase(password))
+        if (user != null && user.getPassword().equals(password))
             return user;
         else
             return null;
+    }
+    
+    /**
+     * Checks to see if a User account associated with the given email already exits in the database.
+     * @param email The email account of the user in question
+     * @return True if the email already exists in the database, false if not. 
+     */
+    private boolean checkDuplicate(String email) {
+        return getUser(email) != null;
     }
 }

@@ -8,7 +8,11 @@ package Beans;
 import Databases.RecipeDatabase;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -24,6 +28,46 @@ public class VirtualRefrigerator implements Serializable {
     
     public VirtualRefrigerator(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+    
+    /**
+     * Recommends a recipe based on the user's recipe history. Essentially scans the user's history
+     * to see which flavor tag appears the most often, then compiles a list of all recipes with the
+     * corresponding tag and picks one at random.
+     * @param cookbook The user's cookbook; used to retrieve the user's recipe history.
+     * @return The recommended recipe.
+     */
+    public Recipe recommendRecipe(Cookbook cookbook) {
+        List<Recipe> validRecipes = checkAllRecipes();
+        
+        String filter;
+        
+        HashMap<String, Integer> filterFreq = new HashMap<>();
+        List<String> allTags = new ArrayList<>();
+        
+        for (Recipe recipe : cookbook.getHistory()) {
+            allTags.addAll(recipe.getFlavorTags());
+        }
+        
+        for (String tag : allTags) {
+            if (filterFreq.get(tag.toLowerCase()) == null)
+                filterFreq.put(tag, 1);
+            else
+                filterFreq.put(tag, filterFreq.get(tag.toLowerCase()));
+        }
+        
+        filter = Collections.max(filterFreq.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
+        
+        List<Recipe> candidates = new ArrayList<>();
+        
+        for (Recipe recipe : validRecipes) {
+            if (recipe.getFlavorTags().contains(filter))
+                candidates.add(recipe);
+        }
+        
+        Random rand = new Random(System.currentTimeMillis());
+        
+        return candidates.get(rand.nextInt(candidates.size()));
     }
     
     /**
@@ -60,12 +104,46 @@ public class VirtualRefrigerator implements Serializable {
     /**
      * Checks all recipes in database to determine which ones the user can make and returns a list of
      * the valid recipes.
+     * @param filters An array of the filters used to narrow down the returned recipes to a specific
+     * flavor profile.
      * @return An ArrayList of the recipes the user can make with the ingredients in their fridge.
      */
-    public ArrayList<Recipe> checkAllRecipes() {
+    public ArrayList<Recipe> checkAllRecipes(String... filters) {
         ArrayList<Recipe> validRecipes = new ArrayList<>();
+        List<Recipe> allRecipes = RecipeDatabase.getInstance().getAllRecipes();
         
-        for (Recipe recipe : RecipeDatabase.getInstance().getAllRecipes()) {
+        //Don't @ me, I'm already ashamed of this.
+        
+        //First, check to make sure that filters isn't null/empty
+        if (filters != null && filters.length > 0) {
+            Iterator<Recipe> itr = allRecipes.iterator(); //Create an iterator for the master list of recipes so we can run through it without a ConcurrentModification exception
+            int tags; //We'll need an int variable to keep track of the number of tags the recipe has in common with the filter array
+            
+            //Iterate through the master list
+            while (itr.hasNext()) {
+                Recipe recipe = (Recipe) itr.next(); //Throw the current list item into a Recipe object so we can get access to its flavor tags
+                List<String> flavorTags = recipe.getFlavorTags(); //Get the recipe's tags and store them in a list
+                tags = 0; //Set tags to 0
+                
+                //Compare each flavor tag in the recipe with the provided filters
+                for (String flavorTag : flavorTags) {
+                    for (int i = 0; i < filters.length; i++) {
+                        //If the flavor tag matches the filter tag, increment tags
+                        if (flavorTag.equalsIgnoreCase(filters[i])) {
+                            tags++;
+                            break;
+                        }
+                    }
+                }
+                
+                //If, after comparing each flavor tag to each filter tag, the tags variable is still less than the length of the filters array, then the recipe
+                //doesn't meet the filter specifications and should be removed
+                if (tags < filters.length)
+                    itr.remove();
+            }
+        }
+        
+        for (Recipe recipe : allRecipes) {
             if (checkRecipe(recipe))
                 validRecipes.add(recipe);
         }
@@ -79,16 +157,11 @@ public class VirtualRefrigerator implements Serializable {
      * @return Boolean stating the success of the operation.
      */
     public boolean addIngredient(Ingredient ingredient) {
-//If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
-for (Ingredient ing : ingredients) {
-    if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-        return ing.replenish(ingredient.getQuantity());
-    }
-}
-
-//If the ingredient isn't found in the fridge, add it manually.
-ingredients.add(ingredient);
-return true;
+        if (ingredient == null) {
+            return false;
+        }
+        // Call method and break out quantity from ingredient
+        return addIngredient(ingredient, ingredient.getQuantity());
     }
     
     /**
@@ -99,17 +172,20 @@ return true;
      * @return Boolean stating the success of the operation.
      */
     public boolean addIngredient(Ingredient ingredient, double quantity) {
-//If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
-for (Ingredient ing : ingredients) {
-    if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
-        return ing.replenish(quantity);
-    }
-}
-
-//If the ingredient isn't found in the fridge, add it manually.
-ingredient.setQuantity(quantity);
-ingredients.add(ingredient);
-return true;
+        if (ingredient == null) {
+            return false;
+        }
+        //If there's an instance of the ingredient already in the fridge, then just replenish it with the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                return ing.replenish(quantity);
+            }
+        }
+        
+        //If the ingredient isn't found in the fridge, add it manually.
+        ingredient.setQuantity(quantity);
+        ingredients.add(ingredient);
+        return true;
     }
     
     /**
@@ -118,23 +194,23 @@ return true;
      * @return Boolean stating the success of the operation.
      */
     public boolean useIngredient(Ingredient ingredient) {
-        if (ingredient == null || ingredients.isEmpty())
+        if (ingredient == null || ingredient.getName() == null)
             return false;
         
-//Search the fridge for the given ingredient and remove the given quantity.
-for (Ingredient ing : ingredients) {
-    if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
-        boolean success = ing.use(ingredient.getQuantity());
+        //Search the fridge for the given ingredient and remove the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                boolean success = ing.use(ingredient.getQuantity());
+                
+                //If the ingredient has been completely used up, remove it from the fridge.
+                if (ing.getQuantity() <= 0)
+                    ingredients.remove(ing);
+                
+                return success;
+            }
+        }
         
-//If the ingredient has been completely used up, remove it from the fridge.
-if (ing.getQuantity() <= 0)
-    ingredients.remove(ing);
-
-return success;
-    }
-}
-
-return false; //Ingredient not found
+        return false; //Ingredient not found
     }
     
     /**
@@ -147,21 +223,21 @@ return false; //Ingredient not found
     public boolean useIngredient(Ingredient ingredient, double quantity) {
         if (ingredient == null || ingredients.isEmpty())
             return false;
-        
-//Search the fridge for the given ingredient and remove the given quantity.
-for (Ingredient ing : ingredients) {
-    if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
-        boolean success = ing.use(quantity);
-        
-//If the ingredient has been completely used up, remove it from the fridge.
-if (ing.getQuantity() <= 0)
-    ingredients.remove(ing);
 
-return success;
-    }
-}
+        //Search the fridge for the given ingredient and remove the given quantity.
+        for (Ingredient ing : ingredients) {
+            if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
+                boolean success = ing.use(quantity);
 
-return false; //Ingredient not found
+                //If the ingredient has been completely used up, remove it from the fridge.
+                if (ing.getQuantity() <= 0)
+                    ingredients.remove(ing);
+
+                return success;
+            }
+        }
+
+        return false; //Ingredient not found
     }
     
     /**

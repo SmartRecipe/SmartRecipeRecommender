@@ -34,7 +34,7 @@ public class LoginServletTest {
     
     LoginServlet underTest;
     
-	HttpServletRequest request;     
+    HttpServletRequest request;
     HttpServletResponse response;
     ServletContext context;
     
@@ -42,11 +42,11 @@ public class LoginServletTest {
     StringWriter stringWriter;
     PrintWriter writer;
     Gson gson = new Gson();
-	
-	@Before
+    
+    @Before
     public void setUp() throws Exception {
-	    underTest = spy(new LoginServlet());
-		request = mock(HttpServletRequest.class);       
+        underTest = spy(new LoginServlet());
+        request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         context = mock(ServletContext.class);
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
@@ -58,7 +58,7 @@ public class LoginServletTest {
         when(response.getWriter()).thenReturn(writer);
         
         mockDB = mock(UserDatabase.class);
-		try {
+        try {
             Field instance = UserDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(instance, mockDB);
@@ -66,11 +66,11 @@ public class LoginServletTest {
             throw new RuntimeException(e);
         }
     }
-
+    
     @After
     public void tearDown() throws Exception {
-    	mockDB=null;
-		try {
+        mockDB=null;
+        try {
             Field instance = UserDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(null, null);
@@ -80,65 +80,65 @@ public class LoginServletTest {
     }
     
     /**
-	 * Test method for {@link LoginServlet#doGet(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testGetRequest() throws IOException {
+     * Test method for {@link LoginServlet#doGet(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testGetRequest() throws IOException {
         
         when(request.getParameter("action")).thenReturn("bad_action");
         
         try {
-        	underTest.doGet(request, response);
-        	verify(underTest, times(1)).processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-	}
-	
-	/**
-	 * Test method for {@link LoginServlet#doPost(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testPostRequest() throws IOException {
-        
-        when(request.getParameter("action")).thenReturn("bad_action");
-        
-        try {
-        	underTest.doPost(request, response);
-        	verify(underTest, times(1)).processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-        
-	}
+            underTest.doGet(request, response);
+            verify(underTest, times(1)).processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+    }
     
     /**
-	 * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testProcessBadRequest() throws IOException {
+     * Test method for {@link LoginServlet#doPost(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testPostRequest() throws IOException {
         
         when(request.getParameter("action")).thenReturn("bad_action");
-
+        
         try {
-        	underTest.processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-
+            underTest.doPost(request, response);
+            verify(underTest, times(1)).processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessBadRequest() throws IOException {
+        
+        when(request.getParameter("action")).thenReturn("bad_action");
+        
+        try {
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         //verify(context, times(1)).getRequestDispatcher("error.html"); // verify dispatcher called correctly
-	}
-	
-	/**
-	 * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testProcessSignupRequest() throws IOException {
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessSignupRequest() throws IOException {
         
         when(request.getParameter("action")).thenReturn("sign_up");
         
@@ -149,53 +149,53 @@ public class LoginServletTest {
         String userJson = gson.toJson(user);
         
         doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
-
+        
         try {
-        	underTest.processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(mockDB, times(1)).addUser(any(User.class)); //TODO compare actual user information once User.equals workss
         //verify(context, times(1)).getRequestDispatcher("index.html");
         //TODO run again and verify token is different
-	}
-	
-	/**
-	 * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testProcessBadSignupRequest() throws IOException {
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessBadSignupRequest() throws IOException {
         
-		//TODO test corrupted user, test empty password, test missing parameters
+        //TODO test corrupted user, test empty password, test missing parameters
         when(request.getParameter("action")).thenReturn("sign_up");
-
+        
         User user = new User();
         user.setName("");
         user.setPassword("testpassword");
         String userJson = gson.toJson(user);
         
         doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
-
+        
         try {
-        	underTest.processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(mockDB, times(0)).addUser(any(User.class));
         //verify(context, times(1)).getRequestDispatcher("error.html");
-	}
-	
-	/**
-	 * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testProcessLoginRequest() throws IOException {
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessLoginRequest() throws IOException {
         
         when(request.getParameter("action")).thenReturn("login");
         
@@ -212,27 +212,27 @@ public class LoginServletTest {
         //when(request.getParameter("password")).thenReturn(user.getPassword());
         
         when(mockDB.login(anyString(), anyString())).thenReturn(user);
-
+        
         try {
             underTest.processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(mockDB, times(1)).login(user.getEmail(), user.getPassword());
         
         writer.flush(); // it may not have been flushed yet...
         //TODO check returned string
         //assertTrue(stringWriter.toString().contains("My expected string"));
-	}
-	
-	/**
-	 * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
-     * @throws IOException 
-	 */
-	@Test
-	public void testProcessLoginRequestIncorrectPassword() throws IOException {
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessLoginRequestIncorrectPassword() throws IOException {
         
         when(request.getParameter("action")).thenReturn("login");
         
@@ -243,19 +243,19 @@ public class LoginServletTest {
         String userJson = gson.toJson(user);
         
         doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
-
+        
         when(mockDB.login(anyString(), anyString())).thenReturn(null);
         try {
-        
+            
             underTest.processRequest(request, response);
-		} catch (ServletException e) {
-			fail("Threw exception");
-		}
-
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
         verify(mockDB, times(1)).login(user.getEmail(), user.getPassword());
         //verify(context, times(1)).getRequestDispatcher("login.html");
-	}
-	
-	
+    }
+    
+    
 }
