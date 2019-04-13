@@ -42,8 +42,7 @@ public class LoginServlet extends BaseServlet {
             throws ServletException, IOException {
         User user;
         Gson gson = new Gson();
-        String action = request != null && request.getParameter("action") != null 
-                ? request.getParameter("action") : "";
+        String action = getAction(request);
         
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();

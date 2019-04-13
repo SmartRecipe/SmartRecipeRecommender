@@ -228,6 +228,10 @@ public class NutritionInfoTest {
         
         underTest.putExtra(null, 100);
         assertEquals(1, underTest.getExtras().size());
+        
+        // Test generic version
+        underTest.putExtra("byteTest", (byte)0xF);
+        assertTrue(underTest.getExtra("byteTest", (byte)0) instanceof Byte);
     }
     
     @Test

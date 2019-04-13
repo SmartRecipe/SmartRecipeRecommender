@@ -84,6 +84,18 @@ public class BaseServlet extends HttpServlet {
         Gson gson = new Gson();
         return gson.fromJson(getBody(request), BaseRequest.class);
     }
+    
+    /**
+     * Returns the request parameter for action.  If request or parameter is null, a blank
+     * String is returned
+     * @param request
+     * @return the action parameter or blank string
+     */
+    protected String getAction(HttpServletRequest request) {
+        return request != null && request.getParameter("action") != null 
+                ? request.getParameter("action") : "";
+        
+    }
 
     /**
      * Sends response as a Application/Json object
