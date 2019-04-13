@@ -42,7 +42,6 @@ public class CookbookServlet extends BaseServlet {
     @Override
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gson gson = new Gson();
         List<Recipe> recipes;
         User user;
         Recipe recipe;
