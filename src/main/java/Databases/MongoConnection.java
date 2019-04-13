@@ -42,8 +42,27 @@ public class MongoConnection {
     public MongoClient getMongo() throws RuntimeException {
         if (mongo == null) {
             logger.log(Level.FINE, "Starting Mongo");
-            
-            mongo = new MongoClient("localhost", SSH_FORWARD_PORT);
+            MongoClientOptions.Builder options = MongoClientOptions.builder().connectionsPerHost(5)
+                    .maxConnectionIdleTime((60 * 1000)) // 60 sec idle time
+                    .maxConnectionLifeTime((120 * 1000)); // 2 min lifetime max
+            ;
+
+            MongoClientURI uri = null;
+            if (ssh != null) {
+                //Use localhost because port forwarding handles the IP address
+                uri = new MongoClientURI("mongodb://127.0.0.1:" + SSH_FORWARD_PORT + "/" + ENV_DB_NAME,
+                        options);
+            } else {
+                uri = new MongoClientURI("mongodb://localhost:27017/" + ENV_DB_NAME, options);
+            }
+
+            logger.info("About to connect to MongoDB @ " + uri.toString());
+
+            try {
+                mongo = new MongoClient(uri);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "An error occoured when connecting to MongoDB", ex);
+            }
         }
         
         return mongo;
@@ -119,5 +138,4 @@ public class MongoConnection {
     public static MongoConnection getInstance() {
         return instance;
     }
-    
 }

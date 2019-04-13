@@ -6,6 +6,8 @@
 package Servlets;
 
 import Beans.User;
+import Servlets.utils.BaseRequest;
+import Servlets.utils.BaseResponse;
 import Servlets.BaseServlet;
 import com.google.gson.Gson;
 import Databases.UserDatabase;
@@ -16,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @WebServlet(
         name = "LoginServlet",
@@ -39,56 +40,75 @@ public class LoginServlet extends BaseServlet {
     protected void processRequest(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+        User user;
         Gson gson = new Gson();
         String action = request != null ? request.getParameter("action") : "";
-        if (action == null)
-            action = "";
-        HttpSession session = request.getSession(true);
         
-        User user;
-        String requestBody = "";
+        BaseRequest baseRequest;
+        BaseResponse baseResponse = new BaseResponse();
+
+        // try to convert the request body into an instance of BaseRequest class
+        // all requests that fail to convert are malformed, we don't understand them
+        try{
+            String requestBody = getBody(request); // parse request body as json
+            baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+        } catch (Exception e) {
+            baseResponse.setMessage("Bad request");
+            sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
+            return; 
+        }
+
+        // Get the user object included in the request
+        try {
+            user = baseRequest.getUser();
+        } catch (Exception e) {
+            user = null;
+        }
+
         UserDatabase userDb = UserDatabase.getInstance();
         
         switch (action) {
             case "sign_up":
-                requestBody = getBody(request);
-                user = gson.fromJson(requestBody, User.class);
                 if (user == null) {
-                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                    baseResponse.setMessage("Invalid user");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                     break;
                 }
                 if (user.getEmail().trim().isEmpty() || user.getPassword().trim().isEmpty()) {
-                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user information\" }");
+                    baseResponse.setMessage("Invalid user information");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                     break;
                 }
                 user.setPassword(user.getPassword());
                 user.setUserID(UUID.randomUUID());
-                userDb.addUser(user);
                 
-                if (session != null)
-                    session.setAttribute("user", user);
-                
-                sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
+                if (userDb.addUser(user)) {
+                    baseResponse.setUser(user);
+                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                }
+                else {
+                    baseResponse.setMessage("Account associated with given email address already exists");
+                    sendResponse(response, STATUS_HTTP_CONFLICT, gson.toJson(baseResponse));
+                }
                 break;
             case "login":
-                requestBody = getBody(request);
-                user = gson.fromJson(requestBody, User.class);
                 if (user == null) {
-                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid user\" }");
+                    baseResponse.setMessage("Invalid user");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                     break;
                 }
                 user = userDb.login(user.getEmail(), user.getPassword());
                 if (user == null) {
-                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, "{ \"message\": \"Invalid email or password\" }");
+                    baseResponse.setMessage("Invalid email or password");
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 } else {
-                    if (session != null)
-                        session.setAttribute("user", user);
-                    
-                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(user));
+                    baseResponse.setUser(user);
+                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                 }
                 break;
             default:
-                sendResponse(response, STATUS_HTTP_NOT_FOUND, "{ \"message\": \"Not Found\" }");
+                baseResponse.setMessage("Not found");
+                sendResponse(response, STATUS_HTTP_NOT_FOUND, gson.toJson(baseResponse));
                 break;
         }
     }
