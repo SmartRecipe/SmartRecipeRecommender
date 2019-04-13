@@ -64,7 +64,7 @@ public class RecipeDatabase {
         MongoDatabase database = conn.getDatabase();
         if (database != null) {
             MongoCollection<Document> recipes = database.getCollection("recipes");
-            UpdateResult result = recipes.replaceOne(Document.parse("{ \"email\" : \"" + recipe.getName() + "\" }"), Document.parse(recipeJSON));
+            UpdateResult result = recipes.replaceOne(Document.parse("{ \"name\" : \"" + recipe.getName() + "\" }"), Document.parse(recipeJSON));
             
             return result.getMatchedCount() >= 1;
         }

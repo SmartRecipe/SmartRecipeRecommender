@@ -17,7 +17,7 @@ public class User implements Serializable {
     private String name;
     private String username;
     private String email;
-    private String password;
+    private transient String password;
     private UUID userID;
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
@@ -26,6 +26,7 @@ public class User implements Serializable {
         this.name = "";
         this.username = "";
         this.email = "";
+        this.password = "";
         this.userID = UUID.randomUUID();
         fridge = new VirtualRefrigerator();
         cookbook = new Cookbook();

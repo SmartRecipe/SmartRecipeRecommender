@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
  * @author soup
  */
 public class Recipe {
+
     @SerializedName("_id")
     private ObjectId id;
 
@@ -121,4 +122,22 @@ public class Recipe {
     public void setFlavorTags(List<String> flavorTags) {
         this.flavorTags = flavorTags;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (String tag : flavorTags) {
+            sb.append(tag);
+            sb.append(", ");
+        }
+        return "Recipe [\n"
+                + "id=" + id +",\n"
+                + "name=" + name + ",\n"
+                + "desc=" + desc.substring(0, Math.min(desc.length(), 20)) + ",\n"
+                + "totalServings="+ totalServings + ",\n"
+                + "timeRequired=" + timeRequired + ",\n"
+                + "flavorTags=" + sb.toString() +
+                "\n]";
+    }
+    
 }

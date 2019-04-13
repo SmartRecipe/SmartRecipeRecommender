@@ -12,14 +12,12 @@ import Servlets.utils.BaseResponse;
 import Databases.RecipeDatabase;
 import Databases.UserDatabase;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -49,8 +47,7 @@ public class CookbookServlet extends BaseServlet {
         Recipe recipe;
         Gson gson = new Gson();
         
-        String filters[];
-        String action = request != null ? request.getParameter("action") : "";
+        String action = getAction(request);
 
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
@@ -58,8 +55,7 @@ public class CookbookServlet extends BaseServlet {
         // try to convert the request body into an instance of BaseRequest class
         // all requests that fail to convert are malformed, we don't understand them
         try{
-            String requestBody = getBody(request);  // parse request body as json
-            baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+            baseRequest = getBaseRequest(request);  // parse request body as json
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
             sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
@@ -150,14 +146,12 @@ public class CookbookServlet extends BaseServlet {
                 break;
             case "add_history":
                 if (user != null) {
-                    if (user.getCookbook().addToHistory(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
+                    if (user.getCookbook().addToHistory(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error adding recipe to history");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
@@ -165,19 +159,17 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             case "add_favorites":
                 if (user != null) {
-                    if (user.getCookbook().addToFavorites(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
+                    if (user.getCookbook().addToFavorites(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
-                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error adding recipe to favorites");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
@@ -185,28 +177,27 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             case "remove_favorites":
                 if (user != null) {
-                    if (user.getCookbook().removeFromFavorites(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
+                    if (user.getCookbook().removeFromFavorites(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
-                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
                         
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error remove recipe from favorites");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                     }
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             default:
