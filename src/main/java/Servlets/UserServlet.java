@@ -22,12 +22,12 @@ import javax.servlet.http.HttpServletResponse;
  * @author soup
  */
 @WebServlet(
-        name = "IngredientServlet",
-        urlPatterns = {"/ingredient"}
+        name = "UserServlet",
+        urlPatterns = {"/user"}
 )
-public class IngredientServlet extends BaseServlet {
+public class UserServlet extends BaseServlet {
     
-    public static final String info = "Cookbook Servlet";
+    public static final String info = "User Servlet";
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
