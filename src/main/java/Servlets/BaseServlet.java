@@ -13,6 +13,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import Servlets.utils.BaseRequest;
+
 /**
  * General utility class to handle request and response operations
  */
@@ -73,6 +78,11 @@ public class BaseServlet extends HttpServlet {
         }
         body = stringBuilder.toString();
         return body;
+    }
+    
+    protected BaseRequest getBaseRequest(HttpServletRequest request) throws JsonSyntaxException, IOException {
+        Gson gson = new Gson();
+        return gson.fromJson(getBody(request), BaseRequest.class);
     }
 
     /**

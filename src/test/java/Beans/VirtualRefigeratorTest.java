@@ -131,7 +131,7 @@ public class VirtualRefigeratorTest {
 	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, String[] filters, int expectedRecipes) {
 	    underTest.setIngredientsList(userIngredients);
 		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
-		ArrayList<Recipe> retVal = underTest.checkAllRecipes(filters);
+		List<Recipe> retVal = underTest.checkAllRecipes(filters);
 		assertNotNull(retVal);
 		verify(mockDB, times(1)).getAllRecipes();
 		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
