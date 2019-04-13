@@ -13,6 +13,7 @@ import java.util.List;
  * @author soup
  */
 public class Recipe {
+
     private String name;
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
@@ -105,4 +106,22 @@ public class Recipe {
     public void setFlavorTags(List<String> flavorTags) {
         this.flavorTags = flavorTags;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (String tag : flavorTags) {
+            sb.append(tag);
+            sb.append(", ");
+        }
+        return "Recipe [\n"
+                + "name=" + name + ",\n"
+                + "desc=" + desc.substring(0, Math.min(desc.length(), 20)) + ",\n"
+                + "ingredients=" + ingredients.size() + ",\n"
+                + "totalServings="+ totalServings + ",\n"
+                + "timeRequired=" + timeRequired + ",\n"
+                + "flavorTags=" + sb.toString() +
+                "\n]";
+    }
+    
 }

@@ -44,29 +44,38 @@ public class VirtualRefrigerator implements Serializable {
         
         HashMap<String, Integer> filterFreq = new HashMap<>();
         List<String> allTags = new ArrayList<>();
-        
+                
         for (Recipe recipe : cookbook.getHistory()) {
             allTags.addAll(recipe.getFlavorTags());
         }
         
         for (String tag : allTags) {
-            if (filterFreq.get(tag.toLowerCase()) == null)
+            if (filterFreq.get(tag.toLowerCase()) == null) {
                 filterFreq.put(tag, 1);
-            else
-                filterFreq.put(tag, filterFreq.get(tag.toLowerCase()));
+            } else {
+                // Increment the frequency count
+                filterFreq.put(tag, filterFreq.get(tag.toLowerCase()) + 1);
+            }
         }
         
-        filter = Collections.max(filterFreq.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
-        
         List<Recipe> candidates = new ArrayList<>();
-        
-        for (Recipe recipe : validRecipes) {
-            if (recipe.getFlavorTags().contains(filter))
-                candidates.add(recipe);
+        if (filterFreq.isEmpty()) {
+            // Pick from all recipes if no filters were found
+            candidates.addAll(validRecipes);
+        } else {
+            // Find the most popular tag and match recipes containing that flavor
+            filter = Collections.max(filterFreq.entrySet(), (entry1, entry2) -> entry1.getValue() - entry2.getValue()).getKey();
+            
+            for (Recipe recipe : validRecipes) {
+                if (recipe.getFlavorTags().contains(filter))
+                    candidates.add(recipe);
+            }
         }
         
         Random rand = new Random(System.currentTimeMillis());
         
+        if (candidates.isEmpty())
+            return null;
         return candidates.get(rand.nextInt(candidates.size()));
     }
     
