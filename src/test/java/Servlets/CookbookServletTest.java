@@ -1,6 +1,7 @@
 package Servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -29,12 +30,15 @@ import com.google.gson.Gson;
 import Beans.Ingredient;
 import Beans.Recipe;
 import Databases.RecipeDatabase;
+import Servlets.utils.BaseResponse;
 
 @RunWith(JUnitParamsRunner.class)
 public class CookbookServletTest {
 	HttpServletRequest request;     
     HttpServletResponse response;
     ServletContext context;
+    
+    CookbookServlet underTest;
     
     StringWriter stringWriter;
     PrintWriter writer;
@@ -46,6 +50,7 @@ public class CookbookServletTest {
 		request = mock(HttpServletRequest.class);       
         response = mock(HttpServletResponse.class);
         context = mock(ServletContext.class);
+        underTest = spy(new CookbookServlet());
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
         
         when(request.getServletContext()).thenReturn(context);
@@ -75,6 +80,13 @@ public class CookbookServletTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    private String recipeToJson(Recipe recipe) {
+        Gson gson = new Gson();
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setRecipe(recipe);
+        return gson.toJson(baseResponse);
     }
     
     /**
@@ -126,7 +138,7 @@ public class CookbookServletTest {
         when(request.getParameter("action")).thenReturn("bad_action");
 
         try {
-        	new CookbookServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
@@ -147,7 +159,7 @@ public class CookbookServletTest {
         when(request.getParameter("action")).thenReturn(null);
 
         try {
-            new CookbookServlet().processRequest(request, response);
+            underTest.processRequest(request, response);
         } catch (ServletException e) {
             fail("Threw exception");
         }
@@ -167,7 +179,6 @@ public class CookbookServletTest {
         
         when(request.getParameter("action")).thenReturn("add_recipe");
         
-        Gson gson = new Gson();
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
@@ -175,17 +186,18 @@ public class CookbookServletTest {
         ingredients.add(new Ingredient("ing2", 2, "cups"));
         ingredients.add(new Ingredient("ing3", 3, "cups"));
         recipe.setIngredients(ingredients);
-        String recipeJSON = gson.toJson(recipe);
-        when(request.getParameter("recipe")).thenReturn(recipeJSON);
+        String recipeJSON = recipeToJson(recipe);
+        doReturn(recipeJSON).when(underTest).getBody(any(HttpServletRequest.class));
+        
+        when(mockDB.addRecipe(any(Recipe.class))).thenReturn(true);
 
         try {
-        	new CookbookServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("recipe"); 
         verify(mockDB, times(1)).addRecipe(any(Recipe.class));
         ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
         verify(response).setStatus(argument.capture());
@@ -202,28 +214,25 @@ public class CookbookServletTest {
         
         when(request.getParameter("action")).thenReturn("add_recipe");
         
-        Gson gson = new Gson();
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("ing1", 1, "cups"));
         recipe.setIngredients(ingredients);
-        String recipeJSON = gson.toJson(recipe);
-        recipeJSON = recipeJSON.substring(5); //Corrupt the message //TODO test with blank string too
-        when(request.getParameter("recipe")).thenReturn(recipeJSON);
+        String recipeJSON = recipeToJson(recipe).substring(5); //Corrupt the message //TODO test with blank string too
+        doReturn(recipeJSON).when(underTest).getBody(any(HttpServletRequest.class));
 
         try {
-        	new CookbookServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(request, atLeast(1)).getParameter("recipe"); 
         verify(mockDB, times(0)).addRecipe(any(Recipe.class));
         ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
         verify(response).setStatus(argument.capture());
-        assertEquals(BaseServlet.STATUS_HTTP_INTERNAL_ERROR, argument.getValue().intValue());
+        assertEquals(BaseServlet.STATUS_HTTP_BAD_REQUEST, argument.getValue().intValue());
 	}
 	
 	/**
@@ -248,7 +257,7 @@ public class CookbookServletTest {
         when(mockDB.getAllRecipes()).thenReturn(recipes);
 
         try {
-        	new CookbookServlet().processRequest(request, response);
+        	underTest.processRequest(request, response);
 		} catch (ServletException e) {
 			fail("Threw exception");
 		}

@@ -50,7 +50,8 @@ public class CookbookServlet extends BaseServlet {
         Gson gson = new Gson();
         
         String filters[];
-        String action = request != null ? request.getParameter("action") : "";
+        String action = request != null && request.getParameter("action") != null 
+                ? request.getParameter("action") : "";
 
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
@@ -81,6 +82,7 @@ public class CookbookServlet extends BaseServlet {
         
         switch (action) {
             case "add_recipe":
+                System.out.println("Adding recipe: "+recipe);
                 try {
                     if (RecipeDatabase.getInstance().addRecipe(recipe)) {
                         baseResponse.setRecipe(recipe);

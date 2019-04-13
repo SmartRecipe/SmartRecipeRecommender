@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 
 import Beans.User;
 import Databases.UserDatabase;
+import Servlets.utils.BaseResponse;
 
 @RunWith(JUnitParamsRunner.class)
 public class LoginServletTest {
@@ -146,9 +147,11 @@ public class LoginServletTest {
         user.setEmail("test");
         user.setName("testName");
         user.setPassword("testpassword");
-        String userJson = gson.toJson(user);
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        String json = gson.toJson(baseResponse);
         
-        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
+        doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
         
         try {
             underTest.processRequest(request, response);
@@ -203,13 +206,12 @@ public class LoginServletTest {
         user.setEmail("test");
         user.setName("testName");
         user.setPassword("testpassword");
-        String userJson = gson.toJson(user);
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        String json = gson.toJson(baseResponse);
         
         LoginServlet underTest = spy(new LoginServlet());
-        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
-        
-        //when(request.getParameter("email")).thenReturn(user.getEmail());
-        //when(request.getParameter("password")).thenReturn(user.getPassword());
+        doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
         
         when(mockDB.login(anyString(), anyString())).thenReturn(user);
         
@@ -240,9 +242,11 @@ public class LoginServletTest {
         user.setEmail("test");
         user.setName("testName");
         user.setPassword("testpassword");
-        String userJson = gson.toJson(user);
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        String json = gson.toJson(baseResponse);
         
-        doReturn(userJson).when(underTest).getBody(any(HttpServletRequest.class));
+        doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
         
         when(mockDB.login(anyString(), anyString())).thenReturn(null);
         try {
