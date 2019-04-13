@@ -11,9 +11,13 @@ import Servlets.utils.BaseResponse;
 import Servlets.BaseServlet;
 import com.google.gson.Gson;
 import Databases.UserDatabase;
+import Servlets.utils.PasswordHash;
 
 import java.util.UUID;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +47,7 @@ public class LoginServlet extends BaseServlet {
         User user;
         Gson gson = new Gson();
         String action = getAction(request);
+        String salt = null;
         
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
@@ -79,7 +84,20 @@ public class LoginServlet extends BaseServlet {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                     break;
                 }
-                user.setPassword(user.getPassword());
+                
+                String hashedPassword = null;
+                String[] passSalt = null;
+                
+                try {
+                    passSalt = PasswordHash.hashAndSaltPassword(user.getPassword());
+                    hashedPassword = passSalt[0];
+                    salt = passSalt[1];
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                user.setPassword(passSalt[0]);
+                user.setSalt(salt);
                 user.setUserID(UUID.randomUUID());
                 
                 if (userDb.addUser(user)) {
