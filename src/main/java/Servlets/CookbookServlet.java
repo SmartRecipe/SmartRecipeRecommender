@@ -44,15 +44,26 @@ public class CookbookServlet extends BaseServlet {
             throws ServletException, IOException {
         Gson gson = new Gson();
         List<Recipe> recipes;
-        Recipe recipe;
         User user;
+        Recipe recipe;
+        Gson gson = new Gson();
         
-        String filters[];
-        String requestBody = getBody(request);  // parse request body as json
-        String action = request != null ? request.getParameter("action") : "";
-        
-        BaseRequest baseRequest = gson.fromJson(requestBody, BaseRequest.class);
-        
+        String action = getAction(request);
+
+        BaseRequest baseRequest;
+        BaseResponse baseResponse = new BaseResponse();
+
+        // try to convert the request body into an instance of BaseRequest class
+        // all requests that fail to convert are malformed, we don't understand them
+        try{
+            baseRequest = getBaseRequest(request);  // parse request body as json
+        } catch (Exception e) {
+            baseResponse.setMessage("Bad request");
+            sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
+            return; 
+        }
+
+        // Get the user object included in the request 
         try {
             user = baseRequest.getUser();
         } catch (Exception e) {
@@ -65,9 +76,6 @@ public class CookbookServlet extends BaseServlet {
             recipe = null;
         }
         
-        
-        BaseResponse baseResponse = new BaseResponse();
-        
         switch (action) {
             case "add_recipe":
                 try {
@@ -77,8 +85,8 @@ public class CookbookServlet extends BaseServlet {
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        baseResponse.setMessage("Error; a recipe by that name may already exist within the database.");
-                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                        baseResponse.setMessage("A recipe by that name may already exist within the database.");
+                        sendResponse(response, STATUS_HTTP_CONFLICT, gson.toJson(baseResponse));
                     }
                 } catch (Exception e) {
                     baseResponse.setMessage("Error occurred while adding recipe.");
@@ -94,7 +102,6 @@ public class CookbookServlet extends BaseServlet {
                 break;
             case "edit_recipe":
                 try {
-                    
                     if (RecipeDatabase.getInstance().updateRecipe(recipe)) {
                         baseResponse.setMessage("Success");
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
@@ -134,21 +141,17 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             case "add_history":
                 if (user != null) {
-                    if (user.getCookbook().addToHistory(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
-                        
+                    if (user.getCookbook().addToHistory(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
-                        
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error adding recipe to history");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
@@ -156,21 +159,17 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             case "add_favorites":
                 if (user != null) {
-                    if (user.getCookbook().addToFavorites(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
-                        
+                    if (user.getCookbook().addToFavorites(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
-                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
-                        
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error adding recipe to favorites");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
@@ -178,28 +177,27 @@ public class CookbookServlet extends BaseServlet {
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             case "remove_favorites":
                 if (user != null) {
-                    if (user.getCookbook().removeFromFavorites(recipe)) {
-                        UserDatabase.getInstance().updateUser(user);
+                    if (user.getCookbook().removeFromFavorites(recipe) && UserDatabase.getInstance().updateUser(user)) {
                         
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Success");
-                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                        sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
                     else {
-                        UserDatabase.getInstance().updateUser(user);
                         
                         baseResponse.setUser(user);
                         baseResponse.setMessage("Error remove recipe from favorites");
+                        sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                     }
                 }
                 else {
                     baseResponse.setMessage("Unauthorized");
-                    sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
+                    sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                 }
                 break;
             default:

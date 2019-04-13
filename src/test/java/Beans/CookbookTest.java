@@ -123,12 +123,4 @@ public class CookbookTest {
         };
     }
     
-    @SuppressWarnings("unused")
-    private Object[] parametersRemoveFromHistory() {
-        return new Object[] { 
-                new Object[] { VirtualRefigeratorTest.createRecipeList(5, 15), VirtualRefigeratorTest.createRecipe(16), false },
-                new Object[] { VirtualRefigeratorTest.createRecipeList(5, 15), VirtualRefigeratorTest.createRecipe(10), true },
-                new Object[] { VirtualRefigeratorTest.createRecipeList(5, 15), null, false }
-            };
-    }
 }

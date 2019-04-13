@@ -15,6 +15,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 
 import Databases.RecipeDatabase;
 import junitparams.JUnitParamsRunner;
@@ -94,6 +95,8 @@ public class VirtualRefigeratorTest {
     
     @SuppressWarnings("unused")
     private Object[] parametersCheckRecipe() {
+        ArrayList<Ingredient> ingList1 = createIngredientList(10);
+        ingList1.add(0, null);
         Recipe r1  = createRecipe(10);
         r1.getIngredients().get(5).setQuantity(10);
         
@@ -110,11 +113,12 @@ public class VirtualRefigeratorTest {
             new Object[] { createRecipe(10), createIngredientList(10), true },
             new Object[] { createRecipe(10), createIngredientList(11), true },
             new Object[] { createRecipe(10), createIngredientList(9), false }, // User is missing an ingredient
-            new Object[] { r1, createIngredientList(10), false }, // Not enough quantity
+            new Object[] { r1, ingList1, false }, // Not enough quantity
             new Object[] { r2, createIngredientList(10), true }, // More than enough quantity
             new Object[] { r3, createIngredientList(10), false }, // Missing ingredient name
             new Object[] { r4, createIngredientList(10), false }, // Null ingredient name
-            new Object[] { null, createIngredientList(10), false } // Missing ingredient
+            new Object[] { null, createIngredientList(10), false }, // null ingredient
+            new Object[] { createRecipe(10), createIngredientList(0), false } // No ingredients
         };
     }
 	
@@ -127,7 +131,7 @@ public class VirtualRefigeratorTest {
 	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, String[] filters, int expectedRecipes) {
 	    underTest.setIngredientsList(userIngredients);
 		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
-		ArrayList<Recipe> retVal = underTest.checkAllRecipes(filters);
+		List<Recipe> retVal = underTest.checkAllRecipes(filters);
 		assertNotNull(retVal);
 		verify(mockDB, times(1)).getAllRecipes();
 		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
@@ -153,6 +157,69 @@ public class VirtualRefigeratorTest {
             new Object[] { r1, createIngredientList(10), new String[] {"test1", "TEST3"}, 2 },
             new Object[] { createRecipeList(10, 15), createIngredientList(10), new String[] {}, 1 },
             new Object[] { createRecipeList(10, 15), createIngredientList(2), null, 0 }
+        };
+    }
+	
+	/**
+     * Test method for {@link Beans.VirtualRefrigerator#recommendRecipe(Cookbook)}.
+     */
+    @Test
+    @Parameters(method = "parametersRecommendRecipe")
+    public void testRecommendRecipe(Cookbook cookbook, List<String> possibleRecipeNames, boolean useRecipes) {
+        VirtualRefrigerator spiedTest = spy(underTest);
+        ArrayList<Recipe> dbRecipes = null;
+        if (useRecipes) {
+            dbRecipes = createRecipeList(1, 5);
+            dbRecipes.get(0).setFlavorTags(Arrays.asList(new String[] {"test1", "test2", "TEST3"}));
+            dbRecipes.get(1).setFlavorTags(Arrays.asList(new String[] {"test1", "test3"}));
+            dbRecipes.get(2).setFlavorTags(Arrays.asList(new String[] {"test1", "missing"}));
+            dbRecipes.get(3).setFlavorTags(Arrays.asList(new String[] {"missing"}));
+            dbRecipes.get(4).setFlavorTags(Arrays.asList(new String[] {"apple", "test3"}));
+        } else {
+           dbRecipes = new ArrayList<>(); 
+        }
+        
+        doReturn(dbRecipes).when(spiedTest).checkAllRecipes(ArgumentMatchers.<String>any());
+        
+        Recipe retVal = spiedTest.recommendRecipe(cookbook);
+        
+        if (possibleRecipeNames.size() == 0) {
+            assertNull(retVal);
+        } else {
+            assertNotNull(retVal);
+            boolean found = false;
+            for (String recipeName : possibleRecipeNames) {
+                if (recipeName.equals(retVal.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue("Unexpected recipe: "+retVal.getName(),found);
+        }
+        
+    }
+    
+    @SuppressWarnings("unused")
+    private Object[] parametersRecommendRecipe() {
+        
+        Cookbook c1 = new Cookbook();
+        ArrayList<Recipe> h1 = createRecipeList(1, 2);
+        h1.get(0).setFlavorTags(Arrays.asList(new String[] {"apple"}));
+        h1.get(1).setFlavorTags(Arrays.asList(new String[] {"apple","test1"}));
+        c1.setHistory(h1);
+        
+        Cookbook c2 = new Cookbook();
+        ArrayList<Recipe> h2 = createRecipeList(1, 2);
+        h2.get(0).setFlavorTags(Arrays.asList(new String[] {"test1"}));
+        h2.get(1).setFlavorTags(Arrays.asList(new String[] {"test3","test1"}));
+        c2.setHistory(h2);
+        
+        
+        return new Object[] {
+            new Object[] { c2, new ArrayList<>(), false },
+            new Object[] { new Cookbook(), Arrays.asList("Recipe 1", "Recipe 2", "Recipe 3", "Recipe 4", "Recipe 5"), true },
+            new Object[] { c1, Arrays.asList("Recipe 5"), true },
+            new Object[] { c2, Arrays.asList("Recipe 1", "Recipe 2", "Recipe 3"), true }
         };
     }
     

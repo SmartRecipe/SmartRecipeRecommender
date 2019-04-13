@@ -53,6 +53,7 @@ public class NutritionInfo {
     }
 
     public NutritionInfo() {
+        this.extras = new HashMap<>();
     }
 
     /**
@@ -245,50 +246,15 @@ public class NutritionInfo {
         return this.extras;
     }
 
-    public Byte getByteExtra(String key, Byte defaultValue) {
+    @SuppressWarnings("unchecked")
+    public <E extends Number> E getExtra(String key, E defaultValue) {
         return (key != null && extras.containsKey(key))
-                ? (Byte) extras.get(key)
+                ? (E) extras.get(key)
                 : defaultValue;
     }
 
-    public void putByteExtra(String key, Byte value) {
-        if (key != null && key.length() > 0) {
-            extras.put(key, value);
-        }
-    }
-
-    public Integer getIntegerExtra(String key, Integer defaultValue) {
-        return (key != null && extras.containsKey(key))
-                ? (Integer) extras.get(key)
-                : defaultValue;
-    }
-
-    public void putIntegerExtra(String key, Integer value) {
-        if (key != null && key.length() > 0) {
-            extras.put(key, value);
-        }
-    }
-
-    public Long getLongExtra(String key, Long defaultValue) {
-        return (key != null && extras.containsKey(key))
-                ? (Long) extras.get(key)
-                : defaultValue;
-    }
-
-    public void putLongExtra(String key, Long value) {
-        if (key != null && key.length() > 0) {
-            extras.put(key, value);
-        }
-    }
-
-    public Double getDoubleExtra(String key, Double defaultValue) {
-        return (key != null && extras.containsKey(key))
-                ? (Double) extras.get(key)
-                : defaultValue;
-    }
-
-    public void putDoubleExtra(String key, Double value) {
-        if (key != null && key.length() > 0) {
+    public <E extends Number> void putExtra(String key, E value) {
+        if (key != null && key.length() > 0 && value != null) {
             extras.put(key, value);
         }
     }
