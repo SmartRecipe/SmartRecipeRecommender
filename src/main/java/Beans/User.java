@@ -26,6 +26,7 @@ public class User implements Serializable {
         this.name = "";
         this.username = "";
         this.email = "";
+        this.password = "";
         this.userID = UUID.randomUUID();
         fridge = new VirtualRefrigerator();
         cookbook = new Cookbook();
