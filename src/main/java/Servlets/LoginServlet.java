@@ -8,7 +8,6 @@ package Servlets;
 import Beans.User;
 import Servlets.utils.BaseRequest;
 import Servlets.utils.BaseResponse;
-import Servlets.BaseServlet;
 import com.google.gson.Gson;
 import Databases.UserDatabase;
 import Servlets.utils.PasswordHash;
@@ -68,6 +67,7 @@ public class LoginServlet extends BaseServlet {
             user = baseRequest.getUser();
         } catch (Exception e) {
             user = null;
+            System.out.println(e);
         }
 
         UserDatabase userDb = UserDatabase.getInstance();
@@ -86,17 +86,16 @@ public class LoginServlet extends BaseServlet {
                 }
                 
                 String hashedPassword = null;
-                String[] passSalt = null;
                 
                 try {
-                    passSalt = PasswordHash.hashAndSaltPassword(user.getPassword());
+                    String[] passSalt = PasswordHash.hashAndSaltPassword(user.getPassword());
                     hashedPassword = passSalt[0];
                     salt = passSalt[1];
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                user.setPassword(passSalt[0]);
+                user.setPassword(hashedPassword);
                 user.setSalt(salt);
                 user.setUserID(UUID.randomUUID());
                 
