@@ -118,7 +118,6 @@ public class Recipe {
             sb.append(", ");
         }
         return "Recipe [\n"
-                + "id=" + id +",\n"
                 + "name=" + name + ",\n"
                 + "desc=" + desc.substring(0, Math.min(desc.length(), 20)) + ",\n"
                 + "totalServings="+ totalServings + ",\n"
