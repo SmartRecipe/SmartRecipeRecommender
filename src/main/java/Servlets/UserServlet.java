@@ -52,7 +52,6 @@ public class UserServlet extends BaseServlet {
         // all requests that fail to convert are malformed, we don't understand them
         try{
             String requestBody = getBody(request); // parse request body as json
-            System.out.println(requestBody);
             baseRequest = gson.fromJson(requestBody, BaseRequest.class);
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
