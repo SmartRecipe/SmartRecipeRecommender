@@ -111,6 +111,51 @@ public class VirtualRefrigerator implements Serializable {
     }
     
     /**
+     * Checks a given recipe to see if the user has all necessary ingredients to make it. Overloaded
+     * method with Ingredient argument for prioritizing ingredients.
+     * @param priority The ingredient being prioritized.
+     * @param recipe The recipe being checked.
+     * @return True if the user can make the recipe, false if not.
+     */
+    public boolean checkRecipe(Recipe recipe, Ingredient priority) {
+        if (recipe == null || ingredients.isEmpty())
+            return false;
+        
+        boolean foundPriority = false;
+        
+        for (Ingredient ing : recipe.getIngredients()) {
+            if (ing.getName() == priority.getName()) {
+                foundPriority = true;
+                break;
+            }
+        }
+        
+        if (!foundPriority)
+            return false;
+        
+        //I've looked at this like a million different ways and this is the solution I came up with.
+        //It's late and I'm tired. Don't judge me.
+        
+        boolean haveIngredient;
+        
+        for (Ingredient needed : recipe.getIngredients()) {                
+            haveIngredient = false;
+            
+            for (Ingredient owned : ingredients) {
+                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.hasEnough(needed)) {
+                    haveIngredient = true;
+                    break;
+                }
+            }
+            
+            if (!haveIngredient)
+                return false;
+        }
+        
+        return true;
+    }
+    
+    /**
      * Checks all recipes in database to determine which ones the user can make and returns a list of
      * the valid recipes.
      * @param filters An array of the filters used to narrow down the returned recipes to a specific
@@ -154,6 +199,57 @@ public class VirtualRefrigerator implements Serializable {
         
         for (Recipe recipe : allRecipes) {
             if (checkRecipe(recipe))
+                validRecipes.add(recipe);
+        }
+        
+        return validRecipes;
+    }
+    
+    /**
+     * Checks all recipes in database to determine which ones the user can make and returns a list of
+     * the valid recipes. Overloaded method with ingredient argument for prioritizing ingredients.
+     * @param priority The ingredient to be prioritized.
+     * @param filters An array of the filters used to narrow down the returned recipes to a specific
+     * flavor profile.
+     * @return An ArrayList of the recipes the user can make with the ingredients in their fridge.
+     */
+    public List<Recipe> checkAllRecipes(Ingredient priority, String... filters) {
+        ArrayList<Recipe> validRecipes = new ArrayList<>();
+        List<Recipe> allRecipes = RecipeDatabase.getInstance().getAllRecipes();
+        
+        //Don't @ me, I'm already ashamed of this.
+        
+        //First, check to make sure that filters isn't null/empty
+        if (filters != null && filters.length > 0) {
+            Iterator<Recipe> itr = allRecipes.iterator(); //Create an iterator for the master list of recipes so we can run through it without a ConcurrentModification exception
+            int tags; //We'll need an int variable to keep track of the number of tags the recipe has in common with the filter array
+            
+            //Iterate through the master list
+            while (itr.hasNext()) {
+                Recipe recipe = (Recipe) itr.next(); //Throw the current list item into a Recipe object so we can get access to its flavor tags
+                List<String> flavorTags = recipe.getFlavorTags(); //Get the recipe's tags and store them in a list
+                tags = 0; //Set tags to 0
+                
+                //Compare each flavor tag in the recipe with the provided filters
+                for (String flavorTag : flavorTags) {
+                    for (int i = 0; i < filters.length; i++) {
+                        //If the flavor tag matches the filter tag, increment tags
+                        if (flavorTag.equalsIgnoreCase(filters[i])) {
+                            tags++;
+                            break;
+                        }
+                    }
+                }
+                
+                //If, after comparing each flavor tag to each filter tag, the tags variable is still less than the length of the filters array, then the recipe
+                //doesn't meet the filter specifications and should be removed
+                if (tags < filters.length)
+                    itr.remove();
+            }
+        }
+        
+        for (Recipe recipe : allRecipes) {
+            if (checkRecipe(recipe, priority))
                 validRecipes.add(recipe);
         }
         

@@ -46,7 +46,7 @@ public class LoginServlet extends BaseServlet {
         
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
-
+        
         // try to convert the request body into an instance of BaseRequest class
         // all requests that fail to convert are malformed, we don't understand them
         try{
@@ -55,18 +55,18 @@ public class LoginServlet extends BaseServlet {
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
             sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
-            return; 
+            return;
         }
-
+        
         // Get the user object included in the request
         try {
             user = baseRequest.getUser();
         } catch (Exception e) {
             user = null;
         }
-
+        
         UserDatabase userDb = UserDatabase.getInstance();
-
+        
         switch (action) {
             case "sign_up":
                 if (user == null) {
