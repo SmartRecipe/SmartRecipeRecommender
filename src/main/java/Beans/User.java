@@ -17,7 +17,7 @@ public class User implements Serializable {
     private String name;
     private String username;
     private String email;
-    private transient String password;
+    private String password;
     private UUID userID;
     private String salt;
     private VirtualRefrigerator fridge;
