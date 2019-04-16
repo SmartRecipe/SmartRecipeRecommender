@@ -83,6 +83,9 @@ public class Ingredient {
     }
     
     public boolean hasEnough(Ingredient needed) {
+        return true;
+        
+        /*
         if (needed == null) {
             return true;
         }
@@ -94,6 +97,8 @@ public class Ingredient {
         }
         return Quantities.getQuantity(this.getQuantity(), thisUnit).isGreaterThanOrEqualTo(
                 Quantities.getQuantity(needed.getQuantity(), otherUnit));
+
+        */
     }
   
     @Override

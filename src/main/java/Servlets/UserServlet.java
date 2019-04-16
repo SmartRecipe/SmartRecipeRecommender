@@ -75,7 +75,7 @@ public class UserServlet extends BaseServlet {
                     }
                     else {
                         baseResponse.setUser(user);
-                        baseResponse.setMessage("Error occurred while updating virtual refrigerator");
+                        baseResponse.setMessage("Error occurred while updating user");
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                     }
                 }
