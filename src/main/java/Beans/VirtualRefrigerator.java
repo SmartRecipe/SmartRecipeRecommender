@@ -75,7 +75,7 @@ public class VirtualRefrigerator implements Serializable {
         Random rand = new Random(System.currentTimeMillis());
         
         if (candidates.isEmpty()) 
-            return validRecipes.get(rand.nextInt(validRecipes.size()));
+            return validRecipes.isEmpty() ? null : validRecipes.get(rand.nextInt(validRecipes.size()));
         else
             return candidates.get(rand.nextInt(candidates.size()));
     }
