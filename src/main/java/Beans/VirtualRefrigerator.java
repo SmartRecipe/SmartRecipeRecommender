@@ -44,7 +44,7 @@ public class VirtualRefrigerator implements Serializable {
         
         HashMap<String, Integer> filterFreq = new HashMap<>();
         List<String> allTags = new ArrayList<>();
-                
+        
         for (Recipe recipe : cookbook.getHistory()) {
             allTags.addAll(recipe.getFlavorTags());
         }
@@ -74,9 +74,10 @@ public class VirtualRefrigerator implements Serializable {
         
         Random rand = new Random(System.currentTimeMillis());
         
-        if (candidates.isEmpty())
-            return null;
-        return candidates.get(rand.nextInt(candidates.size()));
+        if (candidates.isEmpty()) 
+            return validRecipes.get(rand.nextInt(validRecipes.size()));
+        else
+            return candidates.get(rand.nextInt(candidates.size()));
     }
     
     /**
@@ -93,7 +94,7 @@ public class VirtualRefrigerator implements Serializable {
         
         boolean haveIngredient;
         
-        for (Ingredient needed : recipe.getIngredients()) {                
+        for (Ingredient needed : recipe.getIngredients()) {
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
@@ -232,20 +233,20 @@ public class VirtualRefrigerator implements Serializable {
     public boolean useIngredient(Ingredient ingredient, double quantity) {
         if (ingredient == null || ingredients.isEmpty())
             return false;
-
+        
         //Search the fridge for the given ingredient and remove the given quantity.
         for (Ingredient ing : ingredients) {
             if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
                 boolean success = ing.use(quantity);
-
+                
                 //If the ingredient has been completely used up, remove it from the fridge.
                 if (ing.getQuantity() <= 0)
                     ingredients.remove(ing);
-
+                
                 return success;
             }
         }
-
+        
         return false; //Ingredient not found
     }
     
