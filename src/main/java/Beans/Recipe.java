@@ -16,10 +16,6 @@ import org.bson.types.ObjectId;
  * @author soup
  */
 public class Recipe {
-
-    @SerializedName("_id")
-    private ObjectId id;
-
     private String name;
     private String desc;
     private NutritionInfo nutVal; //Nutritional value per serving
@@ -43,15 +39,6 @@ public class Recipe {
         this.timeRequired = timeRequired;
         this.flavorTags = flavorTags;
         this.instructions = instructions;
-    }
-
-    public ObjectId getId() {
-        return this.id;
-    }
-
-    public void setId(ObjectId id) {
-        if (id == null) id = new ObjectId();
-        this.id = id;
     }
 
     public String getName() {
@@ -131,7 +118,6 @@ public class Recipe {
             sb.append(", ");
         }
         return "Recipe [\n"
-                + "id=" + id +",\n"
                 + "name=" + name + ",\n"
                 + "desc=" + desc.substring(0, Math.min(desc.length(), 20)) + ",\n"
                 + "totalServings="+ totalServings + ",\n"
