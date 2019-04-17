@@ -6,6 +6,7 @@ import javax.measure.Unit;
 import javax.measure.quantity.Volume;
 
 import systems.uom.common.USCustomary;
+import tech.units.indriya.format.SimpleUnitFormat;
 
 public enum VolumeUnits {
     LITER(USCustomary.LITER),
@@ -27,18 +28,19 @@ public enum VolumeUnits {
     }
     
     public static Unit<Volume> fromString(String unit) {
-        if (unit == null) {
+        if (unit == null || unit.isEmpty()) {
             return null;
         }
-        unit = unit.toLowerCase();
+        // Remove all non-letters and convert to lowercase
+        unit = unit.replaceAll("[^a-zA-Z]", "").toLowerCase();
         //Strip plural off the end
         if (unit.endsWith("s")) unit = unit.substring(0, unit.length()-1);
         for (VolumeUnits testUnit : VolumeUnits.values()) {
             String name = testUnit.getUnitRepresentation().getName();
-            String symbol = testUnit.getUnitRepresentation().getSymbol();
-            if (name != null && name.toLowerCase().contains(unit)) {
+            String symbol = testUnit.getUnitRepresentation().toString();
+            if (name != null && name.toLowerCase().equals(unit)) {
                 return testUnit.getUnitRepresentation();
-            } else if (symbol != null && symbol.toLowerCase().contains(unit)) {
+            } else if (symbol != null && symbol.toLowerCase().equals(unit)) {
                 return testUnit.getUnitRepresentation();
             }
         }

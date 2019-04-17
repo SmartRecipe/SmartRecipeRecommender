@@ -83,22 +83,19 @@ public class Ingredient {
     }
     
     public boolean hasEnough(Ingredient needed) {
-        return true;
-        
-        /*
         if (needed == null) {
             return true;
         }
         Unit<Volume> thisUnit = VolumeUnits.fromString(this.getUnit());
         Unit<Volume> otherUnit = VolumeUnits.fromString(needed.getUnit());
         if (thisUnit == null || otherUnit == null) {
-            logger.log(Level.WARNING, "Defaulting to quantity only comparison for ingredient: "+needed);
+            if (thisUnit==null) logger.log(Level.WARNING, "Missing unit type for: "+this.getUnit());
+            if (otherUnit==null) logger.log(Level.WARNING, "Missing unit type for needed: "+needed.getUnit());
+            logger.log(Level.WARNING, "Defaulting to quantity only comparison");
             return this.getQuantity() >= needed.getQuantity();
         }
         return Quantities.getQuantity(this.getQuantity(), thisUnit).isGreaterThanOrEqualTo(
                 Quantities.getQuantity(needed.getQuantity(), otherUnit));
-
-        */
     }
   
     @Override

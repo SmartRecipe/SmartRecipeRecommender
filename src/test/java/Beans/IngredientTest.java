@@ -32,7 +32,7 @@ public class IngredientTest {
         assertEquals("Start: "+startQuantity+", Used: "+useQuantity, expectedValue, underTest.getQuantity(), 0.01);
         assertEquals("Start: "+startQuantity+", Used: "+useQuantity, expectedReturn, success);
     }
-
+    
     @Test
     @Parameters(method = "parametersTestUse")
     public void testUse(double startQuantity,double useQuantity, double expectedValue, boolean expectedReturn) {
@@ -40,6 +40,12 @@ public class IngredientTest {
     	boolean success = underTest.use(useQuantity);
         assertEquals("Start: "+startQuantity+", Used: "+useQuantity, expectedValue, underTest.getQuantity(), 0.01);
         assertEquals("Start: "+startQuantity+", Used: "+useQuantity, expectedReturn, success);
+    }
+    
+    @Test
+    @Parameters(method = "parametersTestHasEnough")
+    public void testHasEnoug(Ingredient underTest, Ingredient needed, boolean expectedReturn) {
+        assertEquals("UnderTest: "+underTest+", needed: "+needed,expectedReturn, underTest.hasEnough(needed));
     }
     
     @Test
@@ -56,6 +62,20 @@ public class IngredientTest {
     @Test
     public void setNutVal() {
     	//fail("Not yet implemented");
+    }
+    
+    @SuppressWarnings("unused")
+    private Object[] parametersTestHasEnough() {
+        // Assumes that only quantity and unit are checked
+        return new Object[] { 
+            new Object[] { new Ingredient("have", 100, "tbsp."),  new Ingredient("needed", 1, "cup"), true}, 
+            new Object[] { new Ingredient("have", 5, ""),  new Ingredient("needed", 10, "tsp"), false}, 
+            new Object[] { new Ingredient("have", 3, "cups."),  new Ingredient("needed", 1, "gallon"), false},
+            new Object[] { new Ingredient("have", 100, "tbsp."),  new Ingredient("needed", 100, "tbsp"), true},
+            new Object[] { new Ingredient("have", 100, ""),  new Ingredient("needed", 100, "tbsp"), true},
+            new Object[] { new Ingredient("have", 100, "tbsp."),  new Ingredient("needed", 50, null), true},
+            new Object[] { new Ingredient("have", 3, "ct."),  new Ingredient("needed", 2, "fake"), true},
+        };
     }
     
     @SuppressWarnings("unused")
