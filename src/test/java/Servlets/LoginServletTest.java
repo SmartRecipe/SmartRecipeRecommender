@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import Beans.User;
 import Databases.UserDatabase;
 import Servlets.utils.BaseResponse;
+import Servlets.utils.PasswordHash;
 
 @RunWith(JUnitParamsRunner.class)
 public class LoginServletTest {
@@ -167,7 +169,14 @@ public class LoginServletTest {
         writer.flush(); // it may not have been flushed yet...
         baseResponse = gson.fromJson(stringWriter.toString(), BaseResponse.class);
         assertEquals(user.getEmail(), baseResponse.getUser().getEmail());
-        assertEquals(user.getPassword(), baseResponse.getUser().getPassword());
+        assertNotEquals(user.getPassword(), baseResponse.getUser().getPassword()); // Password should be hashed
+        String[] passSalt = null;
+        try {
+            passSalt = PasswordHash.hashAndSaltPassword(user.getPassword());
+        } catch (NoSuchAlgorithmException e) {
+            fail("Threw exception");
+        }
+        assertEquals(2, passSalt.length);
         
         ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
         verify(response).setStatus(argument.capture());

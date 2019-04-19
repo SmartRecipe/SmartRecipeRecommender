@@ -84,13 +84,13 @@ public class VirtualRefigeratorTest {
     }
     
     /**
-     * Test method for {@link Beans.VirtualRefrigerator#checkRecipe(Beans.Recipe)}.
+     * Test method for {@link Beans.VirtualRefrigerator#checkRecipe(Beans.Recipe, boolean)}.
      */
     @Test
     @Parameters(method = "parametersCheckRecipe")
     public void testCheckRecipe(Recipe dbRecipe, ArrayList<Ingredient> userIngredients, boolean expectedValue ) {
         underTest.setIngredientsList(userIngredients);
-        assertEquals(expectedValue, underTest.checkRecipe(dbRecipe));
+        assertEquals(expectedValue, underTest.checkRecipe(dbRecipe, false));
     }
     
     @SuppressWarnings("unused")
@@ -131,7 +131,7 @@ public class VirtualRefigeratorTest {
 	public void testCheckAllRecipes(ArrayList<Recipe> dbRecipes, ArrayList<Ingredient> userIngredients, String[] filters, int expectedRecipes) {
 	    underTest.setIngredientsList(userIngredients);
 		when(mockDB.getAllRecipes()).thenReturn(dbRecipes);
-		List<Recipe> retVal = underTest.checkAllRecipes(filters);
+		List<Recipe> retVal = underTest.checkAllRecipes(false, filters);
 		assertNotNull(retVal);
 		verify(mockDB, times(1)).getAllRecipes();
 		assertEquals("Recipes: "+dbRecipes.size()+", ingredients: "+userIngredients.size(), expectedRecipes, retVal.size());
@@ -179,7 +179,7 @@ public class VirtualRefigeratorTest {
            dbRecipes = new ArrayList<>(); 
         }
         
-        doReturn(dbRecipes).when(spiedTest).checkAllRecipes(ArgumentMatchers.<String>any());
+        doReturn(dbRecipes).when(spiedTest).checkAllRecipes(anyBoolean(), ArgumentMatchers.<String>any());
         
         Recipe retVal = spiedTest.recommendRecipe(cookbook);
         

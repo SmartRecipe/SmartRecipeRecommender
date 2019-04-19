@@ -424,7 +424,7 @@ public class CookbookServletTest {
         Recipe recipe = new Recipe();
         recipe.setDesc("Test Description");
         
-        when(mockFridge.checkAllRecipes(ArgumentMatchers.<String>any())).thenReturn(
+        when(mockFridge.checkAllRecipes(anyBoolean(), ArgumentMatchers.<String>any())).thenReturn(
                 Arrays.asList(new Recipe[] {recipe, recipe}));
 
         try {
@@ -434,7 +434,7 @@ public class CookbookServletTest {
         }
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(mockFridge, times(1)).checkAllRecipes(ArgumentMatchers.<String>any());
+        verify(mockFridge, times(1)).checkAllRecipes(anyBoolean(), ArgumentMatchers.<String>any());
         ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
         verify(response).setStatus(argument.capture());
         assertEquals(BaseServlet.STATUS_HTTP_OK, argument.getValue().intValue());
@@ -463,7 +463,7 @@ public class CookbookServletTest {
         
         doReturn(baseRequest).when(underTest).getBaseRequest(any(HttpServletRequest.class));
         
-        when(mockFridge.checkAllRecipes(ArgumentMatchers.<String>any())).thenThrow(new NullPointerException());
+        when(mockFridge.checkAllRecipes(anyBoolean(), ArgumentMatchers.<String>any())).thenThrow(new NullPointerException());
 
         try {
             underTest.processRequest(request, response);
@@ -472,7 +472,7 @@ public class CookbookServletTest {
         }
 
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(mockFridge, times(1)).checkAllRecipes(ArgumentMatchers.<String>any());
+        verify(mockFridge, times(1)).checkAllRecipes(anyBoolean(), ArgumentMatchers.<String>any());
         ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
         verify(response).setStatus(argument.capture());
         assertEquals(BaseServlet.STATUS_HTTP_INTERNAL_ERROR, argument.getValue().intValue());
