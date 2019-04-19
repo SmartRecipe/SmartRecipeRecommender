@@ -5,6 +5,7 @@
 */
 package Servlets;
 
+import Beans.Ingredient;
 import Beans.Recipe;
 import Beans.User;
 import Servlets.utils.BaseRequest;
@@ -45,6 +46,8 @@ public class CookbookServlet extends BaseServlet {
         List<Recipe> recipes;
         User user;
         Recipe recipe;
+        Ingredient ingredient;
+        String[] filters;
         Gson gson = new Gson();
         
         String action = getAction(request);
@@ -73,6 +76,18 @@ public class CookbookServlet extends BaseServlet {
             recipe = baseRequest.getRecipe();
         } catch (Exception e) {
             recipe = null;
+        }
+        
+        try {
+            filters = baseRequest.getFilters();
+        } catch (Exception e) {
+            filters = null;
+        }
+        
+        try {
+            ingredient = baseRequest.getIngredient();
+        } catch (Exception e) {
+            ingredient = null;
         }
         
         switch (action) {
@@ -129,7 +144,8 @@ public class CookbookServlet extends BaseServlet {
             case "search_recipes":
                 if (user != null) {
                     try {
-                        recipes = user.getFridge().checkAllRecipes(baseRequest.getFilters());
+                        recipes = ingredient == null ? user.getFridge().checkAllRecipes(filters) : user.getFridge().checkAllRecipes(ingredient, filters);
+                        
                         baseResponse.setMessage("Success");
                         baseResponse.setRecipes(recipes);
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
