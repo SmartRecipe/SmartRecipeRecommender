@@ -19,6 +19,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private UUID userID;
+    private String salt;
     private VirtualRefrigerator fridge;
     private Cookbook cookbook;
     
@@ -28,15 +29,17 @@ public class User implements Serializable {
         this.email = "";
         this.password = "";
         this.userID = UUID.randomUUID();
+        this.salt = "";
         fridge = new VirtualRefrigerator();
         cookbook = new Cookbook();
     }
     
-    public User(String name, String username, String email, UUID userID) {
+    public User(String name, String username, String email, UUID userID, String salt) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.userID = userID;
+        this.salt = salt;
         fridge = new VirtualRefrigerator();
         cookbook = new Cookbook();
     }
@@ -103,10 +106,17 @@ public class User implements Serializable {
         if (cookbook == null) return;
         this.cookbook = cookbook;
     }
+    
+    public String getSalt() {
+        return salt;
+    }
+    
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     @Override
     public String toString() {
         return "User [name=" + name + ", username=" + username + ", email=" + email + ", password=" + password + "]";
     }
-    
 }
