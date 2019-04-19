@@ -29,7 +29,7 @@ public class Ingredient {
     }
     
     public Ingredient(String name, double quantity, String unit) {
-        this.name = name;
+        setName(name);
         this.quantity = quantity;
         this.unit = unit;
     }
@@ -63,6 +63,7 @@ public class Ingredient {
     }
 
     public void setName(String name) {
+        if (name == null) name = "";
         this.name = name;
     }
     

@@ -1,6 +1,7 @@
 package Servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -23,6 +24,7 @@ import org.junit.Test;
 import junitparams.*;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import com.google.gson.Gson;
 
@@ -39,7 +41,7 @@ public class LoginServletTest {
     HttpServletResponse response;
     ServletContext context;
     
-    UserDatabase mockDB;
+    UserDatabase mockUserDB;
     StringWriter stringWriter;
     PrintWriter writer;
     Gson gson = new Gson();
@@ -58,11 +60,11 @@ public class LoginServletTest {
         writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
         
-        mockDB = mock(UserDatabase.class);
+        mockUserDB = mock(UserDatabase.class);
         try {
             Field instance = UserDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
-            instance.set(instance, mockDB);
+            instance.set(instance, mockUserDB);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +72,7 @@ public class LoginServletTest {
     
     @After
     public void tearDown() throws Exception {
-        mockDB=null;
+        mockUserDB=null;
         try {
             Field instance = UserDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
@@ -149,9 +151,8 @@ public class LoginServletTest {
         user.setPassword("testpassword");
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setUser(user);
-        String json = gson.toJson(baseResponse);
-        
-        doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
+        doReturn(gson.toJson(baseResponse)).when(underTest).getBody(any(HttpServletRequest.class));
+        doReturn(true).when(mockUserDB).addUser(any(User.class));
         
         try {
             underTest.processRequest(request, response);
@@ -160,10 +161,115 @@ public class LoginServletTest {
         }
         
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        // FIXME fix once we know this works
-        //verify(mockDB, times(1)).addUser(any(User.class)); //TODO compare actual user information once User.equals workss
-        //verify(context, times(1)).getRequestDispatcher("index.html");
-        //TODO run again and verify token is different
+        
+        verify(mockUserDB, times(1)).addUser(any(User.class));
+        
+        writer.flush(); // it may not have been flushed yet...
+        baseResponse = gson.fromJson(stringWriter.toString(), BaseResponse.class);
+        assertEquals(user.getEmail(), baseResponse.getUser().getEmail());
+        assertEquals(user.getPassword(), baseResponse.getUser().getPassword());
+        
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_OK, argument.getValue().intValue());
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessSignupRequestExistingUser() throws IOException {
+        
+        when(request.getParameter("action")).thenReturn("sign_up");
+        
+        User user = new User();
+        user.setEmail("test");
+        user.setName("testName");
+        user.setPassword("testpassword");
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        doReturn(gson.toJson(baseResponse)).when(underTest).getBody(any(HttpServletRequest.class));
+        doReturn(false).when(mockUserDB).addUser(any(User.class));
+        
+        try {
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
+        verify(request, atLeast(1)).getParameter("action"); // Verify action checked
+        
+        writer.flush(); // it may not have been flushed yet...
+        System.out.println(stringWriter.toString());
+        
+        verify(mockUserDB, times(1)).addUser(any(User.class));
+        
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_CONFLICT, argument.getValue().intValue());
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessSignupRequestNoPassword() throws IOException {
+        
+        when(request.getParameter("action")).thenReturn("sign_up");
+        
+        User user = new User();
+        user.setEmail("test");
+        user.setName("testName");
+        user.setPassword("");
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        doReturn(gson.toJson(baseResponse)).when(underTest).getBody(any(HttpServletRequest.class));
+        
+        try {
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+        
+        verify(request, atLeast(1)).getParameter("action"); // Verify action checked
+        
+        verify(mockUserDB, times(0)).addUser(any(User.class));
+        
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_UNAUTHORIZED, argument.getValue().intValue());
+    }
+    
+    /**
+     * Test method for {@link LoginServlet#processRequest(HttpServletRequest, HttpServletResponse)}.
+     * @throws IOException
+     */
+    @Test
+    public void testProcessRequestCorrupt() throws IOException {
+        
+        when(request.getParameter("action")).thenReturn("sign_up");
+        
+        User user = new User();
+        user.setEmail("test");
+        user.setName("testName");
+        user.setPassword("asdf");
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setUser(user);
+        doReturn(gson.toJson(baseResponse).substring(15)).when(underTest).getBody(any(HttpServletRequest.class));
+        
+        try {
+            underTest.processRequest(request, response);
+        } catch (ServletException e) {
+            fail("Threw exception");
+        }
+                
+        verify(mockUserDB, times(0)).addUser(any(User.class));
+        
+        ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+        verify(response).setStatus(argument.capture());
+        assertEquals(BaseServlet.STATUS_HTTP_BAD_REQUEST, argument.getValue().intValue());
     }
     
     /**
@@ -190,7 +296,7 @@ public class LoginServletTest {
         }
         
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        verify(mockDB, times(0)).addUser(any(User.class));
+        verify(mockUserDB, times(0)).addUser(any(User.class));
         //verify(context, times(1)).getRequestDispatcher("error.html");
     }
     
@@ -214,7 +320,7 @@ public class LoginServletTest {
         LoginServlet underTest = spy(new LoginServlet());
         doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
         
-        when(mockDB.login(anyString(), anyString())).thenReturn(user);
+        when(mockUserDB.login(anyString(), anyString())).thenReturn(user);
         
         try {
             underTest.processRequest(request, response);
@@ -223,8 +329,6 @@ public class LoginServletTest {
         }
         
         verify(request, atLeast(1)).getParameter("action"); // Verify action checked
-        // FIXME fix once we know it works
-        //verify(mockDB, times(1)).login(user.getEmail(), user.getPassword());
         
         writer.flush(); // it may not have been flushed yet...
         //TODO check returned string
@@ -250,7 +354,7 @@ public class LoginServletTest {
         
         doReturn(json).when(underTest).getBody(any(HttpServletRequest.class));
         
-        when(mockDB.login(anyString(), anyString())).thenReturn(null);
+        when(mockUserDB.login(anyString(), anyString())).thenReturn(null);
         try {
             
             underTest.processRequest(request, response);

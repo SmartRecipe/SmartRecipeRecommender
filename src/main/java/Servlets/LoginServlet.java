@@ -50,8 +50,7 @@ public class LoginServlet extends BaseServlet {
         // try to convert the request body into an instance of BaseRequest class
         // all requests that fail to convert are malformed, we don't understand them
         try{
-            String requestBody = getBody(request); // parse request body as json
-            baseRequest = gson.fromJson(requestBody, BaseRequest.class);
+            baseRequest = getBaseRequest(request);  // parse request body as json
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
             sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));

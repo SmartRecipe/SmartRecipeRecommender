@@ -45,9 +45,7 @@ public enum VolumeUnits {
             }
         }
         // Other general catches that the above may miss
-        if (unit.contains("cup")) {
-            return CUP.getUnitRepresentation();
-        } else if (unit.contains("oz") || unit.contains("ounce")) {
+        if (unit.contains("oz") || unit.contains("ounce")) {
             return FL_OZ.getUnitRepresentation();
         } else if (unit.contains("gallon")) {
             return GALLON.getUnitRepresentation();

@@ -103,4 +103,10 @@ public class User implements Serializable {
         if (cookbook == null) return;
         this.cookbook = cookbook;
     }
+
+    @Override
+    public String toString() {
+        return "User [name=" + name + ", username=" + username + ", email=" + email + ", password=" + password + "]";
+    }
+    
 }
