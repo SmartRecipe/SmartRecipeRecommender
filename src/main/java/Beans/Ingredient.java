@@ -29,7 +29,7 @@ public class Ingredient {
     }
     
     public Ingredient(String name, double quantity, String unit) {
-        this.name = name;
+        setName(name);
         this.quantity = quantity;
         this.unit = unit;
     }
@@ -63,6 +63,7 @@ public class Ingredient {
     }
 
     public void setName(String name) {
+        if (name == null) name = "";
         this.name = name;
     }
     
@@ -89,7 +90,9 @@ public class Ingredient {
         Unit<Volume> thisUnit = VolumeUnits.fromString(this.getUnit());
         Unit<Volume> otherUnit = VolumeUnits.fromString(needed.getUnit());
         if (thisUnit == null || otherUnit == null) {
-            logger.log(Level.WARNING, "Defaulting to quantity only comparison for ingredient: "+needed);
+            if (thisUnit==null) logger.log(Level.WARNING, "Missing unit type for: "+this.getUnit());
+            if (otherUnit==null) logger.log(Level.WARNING, "Missing unit type for needed: "+needed.getUnit());
+            logger.log(Level.WARNING, "Defaulting to quantity only comparison");
             return this.getQuantity() >= needed.getQuantity();
         }
         return Quantities.getQuantity(this.getQuantity(), thisUnit).isGreaterThanOrEqualTo(

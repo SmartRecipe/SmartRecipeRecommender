@@ -92,10 +92,14 @@ public class CookbookServletTest {
     @After
     public void tearDown() throws Exception {
     	mockRecipeDB=null;
+    	mockUserDb=null;
 		try {
             Field instance = RecipeDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(null, null);
+            instance = UserDatabase.class.getDeclaredField("instance");
+            instance.setAccessible(true);
+            instance.set(instance, null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

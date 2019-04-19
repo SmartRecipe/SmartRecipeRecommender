@@ -99,9 +99,21 @@ public class CookbookServlet extends BaseServlet {
                 baseResponse.setRecipes(recipes);
                 sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                 break;
+            case "get_showcase":
+                recipe = RecipeDatabase.getInstance().getRecipe(recipe.getName());
+                if (recipe != null) {
+                    baseResponse.setMessage("Success");
+                    baseResponse.setRecipe(recipe);
+                    sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
+                } else {
+                    baseResponse.setMessage("Not found");
+                    sendResponse(response, STATUS_HTTP_NOT_FOUND, gson.toJson(baseResponse));
+                }
+                break;
             case "edit_recipe":
                 try {
                     if (RecipeDatabase.getInstance().updateRecipe(recipe)) {
+                        baseResponse.setRecipe(recipe);
                         baseResponse.setMessage("Success");
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
                     }
@@ -110,7 +122,7 @@ public class CookbookServlet extends BaseServlet {
                         sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                     }
                 } catch (Exception e) {
-                    baseResponse.setMessage("Error occurred while adding recipe");
+                    baseResponse.setMessage("Error occurred while updating recipe");
                     sendResponse(response, STATUS_HTTP_INTERNAL_ERROR, gson.toJson(baseResponse));
                 }
                 break;

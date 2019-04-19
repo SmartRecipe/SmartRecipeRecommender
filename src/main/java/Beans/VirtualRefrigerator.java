@@ -44,7 +44,7 @@ public class VirtualRefrigerator implements Serializable {
         
         HashMap<String, Integer> filterFreq = new HashMap<>();
         List<String> allTags = new ArrayList<>();
-                
+        
         for (Recipe recipe : cookbook.getHistory()) {
             allTags.addAll(recipe.getFlavorTags());
         }
@@ -74,9 +74,10 @@ public class VirtualRefrigerator implements Serializable {
         
         Random rand = new Random(System.currentTimeMillis());
         
-        if (candidates.isEmpty())
-            return null;
-        return candidates.get(rand.nextInt(candidates.size()));
+        if (candidates.isEmpty()) 
+            return validRecipes.isEmpty() ? null : validRecipes.get(rand.nextInt(validRecipes.size()));
+        else
+            return candidates.get(rand.nextInt(candidates.size()));
     }
     
     /**
@@ -93,7 +94,7 @@ public class VirtualRefrigerator implements Serializable {
         
         boolean haveIngredient;
         
-        for (Ingredient needed : recipe.getIngredients()) {                
+        for (Ingredient needed : recipe.getIngredients()) {
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
@@ -124,7 +125,7 @@ public class VirtualRefrigerator implements Serializable {
         //Don't @ me, I'm already ashamed of this.
         
         //First, check to make sure that filters isn't null/empty
-        if (filters != null && filters.length > 0) {
+        if (filters != null && filters.length > 0 && !filters[0].equalsIgnoreCase("")) {
             Iterator<Recipe> itr = allRecipes.iterator(); //Create an iterator for the master list of recipes so we can run through it without a ConcurrentModification exception
             int tags; //We'll need an int variable to keep track of the number of tags the recipe has in common with the filter array
             
@@ -232,20 +233,20 @@ public class VirtualRefrigerator implements Serializable {
     public boolean useIngredient(Ingredient ingredient, double quantity) {
         if (ingredient == null || ingredients.isEmpty())
             return false;
-
+        
         //Search the fridge for the given ingredient and remove the given quantity.
         for (Ingredient ing : ingredients) {
             if (ing != null && ing.getName().equalsIgnoreCase(ingredient.getName())) {
                 boolean success = ing.use(quantity);
-
+                
                 //If the ingredient has been completely used up, remove it from the fridge.
                 if (ing.getQuantity() <= 0)
                     ingredients.remove(ing);
-
+                
                 return success;
             }
         }
-
+        
         return false; //Ingredient not found
     }
     

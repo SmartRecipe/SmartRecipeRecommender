@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +69,10 @@ public class UserDatabase {
         MongoDatabase database = conn.getDatabase();
         if (database != null) {
             MongoCollection<Document> users = database.getCollection("users");
-            users.replaceOne(Document.parse("{ \"email\" : \"" + user.getEmail() + "\" }"), Document.parse(userJSON));
+            UpdateResult ret = users.replaceOne(Document.parse("{ \"email\" : \"" + user.getEmail() + "\" }"), Document.parse(userJSON));
+            return ret.getMatchedCount() > 0;
         }
-        return true;
+        return false;
     }
     
     public List<User> getAllUsers() {
@@ -83,8 +85,9 @@ public class UserDatabase {
             MongoCursor<Document> cursor;
             cursor = userCol.find().iterator();
             try {
-                while (cursor.hasNext())
+                while (cursor.hasNext()) {
                     users.add(gson.fromJson(cursor.next().toJson(), User.class));
+                }
             } finally {
                 cursor.close();
             }
