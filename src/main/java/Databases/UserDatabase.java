@@ -6,6 +6,7 @@
 package Databases;
 
 import Beans.User;
+import Servlets.LoginServlet;
 import Servlets.utils.PasswordHash;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,8 +46,11 @@ public class UserDatabase {
     
     
     public boolean addUser(User user) {
-        if (checkDuplicate(user.getEmail()))
+        if (user == null || checkDuplicate(user.getEmail()))
             return false;
+        
+        PasswordHash.hashAndSaltPassword(user);
+        user.setUserID(UUID.randomUUID());
         
         Gson gson = new Gson();
         String userJSON = gson.toJson(user);
@@ -67,6 +72,8 @@ public class UserDatabase {
     public boolean updateUser(User user) {
         if (user == null)
             return false;
+        
+        PasswordHash.hashAndSaltPassword(user);
         
         Gson gson = new Gson();
         String userJSON = gson.toJson(user);
@@ -112,12 +119,15 @@ public class UserDatabase {
     }
     
     public User login(String email, String password) {
-        //Note: This is a temporary implementation of the login functionality, and so it's naturally insecure. It will be updated later with security measures including salts and hashes.
-        
         User user = getUser(email);
         
+        if (user == null) {
+            Logger.getLogger(UserDatabase.class.getName()).log(Level.INFO, "Unable to find user: "+email);
+            return null;
+        }
+
         try {
-            if (user != null && PasswordHash.hashAndSaltPassword(password + user.getSalt()).equals(user.getPassword()))
+            if (PasswordHash.hashPassword(password, user.getSalt()).equals(user.getPassword()))
                 return user;
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(UserDatabase.class.getName()).log(Level.SEVERE, null, ex);

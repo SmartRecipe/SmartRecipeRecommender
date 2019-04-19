@@ -11,15 +11,18 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Random;
 
+import Beans.User;
+
 /**
  *
  * @author Soup
  */
 public class PasswordHash {
     
-    public static String hashPassword(String password) throws NoSuchAlgorithmException{
+    public static String hashPassword(String password, String salt) throws NoSuchAlgorithmException{
+        String hashAndSalt = password+salt;
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(password.getBytes());
+        md.update(hashAndSalt.getBytes());
         byte[] mdArray = md.digest();
         StringBuilder sb = new StringBuilder(mdArray.length * 2);
         for (byte b : mdArray){
@@ -40,6 +43,22 @@ public class PasswordHash {
     
     public static String[] hashAndSaltPassword(String password) throws NoSuchAlgorithmException{
         String salt = getSalt();
-        return new String[]{hashPassword(password + salt), salt};
+        if (password == null) password = "";
+        return new String[]{hashPassword(password, salt), salt};
+    }
+    
+    /**
+     * Update the user object directly
+     * @param user User to hash the password and update
+     */
+    public static void hashAndSaltPassword(User user){
+        try {
+            String[] hashInfo = hashAndSaltPassword(user.getPassword());
+            user.setPassword(hashInfo[0]);
+            user.setSalt(hashInfo[1]);
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Error hashing password");
+            e.printStackTrace();
+        }
     }
 }

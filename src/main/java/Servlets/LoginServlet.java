@@ -66,7 +66,7 @@ public class LoginServlet extends BaseServlet {
             user = baseRequest.getUser();
         } catch (Exception e) {
             user = null;
-            System.out.println(e);
+            System.out.println("Error getting user: "+e);
         }
         
         UserDatabase userDb = UserDatabase.getInstance();
@@ -83,20 +83,6 @@ public class LoginServlet extends BaseServlet {
                     sendResponse(response, STATUS_HTTP_UNAUTHORIZED, gson.toJson(baseResponse));
                     break;
                 }
-                
-                String hashedPassword = null;
-                
-                try {
-                    String[] passSalt = PasswordHash.hashAndSaltPassword(user.getPassword());
-                    hashedPassword = passSalt[0];
-                    salt = passSalt[1];
-                } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                user.setPassword(hashedPassword);
-                user.setSalt(salt);
-                user.setUserID(UUID.randomUUID());
                 
                 if (userDb.addUser(user)) {
                     baseResponse.setUser(user);

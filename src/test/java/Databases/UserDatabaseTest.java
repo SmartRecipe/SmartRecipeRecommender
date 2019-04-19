@@ -1,14 +1,10 @@
 package Databases;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
-import org.bson.Document;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,13 +14,10 @@ import org.junit.Test;
 import junitparams.*;
 
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import Beans.User;
@@ -123,6 +116,8 @@ public class UserDatabaseTest {
         assertEquals(user2.getName(), user3.getName());
         assertEquals(user2.getUsername(), user3.getUsername());
         assertEquals(user2.getUserID(), user3.getUserID());
+        assertNotEquals(user2.getPassword(), user3.getPassword()); // password should be changed
+        assertNotEquals("", user3.getSalt());
     }
 
     //@Test
@@ -135,9 +130,19 @@ public class UserDatabaseTest {
         //fail("Not yet implemented");
     }
 
-    //@Test
+    @Test
     public final void testLogin() {
-        //fail("Not yet implemented");
+        String password = "TestPassword123";
+        User user = new User();
+        user.setEmail("test@test.com");
+        user.setName("tester");
+        user.setUsername(user.getName()+"Username");
+        user.setPassword(password);
+        assertTrue(underTest.addUser(user));
+        
+        User retUser = underTest.login(user.getEmail(), password);
+        assertNotNull(retUser);
+        assertEquals(user.getUserID(), retUser.getUserID());
     }
 
 }

@@ -97,6 +97,7 @@ public class CookbookServletTest {
             Field instance = RecipeDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(null, null);
+            
             instance = UserDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(instance, null);
