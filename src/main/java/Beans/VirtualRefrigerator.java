@@ -38,7 +38,7 @@ public class VirtualRefrigerator implements Serializable {
      * @return The recommended recipe.
      */
     public Recipe recommendRecipe(Cookbook cookbook) {
-        List<Recipe> validRecipes = checkAllRecipes();
+        List<Recipe> validRecipes = checkAllRecipes(false);
         
         String filter;
         
@@ -83,9 +83,11 @@ public class VirtualRefrigerator implements Serializable {
     /**
      * Checks a given recipe to see if the user has all necessary ingredients to make it.
      * @param recipe The recipe being checked.
+     * @param oneMore A flag to determine if the recipes should be checked with a leniency of one missing
+     * ingredient.
      * @return True if the user can make the recipe, false if not.
      */
-    public boolean checkRecipe(Recipe recipe) {
+    public boolean checkRecipe(Recipe recipe, boolean oneMore) {
         if (recipe == null || ingredients.isEmpty())
             return false;
         
@@ -93,6 +95,7 @@ public class VirtualRefrigerator implements Serializable {
         //It's late and I'm tired. Don't judge me.
         
         boolean haveIngredient;
+        boolean missingOne = false;
         
         for (Ingredient needed : recipe.getIngredients()) {
             haveIngredient = false;
@@ -104,8 +107,14 @@ public class VirtualRefrigerator implements Serializable {
                 }
             }
             
-            if (!haveIngredient)
+            if (!haveIngredient && !oneMore)
                 return false;
+            else if (!haveIngredient && oneMore) {
+                if (missingOne)
+                    return false;
+                else
+                    missingOne = true;
+            }
         }
         
         return true;
@@ -116,9 +125,11 @@ public class VirtualRefrigerator implements Serializable {
      * method with Ingredient argument for prioritizing ingredients.
      * @param priority The ingredient being prioritized.
      * @param recipe The recipe being checked.
+     * @param oneMore A flag to determine if the recipes should be checked with a leniency of one missing
+     * ingredient.
      * @return True if the user can make the recipe, false if not.
      */
-    public boolean checkRecipe(Recipe recipe, Ingredient priority) {
+    public boolean checkRecipe(Recipe recipe, Ingredient priority, boolean oneMore) {
         if (recipe == null || ingredients.isEmpty())
             return false;
         
@@ -138,8 +149,9 @@ public class VirtualRefrigerator implements Serializable {
         //It's late and I'm tired. Don't judge me.
         
         boolean haveIngredient;
+        boolean missingOne = false;
         
-        for (Ingredient needed : recipe.getIngredients()) {                
+        for (Ingredient needed : recipe.getIngredients()) {
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
@@ -149,8 +161,14 @@ public class VirtualRefrigerator implements Serializable {
                 }
             }
             
-            if (!haveIngredient)
+            if (!haveIngredient && !oneMore)
                 return false;
+            else if (!haveIngredient && oneMore) {
+                if (missingOne)
+                    return false;
+                else
+                    missingOne = true;
+            }
         }
         
         return true;
@@ -159,11 +177,13 @@ public class VirtualRefrigerator implements Serializable {
     /**
      * Checks all recipes in database to determine which ones the user can make and returns a list of
      * the valid recipes.
+     * @param oneMore A flag to determine if the recipes should be checked with a leniency of one missing
+     * ingredient.
      * @param filters An array of the filters used to narrow down the returned recipes to a specific
      * flavor profile.
      * @return An ArrayList of the recipes the user can make with the ingredients in their fridge.
      */
-    public List<Recipe> checkAllRecipes(String... filters) {
+    public List<Recipe> checkAllRecipes(boolean oneMore, String... filters) {
         ArrayList<Recipe> validRecipes = new ArrayList<>();
         List<Recipe> allRecipes = RecipeDatabase.getInstance().getAllRecipes();
         
@@ -199,7 +219,7 @@ public class VirtualRefrigerator implements Serializable {
         }
         
         for (Recipe recipe : allRecipes) {
-            if (checkRecipe(recipe))
+            if (checkRecipe(recipe, oneMore))
                 validRecipes.add(recipe);
         }
         
@@ -210,11 +230,13 @@ public class VirtualRefrigerator implements Serializable {
      * Checks all recipes in database to determine which ones the user can make and returns a list of
      * the valid recipes. Overloaded method with ingredient argument for prioritizing ingredients.
      * @param priority The ingredient to be prioritized.
+     * @param oneMore A flag to determine if the recipes should be checked with a leniency of one missing
+     * ingredient.
      * @param filters An array of the filters used to narrow down the returned recipes to a specific
      * flavor profile.
      * @return An ArrayList of the recipes the user can make with the ingredients in their fridge.
      */
-    public List<Recipe> checkAllRecipes(Ingredient priority, String... filters) {
+    public List<Recipe> checkAllRecipes(Ingredient priority, boolean oneMore, String... filters) {
         ArrayList<Recipe> validRecipes = new ArrayList<>();
         List<Recipe> allRecipes = RecipeDatabase.getInstance().getAllRecipes();
         
@@ -250,7 +272,7 @@ public class VirtualRefrigerator implements Serializable {
         }
         
         for (Recipe recipe : allRecipes) {
-            if (checkRecipe(recipe, priority))
+            if (checkRecipe(recipe, priority, oneMore))
                 validRecipes.add(recipe);
         }
         

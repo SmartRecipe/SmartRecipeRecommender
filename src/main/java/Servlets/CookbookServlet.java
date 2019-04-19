@@ -51,10 +51,10 @@ public class CookbookServlet extends BaseServlet {
         Gson gson = new Gson();
         
         String action = getAction(request);
-
+        
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
-
+        
         // try to convert the request body into an instance of BaseRequest class
         // all requests that fail to convert are malformed, we don't understand them
         try{
@@ -62,10 +62,10 @@ public class CookbookServlet extends BaseServlet {
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
             sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
-            return; 
+            return;
         }
-
-        // Get the user object included in the request 
+        
+        // Get the user object included in the request
         try {
             user = baseRequest.getUser();
         } catch (Exception e) {
@@ -144,7 +144,9 @@ public class CookbookServlet extends BaseServlet {
             case "search_recipes":
                 if (user != null) {
                     try {
-                        recipes = ingredient == null ? user.getFridge().checkAllRecipes(filters) : user.getFridge().checkAllRecipes(ingredient, filters);
+                        boolean oneMore = Boolean.parseBoolean(request.getParameter("one_more"));
+                        
+                        recipes = ingredient == null ? user.getFridge().checkAllRecipes(oneMore, filters) : user.getFridge().checkAllRecipes(ingredient, oneMore, filters);
                         
                         baseResponse.setMessage("Success");
                         baseResponse.setRecipes(recipes);
