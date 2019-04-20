@@ -23,6 +23,7 @@ public class Recipe {
     private String instructions;
     private int totalServings;
     private double timeRequired;
+    private boolean needsOneMoreIngredient;
     private List<String> flavorTags;
     
     public Recipe() {
@@ -108,6 +109,14 @@ public class Recipe {
     
     public void setFlavorTags(List<String> flavorTags) {
         this.flavorTags = flavorTags;
+    }
+
+    public boolean getNeedsOneMoreIngredient() {
+        return this.needsOneMoreIngredient;
+    }
+
+    public void setNeedsOneMoreIngredient(boolean needsOneMoreIngredient) {
+        this.needsOneMoreIngredient = needsOneMoreIngredient;
     }
     
     @Override
