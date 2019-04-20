@@ -101,7 +101,7 @@ public class VirtualRefrigerator implements Serializable {
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
-                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.hasEnough(needed)) {
+                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName())) {
                     haveIngredient = true;
                     break;
                 }
@@ -110,10 +110,14 @@ public class VirtualRefrigerator implements Serializable {
             if (!haveIngredient && !oneMore)
                 return false;
             else if (!haveIngredient && oneMore) {
-                if (missingOne)
+                if (missingOne) {
+                    recipe.setNeedsOneMoreIngredient(false);
                     return false;
-                else
+                }
+                else {
+                    recipe.setNeedsOneMoreIngredient(true);
                     missingOne = true;
+                }
             }
         }
         
@@ -146,7 +150,8 @@ public class VirtualRefrigerator implements Serializable {
             return false;
         
         //I've looked at this like a million different ways and this is the solution I came up with.
-        //It's late and I'm tired. Don't judge me.
+        //It's late and I'm tired. Don't judge me. 
+        //No judgements at all :P
         
         boolean haveIngredient;
         boolean missingOne = false;
@@ -164,10 +169,14 @@ public class VirtualRefrigerator implements Serializable {
             if (!haveIngredient && !oneMore)
                 return false;
             else if (!haveIngredient && oneMore) {
-                if (missingOne)
+                if (missingOne) {
+                    recipe.setNeedsOneMoreIngredient(false);
                     return false;
-                else
+                }
+                else {
+                    recipe.setNeedsOneMoreIngredient(true);
                     missingOne = true;
+                }
             }
         }
         
@@ -219,8 +228,9 @@ public class VirtualRefrigerator implements Serializable {
         }
         
         for (Recipe recipe : allRecipes) {
-            if (checkRecipe(recipe, oneMore))
+            if (checkRecipe(recipe, oneMore)) {
                 validRecipes.add(recipe);
+            }
         }
         
         return validRecipes;
