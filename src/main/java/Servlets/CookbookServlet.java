@@ -146,7 +146,10 @@ public class CookbookServlet extends BaseServlet {
                     try {
                         boolean oneMore = Boolean.parseBoolean(request.getParameter("one_more"));
                         
-                        recipes = ingredient == null ? user.getFridge().checkAllRecipes(oneMore, filters) : user.getFridge().checkAllRecipes(ingredient, oneMore, filters);
+                        if (ingredient == null)
+                            recipes = user.getFridge().checkAllRecipes(oneMore, filters);
+                        else
+                            recipes = user.getFridge().checkAllRecipes(ingredient, oneMore, filters);
                         
                         baseResponse.setMessage("Success");
                         baseResponse.setRecipes(recipes);
