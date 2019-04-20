@@ -140,7 +140,7 @@ public class VirtualRefrigerator implements Serializable {
         boolean foundPriority = false;
         
         for (Ingredient ing : recipe.getIngredients()) {
-            if (ing.getName() == priority.getName()) {
+            if (ing.getName().equalsIgnoreCase(priority.getName())) {
                 foundPriority = true;
                 break;
             }
