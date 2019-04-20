@@ -73,8 +73,6 @@ public class UserDatabase {
         if (user == null)
             return false;
         
-        PasswordHash.hashAndSaltPassword(user);
-        
         Gson gson = new Gson();
         String userJSON = gson.toJson(user);
         MongoDatabase database = conn.getDatabase();
