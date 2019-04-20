@@ -101,7 +101,7 @@ public class VirtualRefrigerator implements Serializable {
             haveIngredient = false;
             
             for (Ingredient owned : ingredients) {
-                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName())) {
+                if (owned != null && owned.getName().equalsIgnoreCase(needed.getName()) && owned.hasEnough(needed)) {
                     haveIngredient = true;
                     break;
                 }
