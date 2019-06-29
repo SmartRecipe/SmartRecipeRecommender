@@ -5,6 +5,7 @@
 */
 package Servlets;
 
+import Beans.Ingredient;
 import Beans.Recipe;
 import Beans.User;
 import Servlets.utils.BaseRequest;
@@ -45,13 +46,15 @@ public class CookbookServlet extends BaseServlet {
         List<Recipe> recipes;
         User user;
         Recipe recipe;
+        Ingredient ingredient;
+        String[] filters;
         Gson gson = new Gson();
         
         String action = getAction(request);
-
+        
         BaseRequest baseRequest;
         BaseResponse baseResponse = new BaseResponse();
-
+        
         // try to convert the request body into an instance of BaseRequest class
         // all requests that fail to convert are malformed, we don't understand them
         try{
@@ -59,10 +62,10 @@ public class CookbookServlet extends BaseServlet {
         } catch (Exception e) {
             baseResponse.setMessage("Bad request");
             sendResponse(response, STATUS_HTTP_BAD_REQUEST, gson.toJson(baseResponse));
-            return; 
+            return;
         }
-
-        // Get the user object included in the request 
+        
+        // Get the user object included in the request
         try {
             user = baseRequest.getUser();
         } catch (Exception e) {
@@ -73,6 +76,18 @@ public class CookbookServlet extends BaseServlet {
             recipe = baseRequest.getRecipe();
         } catch (Exception e) {
             recipe = null;
+        }
+        
+        try {
+            filters = baseRequest.getFilters();
+        } catch (Exception e) {
+            filters = null;
+        }
+        
+        try {
+            ingredient = baseRequest.getIngredient();
+        } catch (Exception e) {
+            ingredient = null;
         }
         
         switch (action) {
@@ -129,7 +144,10 @@ public class CookbookServlet extends BaseServlet {
             case "search_recipes":
                 if (user != null) {
                     try {
-                        recipes = user.getFridge().checkAllRecipes(baseRequest.getFilters());
+                        boolean oneMore = Boolean.parseBoolean(request.getParameter("one_more"));
+                        
+                        recipes = ingredient == null ? user.getFridge().checkAllRecipes(oneMore, filters) : user.getFridge().checkAllRecipes(ingredient, oneMore, filters);
+                        
                         baseResponse.setMessage("Success");
                         baseResponse.setRecipes(recipes);
                         sendResponse(response, STATUS_HTTP_OK, gson.toJson(baseResponse));
